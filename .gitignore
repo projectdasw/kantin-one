@@ -1,0 +1,30 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Dependencies
+**/vendor/
+**/node_modules/
+
+# Laravel runtime
+src/storage/logs/*
+src/storage/framework/cache/*
+src/storage/framework/sessions/*
+src/storage/framework/views/*
+src/bootstrap/cache/*.php
+
+# Build output
+src/public/build/
+src/public/hot
+
+# Editor and temporary files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+*.tmp

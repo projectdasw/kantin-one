@@ -1,0 +1,25 @@
+services:
+  kantin-one:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: kantin-one-app
+
+    restart: unless-stopped
+
+    ports:
+      - "192.168.100.75:8081:80"
+
+    working_dir: /var/www/html
+
+    volumes:
+      - ./src:/var/www/html
+
+    networks:
+      - kantin-network
+
+networks:
+  kantin-network:
+    external: true
+    name: dasw_backend
