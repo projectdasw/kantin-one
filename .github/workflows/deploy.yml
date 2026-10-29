@@ -1,0 +1,57 @@
+name: Deploy Kantin One
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: kantin-one-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to DASW Startup Server
+    runs-on: [self-hosted, linux, x64, kantin-one]
+    timeout-minutes: 20
+
+    steps:
+      - name: Update source code
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /opt/kantin-one
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Build and start application container
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /opt/kantin-one
+          docker compose up -d --build kantin-one
+
+      - name: Install production dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /opt/kantin-one
+          docker compose exec -T kantin-one composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+
+      - name: Run Laravel migrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /opt/kantin-one
+          docker compose exec -T kantin-one php artisan migrate --force
+
+      - name: Clear Laravel caches
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /opt/kantin-one
+          docker compose exec -T kantin-one php artisan optimize:clear
