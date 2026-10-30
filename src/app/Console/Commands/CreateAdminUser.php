@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 class CreateAdminUser extends Command
 {
     protected $signature = 'app:create-admin';
-
     protected $description = 'Create the first administrator account';
 
     public function handle(): int
