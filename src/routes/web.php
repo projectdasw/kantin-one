@@ -19,6 +19,9 @@ Route::middleware(['auth', 'prevent.back'])->group(function () {
     Route::resource('users', UserController::class)
         ->except(['destroy']);
 
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])
+        ->name('users.destroy');
+
     Route::patch('/users/{user}/status', [UserController::class, 'toggleStatus'])
         ->name('users.toggle-status');
     

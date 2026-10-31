@@ -70,9 +70,9 @@ class UserController extends Controller
         $this->ensureAdministrator();
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'alpha_dash', 'max:50', 'unique:users,username'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'username' => ['required', 'string', 'regex:/\A[a-z0-9_-]+\z/', 'max:50', 'unique:users,username',],
+            'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed',],
             'role' => ['required', Rule::in($this->roles())],
         ]);
 
@@ -103,19 +103,8 @@ class UserController extends Controller
         $this->ensureAdministrator();
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => [
-                'required',
-                'string',
-                'alpha_dash',
-                'max:50',
-                Rule::unique('users', 'username')->ignore($user->id),
-            ],
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('users', 'email')->ignore($user->id),
-            ],
+            'username' => ['required', 'string', 'regex:/\A[a-z0-9_-]+\z/', 'max:50', Rule::unique('users', 'username')->ignore($user->id),],
+            'email' => ['nullable', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id),],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['required', Rule::in($this->roles())],
         ]);
@@ -144,6 +133,28 @@ class UserController extends Controller
         return redirect()
             ->route('users.show', $user)
             ->with('success', 'Data pengguna berhasil diperbarui.');
+    }
+
+    public function destroy(User $user)
+    {
+        $this->ensureAdministrator();
+
+        if ($user->id === auth()->id()) {
+            return back()->with(
+                'error',
+                'Anda tidak dapat menghapus akun sendiri.'
+            );
+        }
+
+        if ($user->is_active) {
+            return back()->with('error', 'Nonaktifkan akun terlebih dahulu sebelum menghapusnya.');
+        }
+
+        $user->delete();
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Akun pengguna berhasil dihapus.');
     }
 
     public function toggleStatus(User $user)

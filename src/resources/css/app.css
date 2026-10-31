@@ -1,11 +1,11 @@
 @import 'tailwindcss';
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
-/* @import './base/variables.css';
-@import './base/typography.css'; */
+@import './base/variables.css';
+/* @import './base/typography.css'; */
 
 @import './layouts/dashboard.css';
-/* @import './layouts/auth.css'; */
+@import './layouts/auth.css';
 
 @import './components/navbar.css';
 @import './components/sidebar.css';

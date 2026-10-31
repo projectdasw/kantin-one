@@ -115,50 +115,38 @@
 @endphp
 
 <aside class="dashboard-sidebar" id="dashboardSidebar">
-
     <div class="sidebar-brand">
         <div class="brand-icon">
             <i class="fa-solid fa-utensils"></i>
         </div>
-
         <div class="brand-text">
             <span class="brand-name">Kantin<span>.ONE</span></span>
             <small>Management System</small>
         </div>
     </div>
-
     <div class="sidebar-user">
         <div class="sidebar-user-avatar">
             {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
         </div>
-
         <div class="sidebar-user-info">
             <strong>{{ auth()->user()->name }}</strong>
             <small>{{ $role }}</small>
         </div>
     </div>
-
     <div class="sidebar-menu-label">MENU UTAMA</div>
-
     <nav class="sidebar-nav">
         @foreach ($menus as $menu)
-            <a href="{{ $menu['url'] }}"
-               class="sidebar-link {{ request()->is(...$menu['active']) ? 'active' : '' }}"
-               title="{{ $menu['label'] }}">
-
+            <a href="{{ $menu['url'] }}" class="sidebar-link {{ request()->is(...$menu['active']) ? 'active' : '' }}" title="{{ $menu['label'] }}">
                 <i class="{{ $menu['icon'] }}"></i>
-
                 <span>{{ $menu['label'] }}</span>
             </a>
         @endforeach
     </nav>
-
     <div class="sidebar-bottom">
         <a href="#" class="sidebar-link" title="Pengaturan">
             <i class="fa-solid fa-gear"></i>
             <span>Pengaturan</span>
         </a>
-
         <form action="{{ route('logout') }}" method="POST">
             @csrf
 
@@ -168,9 +156,7 @@
             </button>
         </form>
     </div>
-
     <div class="sidebar-version">
         <span>Kantin.ONE v1.0</span>
     </div>
-
 </aside>
