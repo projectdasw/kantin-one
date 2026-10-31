@@ -10,6 +10,12 @@
                 'active' => ['dashboard'],
             ],
             [
+                'label' => 'Aplikasi Pemesanan Kantin',
+                'icon' => 'fa-solid fa-users',
+                'url' => route('orders.index'),
+                'active' => ['orders*'],
+            ],
+            [
                 'label' => 'Manajemen Pengguna',
                 'icon' => 'fa-solid fa-users',
                 'url' => route('users.index'),

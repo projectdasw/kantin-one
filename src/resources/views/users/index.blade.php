@@ -3,20 +3,7 @@
 @section('page-title', 'Manajemen Pengguna')
 @section('page-description', 'Kelola akun dan hak akses pengguna Kantin.ONE.')
 @section('dashboard-content')
-    <div class="container-fluid">
-
-        {{-- Page Header --}}
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-            <div>
-                <h4 class="fw-bold mb-1">Manajemen Pengguna</h4>
-                <p class="text-muted mb-0">
-                    Kelola akun dan hak akses pengguna Kantin.ONE.
-                </p>
-            </div>
-            <a href="{{ route('users.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>Tambah Pengguna
-            </a>
-        </div>
+    <div class="container-fluid p-0">
 
         {{-- Summary --}}
         <div class="row g-3 mb-4">
@@ -54,10 +41,14 @@
 
         {{-- User Table --}}
         <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0 pt-4 px-4">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white border-0">
                 <h5 class="fw-bold mb-0">Daftar Pengguna</h5>
+                <a href="{{ route('users.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i>
+                    <span>Tambah Pengguna</span>
+                </a>
             </div>
-            <div class="card-body px-4">
+            <div class="card-body">
 
                 {{-- Filter --}}
                 <form method="GET" action="{{ route('users.index') }}" class="row g-2 mb-4" id="userSearchForm">

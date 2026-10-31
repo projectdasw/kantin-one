@@ -24,7 +24,11 @@ Route::middleware(['auth', 'prevent.back'])->group(function () {
 
     Route::patch('/users/{user}/status', [UserController::class, 'toggleStatus'])
         ->name('users.toggle-status');
-    
+
+    Route::get('/orders', function () {
+        return view('orders.index');
+    })->name('orders.index');
+
     // Dashboard redirect berdasarkan role
     // Route::get('/dashboard', function () {
     //     return match (auth()->user()->role) {
