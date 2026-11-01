@@ -48,29 +48,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ==========================================
     // LIVE SEARCH, FILTER & PAGINATION
+    // POST REQUEST - NO SENSITIVE DATA IN URL
     // ==========================================
     const searchForm = document.getElementById('userSearchForm');
     const searchInput = document.getElementById('userSearchInput');
     const tableContainer = document.getElementById('usersTableContainer');
+    const resetButton = document.getElementById('userResetFilter');
 
     if (searchForm && searchInput && tableContainer) {
         let searchTimeout;
         let controller;
 
-        async function loadUsers(url) {
+        async function loadUsers(page = 1) {
             if (controller) {
                 controller.abort();
             }
 
             const currentController = new AbortController();
             controller = currentController;
+
+            const formData = new FormData(searchForm);
+
+            // Pagination dikirim melalui POST body
+            formData.set('page', page);
+
             tableContainer.style.opacity = '0.5';
 
             try {
-                const response = await fetch(url, {
+                const response = await fetch(searchForm.action, {
+                    method: 'POST',
                     headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'text/html'
                     },
+                    body: formData,
                     signal: currentController.signal
                 });
 
@@ -84,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (controller !== currentController) return;
 
                 tableContainer.innerHTML = html;
-                window.history.replaceState({}, '', url);
+
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     console.error(error);
@@ -102,44 +113,53 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        function buildSearchUrl() {
-            const url = new URL(searchForm.action, window.location.origin);
-            const formData = new FormData(searchForm);
-
-            formData.forEach((value, key) => {
-                if (value !== '') {
-                    url.searchParams.set(key, value);
-                }
-            });
-
-            // Pencarian baru dimulai dari halaman pertama
-            url.searchParams.delete('page');
-
-            return url.toString();
-        }
-
         // Live Search
         searchInput.addEventListener('input', function () {
             clearTimeout(searchTimeout);
+
             searchTimeout = setTimeout(() => {
-                loadUsers(buildSearchUrl());
+                loadUsers(1);
             }, 350);
         });
 
         // Filter Role dan Status
         searchForm.addEventListener('submit', function (event) {
             event.preventDefault();
+
             clearTimeout(searchTimeout);
-            loadUsers(buildSearchUrl());
+            loadUsers(1);
+        });
+
+        // Reset Filter
+        if (resetButton) {
+            resetButton.addEventListener('click', function () {
+                searchForm.reset();
+
+                clearTimeout(searchTimeout);
+                loadUsers(1);
+            });
+        }
+
+        // Filter otomatis ketika pilihan berubah
+        searchForm.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function () {
+                clearTimeout(searchTimeout);
+                loadUsers(1);
+            });
         });
 
         // Pagination AJAX
         tableContainer.addEventListener('click', function (event) {
             const link = event.target.closest('.pagination a');
+
             if (!link) return;
 
             event.preventDefault();
-            loadUsers(link.href);
+
+            const url = new URL(link.href);
+            const page = url.searchParams.get('page') || 1;
+
+            loadUsers(page);
         });
     }
 
@@ -235,4 +255,86 @@ document.addEventListener('DOMContentLoaded', function () {
             return entities[character];
         });
     }
+
+    // Restore user confirmation
+    document.addEventListener('submit', function (event) {
+        const form = event.target.closest('.restore-user-form');
+        if (!form) return;
+
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Pulihkan Pengguna?',
+            text: `Apakah Anda yakin ingin memulihkan akun ${form.dataset.name}?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Pulihkan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then(result => {
+            if (result.isConfirmed) form.submit();
+        });
+    });
+
+    // Permanent delete confirmation - Double Confirmation
+    document.addEventListener('submit', async function (event) {
+        const form = event.target.closest('.force-delete-user-form');
+        if (!form) return;
+
+        event.preventDefault();
+
+        const name = escapeHtml(form.dataset.name);
+
+        // Confirmation pertama
+        const firstConfirm = await Swal.fire({
+            title: 'Hapus Permanen?',
+            html: `
+                Akun <strong>${name}</strong> akan dihapus permanen.
+                <br><br>
+                <span class="text-danger">
+                    Data tidak dapat dipulihkan kembali!
+                </span>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Lanjutkan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        });
+
+        if (!firstConfirm.isConfirmed) return;
+
+        // Confirmation kedua
+        const secondConfirm = await Swal.fire({
+            title: 'Konfirmasi Terakhir!',
+            html: `
+                Apakah Anda benar-benar yakin ingin menghapus
+                akun <strong>${name}</strong> secara permanen?
+                <br><br>
+                <strong class="text-danger">
+                    Tindakan ini tidak dapat dibatalkan!
+                </strong>
+            `,
+            icon: 'error',
+            input: 'text',
+            inputPlaceholder: 'Ketik HAPUS untuk melanjutkan',
+            inputValidator: (value) => {
+                if (value !== 'HAPUS') {
+                    return 'Ketik HAPUS dengan huruf kapital untuk melanjutkan.';
+                }
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Hapus Permanen',
+            cancelButtonText: 'Batalkan',
+            reverseButtons: true
+        });
+
+        if (secondConfirm.isConfirmed) {
+            form.submit();
+        }
+    });
 });

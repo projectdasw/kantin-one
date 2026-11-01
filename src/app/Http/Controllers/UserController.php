@@ -8,6 +8,12 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Authorization
+    |--------------------------------------------------------------------------
+    */
+
     private function ensureAdministrator(): void
     {
         abort_unless(
@@ -19,42 +25,94 @@ class UserController extends Controller
 
     private function roles(): array
     {
-        return ['administrator', 'canteen_manager', 'tenant',];
+        return [
+            'administrator',
+            'canteen_manager',
+            'tenant',
+        ];
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Selection
+    |--------------------------------------------------------------------------
+    */
+
+    private function selectUser(Request $request, bool $onlyTrashed = false): User
+    {
+        $validated = $request->validate([
+            'user_id' => ['required', 'uuid', 'exists:users,id'],
+        ]);
+
+        $query = $onlyTrashed
+            ? User::onlyTrashed()
+            : User::query();
+
+        return $query->findOrFail($validated['user_id']);
+    }
+
+    private function selectedUser(): User
+    {
+        $userId = session('users.selected_user_id');
+
+        abort_unless($userId, 404, 'Pengguna belum dipilih.');
+
+        return User::findOrFail($userId);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Index, Search & Pagination
+    |--------------------------------------------------------------------------
+    */
 
     public function index(Request $request)
     {
         $this->ensureAdministrator();
 
         $users = User::query()
-            ->when($request->search, function ($query, $search) {
+            ->when($request->input('search'), function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
                         ->orWhere('username', 'like', "%{$search}%");
                 });
             })
-            ->when($request->role, function ($query, $role) {
+            ->when($request->input('role'), function ($query, $role) {
                 $query->where('role', $role);
             })
-            ->when($request->status !== null && $request->status !== '', function ($query) use ($request) {
-                $query->where('is_active', $request->status);
-            })
+            ->when(
+                $request->input('status') !== null &&
+                $request->input('status') !== '',
+                function ($query) use ($request) {
+                    $query->where('is_active', $request->input('status'));
+                }
+            )
             ->latest()
-            ->paginate(10)
-            ->withQueryString();
+            ->paginate(
+                10,
+                ['*'],
+                'page',
+                max(1, (int) $request->input('page', 1))
+            );
 
         $data = [
             'users' => $users,
             'roles' => $this->roles(),
         ];
 
-        if (request()->ajax()) {
-            return view('users.partials.table', $data);
+        if ($request->ajax()) {
+            return view('users.partials.table', compact('users'));
         }
 
         return view('users.index', $data);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create User
+    |--------------------------------------------------------------------------
+    */
 
     public function create()
     {
@@ -68,52 +126,136 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->ensureAdministrator();
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'regex:/\A[a-z0-9_-]+\z/', 'max:50', 'unique:users,username',],
-            'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed',],
-            'role' => ['required', Rule::in($this->roles())],
+            'username' => [
+                'required',
+                'string',
+                'regex:/\A[a-z0-9_-]+\z/',
+                'max:50',
+                'unique:users,username',
+            ],
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+            'role' => [
+                'required',
+                Rule::in($this->roles()),
+            ],
         ]);
 
         $validated['is_active'] = true;
+
         User::create($validated);
+
         return redirect()
             ->route('users.index')
             ->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
-    public function show(User $user)
+    /*
+    |--------------------------------------------------------------------------
+    | User Detail
+    |--------------------------------------------------------------------------
+    */
+
+    public function selectDetail(Request $request)
     {
         $this->ensureAdministrator();
+
+        $user = $this->selectUser($request);
+
+        session()->put('users.selected_user_id', $user->id);
+
+        return redirect()->route('users.show');
+    }
+
+    public function show()
+    {
+        $this->ensureAdministrator();
+
+        $user = $this->selectedUser();
+
         return view('users.show', compact('user'));
     }
 
-    public function edit(User $user)
+    /*
+    |--------------------------------------------------------------------------
+    | Edit User
+    |--------------------------------------------------------------------------
+    */
+
+    public function selectEdit(Request $request)
     {
         $this->ensureAdministrator();
+
+        $user = $this->selectUser($request);
+
+        session()->put('users.selected_user_id', $user->id);
+
+        return redirect()->route('users.edit');
+    }
+
+    public function edit()
+    {
+        $this->ensureAdministrator();
+
+        $user = $this->selectedUser();
+
         return view('users.edit', [
             'user' => $user,
             'roles' => $this->roles(),
         ]);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
         $this->ensureAdministrator();
+
+        $user = $this->selectedUser();
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'regex:/\A[a-z0-9_-]+\z/', 'max:50', Rule::unique('users', 'username')->ignore($user->id),],
-            'email' => ['nullable', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id),],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', Rule::in($this->roles())],
+            'username' => [
+                'required',
+                'string',
+                'regex:/\A[a-z0-9_-]+\z/',
+                'max:50',
+                Rule::unique('users', 'username')->ignore($user->id),
+            ],
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'password' => [
+                'nullable',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+            'role' => [
+                'required',
+                Rule::in($this->roles()),
+            ],
         ]);
 
         if (empty($validated['password'])) {
             unset($validated['password']);
         }
 
-        // Jangan izinkan Administrator terakhir kehilangan role Administrator.
+        // Lindungi Administrator aktif terakhir.
         if (
             $user->is_active &&
             $user->role === 'administrator' &&
@@ -130,41 +272,30 @@ class UserController extends Controller
         }
 
         $user->update($validated);
+
         return redirect()
-            ->route('users.show', $user)
+            ->route('users.show')
             ->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
-    public function destroy(User $user)
+    /*
+    |--------------------------------------------------------------------------
+    | User Status
+    |--------------------------------------------------------------------------
+    */
+
+    public function toggleStatus(Request $request)
     {
         $this->ensureAdministrator();
 
-        if ($user->id === auth()->id()) {
-            return back()->with(
-                'error',
-                'Anda tidak dapat menghapus akun sendiri.'
-            );
-        }
-
-        if ($user->is_active) {
-            return back()->with('error', 'Nonaktifkan akun terlebih dahulu sebelum menghapusnya.');
-        }
-
-        $user->delete();
-
-        return redirect()
-            ->route('users.index')
-            ->with('success', 'Akun pengguna berhasil dihapus.');
-    }
-
-    public function toggleStatus(User $user)
-    {
-        $this->ensureAdministrator();
+        $user = $this->selectUser($request);
 
         if ($user->id === auth()->id()) {
-            return back()->with('error', 'Anda tidak dapat menonaktifkan akun sendiri.');
+            return back()
+                ->with('error', 'Anda tidak dapat mengubah status akun sendiri.');
         }
 
+        // Lindungi Administrator aktif terakhir.
         if (
             $user->is_active &&
             $user->role === 'administrator' &&
@@ -172,7 +303,8 @@ class UserController extends Controller
                 ->where('is_active', true)
                 ->count() <= 1
         ) {
-            return back()->with('error', 'Administrator aktif terakhir tidak dapat dinonaktifkan.');
+            return back()
+                ->with('error', 'Administrator aktif terakhir tidak dapat dinonaktifkan.');
         }
 
         $user->update([
@@ -184,5 +316,161 @@ class UserController extends Controller
             : 'Akun pengguna berhasil dinonaktifkan.';
 
         return back()->with('success', $message);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Soft Delete
+    |--------------------------------------------------------------------------
+    */
+
+    public function destroy(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $user = $this->selectUser($request);
+
+        if ($user->id === auth()->id()) {
+            return back()
+                ->with('error', 'Anda tidak dapat menghapus akun sendiri.');
+        }
+
+        if ($user->is_active) {
+            return back()
+                ->with('error', 'Nonaktifkan akun terlebih dahulu sebelum menghapusnya.');
+        }
+
+        $user->delete();
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Akun pengguna berhasil dihapus.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Trash, Restore & Force Delete
+    |--------------------------------------------------------------------------
+    */
+
+    public function trash()
+    {
+        $this->ensureAdministrator();
+
+        $users = User::onlyTrashed()
+            ->latest('deleted_at')
+            ->paginate(10);
+
+        return view('users.trash', compact('users'));
+    }
+
+    public function restore(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $user = $this->selectUser($request, true);
+
+        $user->restore();
+
+        return redirect()
+            ->route('users.trash')
+            ->with('success', 'Akun pengguna berhasil dipulihkan.');
+    }
+
+    public function forceDelete(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $user = $this->selectUser($request, true);
+
+        $userId = $user->id;
+
+        $user->forceDelete();
+
+        // Bersihkan session jika pengguna yang dihapus
+        // masih tersimpan sebagai pengguna terpilih.
+        if (session('users.selected_user_id') === $userId) {
+            session()->forget('users.selected_user_id');
+        }
+
+        if (session('users.reset_password_user_id') === $userId) {
+            session()->forget('users.reset_password_user_id');
+        }
+
+        return redirect()
+            ->route('users.trash')
+            ->with('success', 'Akun pengguna berhasil dihapus permanen.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reset Password
+    |--------------------------------------------------------------------------
+    */
+
+    public function startPasswordReset(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $user = $this->selectUser($request);
+
+        // Simpan target reset password.
+        session()->put('users.reset_password_user_id', $user->id);
+
+        // Agar setelah reset dapat kembali ke detail pengguna yang sama.
+        session()->put('users.selected_user_id', $user->id);
+
+        return redirect()->route('users.resetpassword.edit');
+    }
+
+    public function editPassword()
+    {
+        $this->ensureAdministrator();
+
+        $userId = session('users.reset_password_user_id');
+
+        abort_unless(
+            $userId,
+            404,
+            'Target Reset Password tidak ditemukan.'
+        );
+
+        $user = User::findOrFail($userId);
+
+        return view('users.resetpassword', compact('user'));
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $userId = session('users.reset_password_user_id');
+
+        abort_unless(
+            $userId,
+            404,
+            'Target Reset Password tidak ditemukan.'
+        );
+
+        $user = User::findOrFail($userId);
+
+        $validated = $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+        ]);
+
+        $user->update([
+            'password' => $validated['password'],
+        ]);
+
+        session()->forget('users.reset_password_user_id');
+
+        return redirect()
+            ->route('users.show')
+            ->with('success', 'Password pengguna berhasil diperbarui.');
     }
 }

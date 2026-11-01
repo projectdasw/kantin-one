@@ -1,8 +1,19 @@
 @extends('layouts.dashboard')
 @section('title', 'Dashboard')
 @section('page-title', 'Dashboard')
-@section('page-description', 'Ringkasan aktivitas dan informasi Kantin.ONE.')
+@section('page-description', 'Selamat datang di Kantin.ONE Management System.')
 @section('dashboard-content')
+    @section('page-actions')
+        <a href="{{ route('users.create') }}" class="btn btn-primary">
+            <i class="fa-solid fa-user-plus me-1"></i>
+            Tambah Pengguna
+        </a>
+
+        <a href="#" class="btn btn-outline-primary">
+            <i class="fa-solid fa-file-lines me-1"></i>
+            Lihat Laporan
+        </a>
+    @endsection
     <div class="row g-4">
 
         {{-- Total Tenant --}}

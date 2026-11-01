@@ -9,60 +9,69 @@ Route::get('/', function () {
         : redirect()->route('login');
 });
 
-Route::middleware(['auth', 'prevent.back'])->group(function () {
-
+Route::middleware(['auth', 'prevent.back'])->group(function () {    
     Route::get('/dashboard', function () {
         return view('dashboard.index');
     })->name('dashboard');
 
-    // User Management
-    Route::resource('users', UserController::class)
-        ->except(['destroy']);
-
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])
-        ->name('users.destroy');
-
-    Route::patch('/users/{user}/status', [UserController::class, 'toggleStatus'])
-        ->name('users.toggle-status');
-
     Route::get('/orders', function () {
         return view('orders.index');
     })->name('orders.index');
+    
+    // User Management
+    Route::post('/users/search', [UserController::class, 'index'])
+    ->name('users.search');
 
-    // Dashboard redirect berdasarkan role
-    // Route::get('/dashboard', function () {
-    //     return match (auth()->user()->role) {
-    //         'administrator' => redirect()->route('admin.dashboard'),
-    //         'canteen_manager' => redirect()->route('manager.dashboard'),
-    //         'tenant' => redirect()->route('tenant.dashboard'),
-    //         default => abort(403),
-    //     };
-    // })->name('dashboard');
+    // Index & Create
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users.index');
 
-    // Administrator
-    // Route::middleware('role:administrator')
-    //     ->prefix('admin')
-    //     ->name('admin.')
-    //     ->group(function () {
-    //         Route::view('/dashboard', 'dashboards.admin')
-    //             ->name('dashboard');
-    //     });
+    Route::get('/users/create', [UserController::class, 'create'])
+        ->name('users.create');
 
-    // Pengelola Kantin
-    // Route::middleware('role:canteen_manager')
-    //     ->prefix('manager')
-    //     ->name('manager.')
-    //     ->group(function () {
-    //         Route::view('/dashboard', 'dashboards.manager')
-    //             ->name('dashboard');
-    //     });
+    Route::post('/users', [UserController::class, 'store'])
+        ->name('users.store');
 
-    // Tenant
-    // Route::middleware('role:tenant')
-    //     ->prefix('tenant')
-    //     ->name('tenant.')
-    //     ->group(function () {
-    //         Route::view('/dashboard', 'dashboards.tenant')
-    //             ->name('dashboard');
-    //     });
+    // Detail & Edit: pilih pengguna melalui POST
+    Route::post('/users/detail', [UserController::class, 'selectDetail'])
+        ->name('users.select-detail');
+
+    Route::get('/users/detail', [UserController::class, 'show'])
+        ->name('users.show');
+
+    Route::post('/users/edit', [UserController::class, 'selectEdit'])
+        ->name('users.select-edit');
+
+    Route::get('/users/edit', [UserController::class, 'edit'])
+        ->name('users.edit');
+
+    Route::put('/users/edit', [UserController::class, 'update'])
+        ->name('users.update');
+
+    // Status & Delete
+    Route::post('/users/status', [UserController::class, 'toggleStatus'])
+        ->name('users.toggle-status');
+
+    Route::post('/users/delete', [UserController::class, 'destroy'])
+        ->name('users.destroy');
+
+    // Trash, Restore & Permanent Delete
+    Route::get('/users/trash', [UserController::class, 'trash'])
+        ->name('users.trash');
+
+    Route::post('/users/restore', [UserController::class, 'restore'])
+        ->name('users.restore');
+
+    Route::post('/users/forcedelete', [UserController::class, 'forceDelete'])
+        ->name('users.force-delete');
+
+    // Reset Password
+    Route::post('/users/resetpassword/start', [UserController::class, 'startPasswordReset'])
+        ->name('users.resetpassword.start');
+
+    Route::get('/users/resetpassword', [UserController::class, 'editPassword'])
+        ->name('users.resetpassword.edit');
+
+    Route::patch('/users/resetpassword', [UserController::class, 'updatePassword'])
+        ->name('users.resetpassword.update');
 });

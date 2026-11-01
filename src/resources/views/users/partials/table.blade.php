@@ -10,20 +10,25 @@
                 <th class="text-center">Aksi</th>
             </tr>
         </thead>
+
         <tbody>
             @forelse ($users as $user)
                 <tr>
                     <td>{{ $users->firstItem() + $loop->index }}</td>
+
                     <td>
                         <div class="fw-semibold">{{ $user->name }}</div>
                         <small class="text-muted">{{ $user->email ?: '—' }}</small>
                     </td>
+
                     <td>{{ $user->username }}</td>
+
                     <td>
                         <span class="badge bg-info-subtle text-info">
                             {{ ucwords(str_replace('_', ' ', $user->role)) }}
                         </span>
                     </td>
+
                     <td>
                         @if ($user->is_active)
                             <span class="badge bg-success-subtle text-success">Aktif</span>
@@ -31,24 +36,57 @@
                             <span class="badge bg-danger-subtle text-danger">Nonaktif</span>
                         @endif
                     </td>
+
                     <td>
                         <div class="d-flex justify-content-center gap-1">
-                            <a href="{{ route('users.show', $user) }}"
-                               class="btn btn-sm btn-light" title="Detail">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="{{ route('users.edit', $user) }}"
-                               class="btn btn-sm btn-light" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
+
+                            {{-- Detail --}}
+                            <form action="{{ route('users.select-detail') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $user->id }}">
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-light"
+                                        title="Detail">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </form>
+
+                            {{-- Edit --}}
+                            <form action="{{ route('users.select-edit') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $user->id }}">
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-light"
+                                        title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </form>
+
+                            {{-- Reset Password --}}
+                            <form action="{{ route('users.resetpassword.start') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $user->id }}">
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="Reset Password">
+                                    <i class="fas fa-key"></i>
+                                </button>
+                            </form>
+
                             @if ($user->id !== auth()->id())
-                                <form action="{{ route('users.toggle-status', $user) }}"
+
+                                {{-- Toggle Status --}}
+                                <form action="{{ route('users.toggle-status') }}"
                                       method="POST"
                                       class="status-form"
                                       data-name="{{ $user->name }}"
                                       data-active="{{ $user->is_active ? '1' : '0' }}">
+
                                     @csrf
-                                    @method('PATCH')
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
 
                                     <button type="submit"
                                             class="btn btn-sm btn-light {{ $user->is_active ? 'text-danger' : 'text-success' }}"
@@ -56,13 +94,17 @@
                                         <i class="fas {{ $user->is_active ? 'fa-user-slash' : 'fa-user-check' }}"></i>
                                     </button>
                                 </form>
+
                                 @if (!$user->is_active)
-                                    <form action="{{ route('users.destroy', $user) }}"
-                                        method="POST"
-                                        class="delete-user-form"
-                                        data-name="{{ $user->name }}">
+
+                                    {{-- Soft Delete --}}
+                                    <form action="{{ route('users.destroy') }}"
+                                          method="POST"
+                                          class="delete-user-form"
+                                          data-name="{{ $user->name }}">
+
                                         @csrf
-                                        @method('DELETE')
+                                        <input type="hidden" name="user_id" value="{{ $user->id }}">
 
                                         <button type="submit"
                                                 class="btn btn-sm btn-light text-danger"
@@ -70,8 +112,10 @@
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+
                                 @endif
                             @endif
+
                         </div>
                     </td>
                 </tr>
@@ -86,9 +130,13 @@
         </tbody>
     </table>
 </div>
+
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
     <small class="text-muted">
-        Menampilkan {{ $users->firstItem() ?? 0 }} sampai {{ $users->lastItem() ?? 0 }} dari {{ $users->total() }} pengguna
+        Menampilkan {{ $users->firstItem() ?? 0 }}
+        sampai {{ $users->lastItem() ?? 0 }}
+        dari {{ $users->total() }} pengguna
     </small>
+
     {{ $users->links() }}
 </div>

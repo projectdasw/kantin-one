@@ -6,10 +6,25 @@
     <main class="dashboard-main">
         @include('partials.navbar')
         <div class="dashboard-content">
-            <div class="page-heading">
-                <h1>@yield('page-title', 'Dashboard')</h1>
-                <p>@yield('page-description', 'Selamat datang di Kantin.ONE Management System.')</p>
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    {{-- Page Information --}}
+                    <div class="d-flex flex-column">
+                        <h3 class="fw-bold">@yield('page-title')</h3>
+                        <span class="text-muted">@yield('page-description')</span>
+                        
+                    </div>
+
+                    {{-- Page Actions --}}
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        @yield('page-actions')
+                    </div>
+                </div>
             </div>
+
+            {{-- Quick Actions --}}
+            @yield('button-list')
+
             <div class="flex-grow-1">
                 @yield('dashboard-content')
             </div>
