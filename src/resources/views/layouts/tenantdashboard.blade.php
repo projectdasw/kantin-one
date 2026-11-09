@@ -4,14 +4,13 @@
         $role = auth()->user()->role ?? '';
     @endphp
     
-    <div class="container vh-100 d-flex flex-column justify-content-center p-0">
-        <div class="container bg-white">
+    <div class="container-fluid p-0 mb-4">
+        <div class="sticky-top bg-white">
             @include('partials.tenant_dashboard.navbar')
-            <hr class="m-0">
         </div>
-        <div class="container p-2 bg-white">
+        <div class="container p-0">
             <div class="row justify-content-around align-items-center p-3">
-                <div class="col-5 d-flex align-items-start">
+                <div class="col-6 d-flex align-items-start">
                     <span class="text-bg-primary bg-gradient p-2 fs-4 rounded-3">
                         <i class="fa-solid fa-store"></i>
                     </span>
@@ -22,7 +21,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="col-5 d-flex justify-content-end">
+                <div class="col-6 d-flex justify-content-end gap-2">
                     @yield('buttonlist_dashboard')
                     @yield('buttonlist_products')
                     @yield('buttonlist_sales')
@@ -30,7 +29,7 @@
             </div>
         </div>
 
-        <div class="container px-5 pb-5 bg-white">
+        <div class="container-fluid">
             @yield('tenant-dashboard-content')
         </div>
     </div>
