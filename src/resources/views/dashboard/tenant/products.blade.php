@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Ketersediaan Produk')
-
 @section('content')
 <div class="tenant-products-page">
 

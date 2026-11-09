@@ -233,10 +233,8 @@ Route::middleware(['auth', 'prevent.back', 'role:administrator'])->group(functio
 
     Route::post('/products/force-delete', [ProductController::class, 'forceDelete'])
         ->name('products.force-delete');
-
-    /* -------------------------------------------------------------------------- */
-
 });
+/* -------------------------------------------------------------------------- */
 
 /* Dashboard - Kepala Pengelola Tenant */
 /* -------------------------------------------------------------------------- */
@@ -260,7 +258,7 @@ Route::middleware(['auth', 'prevent.back', 'role:canteen_manager'])->group(funct
     Route::get('/tenant/produk', function () {
         return view('orders.tenant.products');
     })->name('tenant.products.index');
-    });
+});
 /* -------------------------------------------------------------------------- */
 
 /* Dashboard - Kepala Tenant & Pegawai Tenant */
@@ -269,4 +267,20 @@ Route::middleware(['auth', 'prevent.back', 'role:tenant,tenant_employee'])->grou
     Route::get('/tenant/dashboard', function () {
         return view('dashboard.tenant.index');
     })->name('dashboard.tenant');
+
+    Route::get('/tenant/produk_tenant', function () {
+        return view('dashboard.tenant.products');
+    })->name('tenant.produk_tenant');
+
+    Route::get('/tenant/penjualan_tenant', function () {
+        return view('dashboard.tenant.sales');
+    })->name('tenant.penjualan_tenant');
+
+    Route::get('/tenant/products', function () {
+        return view('dashboard.tenant.products.index');
+    })->name('tenant.products');
+
+    Route::get('/tenant/sales', function () {
+        return view('dashboard.tenant.sales.index');
+    })->name('tenant.sales');
 });

@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Verifikasi Penjualan')
-
 @section('content')
 <div class="tenant-sales-page">
 
@@ -35,7 +33,7 @@
                 <p>Periksa dan verifikasi total penjualan tenant.</p>
             </div>
 
-            <a href="{{ route('tenant.orders.index') }}" class="btn-back-orders">
+            <a href="{{ route('dashboard.tenant') }}" class="btn-back-orders">
                 <i class="fa-solid fa-arrow-left"></i>
                 Kembali ke Pesanan
             </a>
