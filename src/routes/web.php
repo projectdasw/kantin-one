@@ -22,34 +22,34 @@ Route::get('/', function () {
 /* Order Page - Customer */
 /* -------------------------------------------------------------------------- */
 Route::get('/orders', function () {
-    return view('orders.customer.index');
-})->name('customer.orders.index');
+    return view('customer.index');
+})->name('customer.index');
 
 Route::get('/pesan/tenant', function () {
-    return view('orders.customer.tenants');
-})->name('customer.orders.tenants');
+    return view('customer.tenants');
+})->name('customer.tenants');
 
 Route::get('/pesan/tenant/{tenant}', function ($tenant) {
-    return view('orders.customer.products', [
+    return view('customer.products', [
         'tenantSlug' => $tenant
     ]);
-})->name('customer.orders.products');
+})->name('customer.products');
 
 Route::get('/pesan/keranjang', function () {
-    return view('orders.customer.cart');
-})->name('customer.orders.cart');
+    return view('customer.cart');
+})->name('customer.cart');
 
 Route::get('/pesan/checkout', function () {
-    return view('orders.customer.checkout');
-})->name('customer.orders.checkout');
+    return view('customer.checkout');
+})->name('customer.checkout');
 
 Route::get('/pesan/konfirmasi', function () {
-    return view('orders.customer.confirmation');
-})->name('customer.orders.confirmation');
+    return view('customer.confirmation');
+})->name('customer.confirmation');
 
 Route::get('/pesan/status', function () {
-    return view('orders.customer.status');
-})->name('customer.orders.status');
+    return view('customer.status');
+})->name('customer.status');
 /* -------------------------------------------------------------------------- */
 
 

@@ -1,0 +1,65 @@
+/* ==========================================
+   KANTIN.ONE - GLOBAL TYPOGRAPHY
+   Font: Plus Jakarta Sans
+========================================== */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+
+/* ==========================================
+   FONT VARIABLES
+========================================== */
+
+:root {
+    --font-primary: 'Plus Jakarta Sans', sans-serif;
+
+    --bs-font-sans-serif: 'Plus Jakarta Sans', sans-serif;
+    --bs-body-font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+
+/* ==========================================
+   GLOBAL FONT
+========================================== */
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+option,
+optgroup {
+    font-family: var(--font-primary) !important;
+}
+
+
+/* ==========================================
+   BOOTSTRAP COMPONENTS
+========================================== */
+
+.btn,
+.form-control,
+.form-select,
+.dropdown-menu,
+.dropdown-item,
+.modal,
+.tooltip,
+.popover,
+.table {
+    font-family: var(--font-primary) !important;
+}
+
+
+/* ==========================================
+   SWEETALERT2
+========================================== */
+
+.swal2-popup,
+.swal2-title,
+.swal2-html-container,
+.swal2-confirm,
+.swal2-cancel {
+    font-family: var(--font-primary) !important;
+}
