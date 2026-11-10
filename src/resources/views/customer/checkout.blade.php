@@ -8,7 +8,7 @@
 
         {{-- HEADER --}}
         <header class="order-header">
-            <a href="{{ route('customer.orders.tenants') }}" class="order-brand">
+            <a href="{{ route('customer.tenants') }}" class="order-brand">
                 <span class="brand-icon">
                     <i class="fa-solid fa-utensils"></i>
                 </span>
@@ -23,7 +23,7 @@
 
         {{-- HEADING --}}
         <section class="checkout-heading">
-            <a href="{{ route('customer.orders.cart') }}" class="back-link">
+            <a href="{{ route('customer.cart') }}" class="back-link">
                 <i class="fa-solid fa-arrow-left me-1"></i>
                 Kembali ke Keranjang
             </a>
