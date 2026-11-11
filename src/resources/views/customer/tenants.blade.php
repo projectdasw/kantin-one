@@ -34,8 +34,8 @@
                     <div class="card border-0 shadow-sm rounded-4 mb-3">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div class="d-flex flex-row align-items-center">
-                                <span class="bg-light px-2 py-1 fs-4 rounded-3 me-3 border-0">
-                                    <i class="fa-solid fa-location-dot fs-5" style="color: var(--primary);"></i>
+                                <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
+                                    <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
                                 </span>
                                 <div>
                                     <span class="m-0" style="color: var(--text-muted); font-size: 12px;">Lokasi Pemesanan</span>

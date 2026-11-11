@@ -2,7 +2,7 @@
 @section('title', 'Keranjang Belanja')
 @section('customer-content')
     <div class="container p-0 mb-3">
-        <div class="container d-flex justify-content-between align-items-center mb-3">
+        <div class="container d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <h3 class="bg-light px-2 py-1 rounded-3 me-3 border-0">
                     <i class="fa-solid fa-basket-shopping" style="color: var(--primary);"></i>
@@ -22,43 +22,62 @@
             </button>
         </div>
         <div class="container p-0">
-            <div class="card border-0 rounded-4 shadow-sm position-relative">
-                <!-- <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge d-flex justify-content-center align-items-center text-success
-                        bg-white border border-1">
-                        <span class="small">Tersedia</span>
-                    </span>
-                </div> -->
-                <div class="card-header border-0 bg-success-subtle">
-                    <span class="fw-bold text-success m-0" style="font-size: 12px;">
-                        Kantin ini masih buka pemesanan
-                    </span>
-                </div>
-                <div class="card-body">
-                    <img src="{{ asset('img-dummy/supermarket.png') }}" class="card-img-top w-25" alt="image/png">
-                    <h6 class="card-title fw-bold mb-2">Produk 1</h6>
-                    <p class="card-text text-muted small m-0">
-                        Aneka makanan khas nusantara dengan cita rasa rumahan.
-                    </p>
-                    <hr>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="fw-bold">Rp. 999.999</h6>
-                        <div class="d-flex justify-content-center align-items-center gap-3">
-                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
-                                <i class="fa-solid fa-minus"></i>
-                            </button>
-                            <span class="fw-bold">0</span>
-                            <button type="button" class="btn btn-sm btn-success bg-gradient">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
+            <div class="row g-4">
+                <div class="col-8">
+                    <div class="card border-0 rounded-4 shadow-sm position-relative">
+                        <!-- <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge d-flex justify-content-center align-items-center text-success
+                                bg-white border border-1">
+                                <span class="small">Tersedia</span>
+                            </span>
+                        </div> -->
+                        <div class="card-header border-0 bg-success-subtle">
+                            <span class="fw-bold text-success m-0" style="font-size: 12px;">
+                                Kantin ini masih buka pemesanan
+                            </span>
                         </div>
-                    </div>                                
+                        <div class="card-body">
+                            <div class="d-flex flex-row align-items-center">
+                                <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
+                                    <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
+                                </span>
+                                <h6 class="fw-bold m-0">Kantin 1</h6>
+                            </div>
+                            <img src="{{ asset('img-dummy/supermarket.png') }}" class="card-img-top w-25" alt="image/png">
+                            <h6 class="card-title fw-bold mb-2">Produk 1</h6>
+                            <p class="card-text text-muted small m-0">
+                                Aneka makanan khas nusantara dengan cita rasa rumahan.
+                            </p>
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold">Rp. 999.999</h6>
+                                <div class="d-flex justify-content-center align-items-center gap-3">
+                                    <button type="button" class="btn btn-sm btn-danger bg-gradient">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                    <span class="fw-bold">0</span>
+                                    <button type="button" class="btn btn-sm btn-success bg-gradient">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>                                
+                        </div>
+                        <div class="card-footer border-0 bg-danger-subtle">
+                            <span class="fw-bold text-danger" style="font-size: 12px;">
+                                Segera lakukan pemesanan pada kantin ini sebelum dari pihak kantin
+                                menutup secara tiba-tiba
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-header border-0 bg-danger-subtle">
-                    <span class="fw-bold text-danger" style="font-size: 12px;">
-                        Segera lakukan pemesanan pada kantin ini sebelum dari pihak kantin
-                        menutup secara tiba-tiba
-                    </span>
+                <div class="col-4">
+                    <div class="card">
+                        <img src="..." class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
