@@ -1,9 +1,10 @@
-
 services:
   kantin-one:
     build:
       context: .
       dockerfile: Dockerfile
+
+    image: kantin-one:latest
 
     container_name: kantin-one-app
 
@@ -16,6 +17,33 @@ services:
 
     volumes:
       - ./src:/var/www/html
+
+    networks:
+      - kantin-network
+
+  queue-worker:
+    image: kantin-one:latest
+    container_name: kantin-one-worker
+
+    restart: unless-stopped
+
+    working_dir: /var/www/html
+
+    command:
+      - php
+      - artisan
+      - queue:work
+      - database
+      - --sleep=3
+      - --tries=3
+      - --timeout=60
+      - --memory=128
+
+    volumes:
+      - ./src:/var/www/html
+
+    mem_limit: 192m
+    cpus: 0.50
 
     networks:
       - kantin-network
