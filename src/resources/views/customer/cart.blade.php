@@ -22,45 +22,154 @@
             </button>
         </div>
         <div class="container p-0">
-            <div class="row g-4">
-                <div class="col-8">
-                    <div class="card border-0 rounded-4 shadow-sm position-relative">
-                        <!-- <div class="position-absolute top-0 end-0 m-3">
-                            <span class="badge d-flex justify-content-center align-items-center text-success
-                                bg-white border border-1">
-                                <span class="small">Tersedia</span>
-                            </span>
-                        </div> -->
+            <div class="row flex-wrap g-3">
+                <div class="col">
+                    <div class="card border-0 shadow-sm mb-3">
                         <div class="card-header border-0 bg-success-subtle">
                             <span class="fw-bold text-success m-0" style="font-size: 12px;">
                                 Kantin ini masih buka pemesanan
                             </span>
                         </div>
                         <div class="card-body">
-                            <div class="d-flex flex-row align-items-center">
+                            <div class="d-flex flex-row align-items-center mb-2">
                                 <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
                                     <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
                                 </span>
                                 <h6 class="fw-bold m-0">Kantin 1</h6>
                             </div>
-                            <img src="{{ asset('img-dummy/supermarket.png') }}" class="card-img-top w-25" alt="image/png">
-                            <h6 class="card-title fw-bold mb-2">Produk 1</h6>
-                            <p class="card-text text-muted small m-0">
-                                Aneka makanan khas nusantara dengan cita rasa rumahan.
-                            </p>
-                            <hr>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="fw-bold">Rp. 999.999</h6>
-                                <div class="d-flex justify-content-center align-items-center gap-3">
-                                    <button type="button" class="btn btn-sm btn-danger bg-gradient">
-                                        <i class="fa-solid fa-minus"></i>
-                                    </button>
-                                    <span class="fw-bold">0</span>
-                                    <button type="button" class="btn btn-sm btn-success bg-gradient">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </button>
-                                </div>
-                            </div>                                
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div class="d-flex justify-content-start align-items-center gap-3">
+                                        <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
+                                            alt="image/png" style="width: 100px; height: 70px;">
+                                        <div class="d-flex flex-column gap-1">
+                                            <h6 class="fw-bold m-0">
+                                                Produk 1
+                                                <span class="badge rounded-pill text-bg-success ms-1">Tersedia</span>
+                                            </h6>
+                                            <span class="fw-bold small" style="word-spacing: 4px;">Rp999.999</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex justify-content-center align-items-center gap-3 my-2">
+                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+                                            <span class="fw-bold">0</span>
+                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div class="d-flex justify-content-start align-items-center gap-3">
+                                        <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
+                                            alt="image/png" style="width: 100px; height: 70px;">
+                                        <div class="d-flex flex-column gap-1">
+                                            <h6 class="fw-bold m-0">
+                                                Produk 2
+                                                <span class="badge rounded-pill text-bg-danger ms-1">Tidak Tersedia</span>
+                                            </h6>
+                                            <span class="fw-bold small" style="word-spacing: 4px;">Rp999.999</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex justify-content-center align-items-center gap-3 my-2">
+                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+                                            <span class="fw-bold">0</span>
+                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>                           
+                        </div>
+                        <div class="card-footer border-0 bg-danger-subtle">
+                            <span class="fw-bold text-danger" style="font-size: 12px;">
+                                Segera lakukan pemesanan pada kantin ini sebelum dari pihak kantin
+                                menutup secara tiba-tiba
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header border-0 bg-success-subtle">
+                            <span class="fw-bold text-success m-0" style="font-size: 12px;">
+                                Kantin ini masih buka pemesanan
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-row align-items-center mb-2">
+                                <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
+                                    <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
+                                </span>
+                                <h6 class="fw-bold m-0">Kantin 1</h6>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div class="d-flex justify-content-start align-items-center gap-3">
+                                        <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
+                                            alt="image/png" style="width: 100px; height: 70px;">
+                                        <div class="d-flex flex-column gap-1">
+                                            <h6 class="fw-bold m-0">
+                                                Produk 1
+                                                <span class="badge rounded-pill text-bg-success ms-1">Tersedia</span>
+                                            </h6>
+                                            <span class="fw-bold small" style="word-spacing: 4px;">Rp999.999</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex justify-content-center align-items-center gap-3 my-2">
+                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+                                            <span class="fw-bold">0</span>
+                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div class="d-flex justify-content-start align-items-center gap-3">
+                                        <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
+                                            alt="image/png" style="width: 100px; height: 70px;">
+                                        <div class="d-flex flex-column gap-1">
+                                            <h6 class="fw-bold m-0">
+                                                Produk 2
+                                                <span class="badge rounded-pill text-bg-danger ms-1">Tidak Tersedia</span>
+                                            </h6>
+                                            <span class="fw-bold small" style="word-spacing: 4px;">Rp999.999</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex justify-content-center align-items-center gap-3 my-2">
+                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+                                            <span class="fw-bold">0</span>
+                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>                           
                         </div>
                         <div class="card-footer border-0 bg-danger-subtle">
                             <span class="fw-bold text-danger" style="font-size: 12px;">
@@ -70,12 +179,57 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="card">
-                        <img src="..." class="card-img-top" alt="...">
+                <div class="col">
+                    <div class="card border-0 shadow-sm px-2 sticky-top z-0" style="top: 100px;">
                         <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <h6 class="fw-bold m-0">Ringkasan Pesanan</h6>
+                            <hr class="mb-2">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold small m-0">Kantin 1</h6>
+                                        <h6 class="fw-bold small m-0">Subtotal</h6>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="text-muted small m-0">Produk 1</h6>
+                                        <h6 class="text-muted small m-0">Rp. 999.999</h6>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="text-muted small m-0">Produk 2</h6>
+                                        <h6 class="text-muted small m-0">Rp. 999.999</h6>
+                                    </div>
+                                </li>
+                                <li class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold small m-0">Kantin 2</h6>
+                                        <h6 class="fw-bold small m-0">Subtotal</h6>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="text-muted small m-0">Produk 1</h6>
+                                        <h6 class="text-muted small m-0">Rp. 999.999</h6>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="text-muted small m-0">Produk 2</h6>
+                                        <h6 class="text-muted small m-0">Rp. 999.999</h6>
+                                    </div>
+                                </li>
+                            </ul>
+                            <hr>
+                            <div class="d-flex flex-column mb-4">
+                                <h6 class="fw-bold">Total Pembayaran</h6>
+                                <h4 class="fw-bold m-0" style="color: var(--primary);">Rp. 999.999</h4>
+                            </div>
+                            <div class="alert alert-warning m-0" role="alert" style="font-size: 12px;">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>Pembayaran dilakukan dalam satu transaksi untuk seluruh kantin pilihanmu</span>
+                            </div>
+                            <hr>
+                            <button type="button" class="btn btn-primary w-100">
+                                <span class="float-start">Pesan</span>
+                                <span class="float-end">
+                                    <i class="fa-solid fa-arrow-right-long"></i>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
