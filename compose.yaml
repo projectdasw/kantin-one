@@ -18,6 +18,17 @@ services:
     volumes:
       - ./src:/var/www/html
 
+    healthcheck:
+      test:
+        - CMD
+        - php
+        - -r
+        - "$$context = stream_context_create(['http' => ['ignore_errors' => true, 'timeout' => 4]]); $$body = @file_get_contents('http://127.0.0.1/up', false, $$context); exit(isset($$http_response_header[0]) && str_contains($$http_response_header[0], ' 200 ') ? 0 : 1);"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
     networks:
       - kantin-network
 
