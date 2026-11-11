@@ -3,8 +3,8 @@
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (! Auth::check()) {
@@ -31,7 +31,7 @@ Route::get('/pesan/tenant', function () {
 
 Route::get('/pesan/tenant/{tenant}', function ($tenant) {
     return view('customer.products', [
-        'tenantSlug' => $tenant
+        'tenantSlug' => $tenant,
     ]);
 })->name('customer.products');
 
@@ -51,7 +51,6 @@ Route::get('/pesan/status', function () {
     return view('customer.status');
 })->name('customer.status');
 /* -------------------------------------------------------------------------- */
-
 
 Route::middleware(['auth', 'prevent.back', 'role:administrator'])->group(function () {
 
