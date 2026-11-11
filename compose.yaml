@@ -74,6 +74,28 @@ services:
 
     networks:
       - kantin-network
+  
+  scheduler:
+    image: kantin-one:latest
+    container_name: kantin-one-scheduler
+
+    restart: unless-stopped
+
+    working_dir: /var/www/html
+
+    command:
+      - php
+      - artisan
+      - schedule:work
+
+    volumes:
+      - ./src:/var/www/html
+
+    mem_limit: 128m
+    cpus: 0.25
+
+    networks:
+      - kantin-network
 
 networks:
   kantin-network:
