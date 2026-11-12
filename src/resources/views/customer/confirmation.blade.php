@@ -6,7 +6,7 @@
 <div class="confirmation-page">
 
     <header class="confirmation-header">
-        <a href="{{ route('customer.orders.index') }}" class="confirmation-brand">
+        <a href="{{ route('customer.index') }}" class="confirmation-brand">
             <span class="brand-icon">
                 <i class="fa-solid fa-utensils"></i>
             </span>
@@ -131,12 +131,12 @@
         </section>
 
         <div class="confirmation-actions">
-            <a href="{{ route('customer.orders.status') }}" class="btn-back-home">
+            <a href="{{ route('customer.status') }}" class="btn-back-home">
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 Lihat Status Pesanan
             </a>
 
-            <a href="{{ route('customer.orders.index') }}" class="btn-back-home">
+            <a href="{{ route('customer.index') }}" class="btn-back-home">
                 <i class="fa-solid fa-house"></i>
                 Kembali ke Beranda
             </a>

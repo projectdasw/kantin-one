@@ -47,6 +47,10 @@ Route::get('/pesan/konfirmasi', function () {
     return view('customer.confirmation');
 })->name('customer.confirmation');
 
+Route::get('/pesan/bayar', function () {
+    return view('customer.pay');
+})->name('customer.pay');
+
 Route::get('/pesan/status', function () {
     return view('customer.status');
 })->name('customer.status');

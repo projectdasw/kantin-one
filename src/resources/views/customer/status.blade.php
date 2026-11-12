@@ -6,7 +6,7 @@
 <div class="order-status-page">
 
     <header class="order-status-header">
-        <a href="{{ route('customer.orders.index') }}" class="status-brand">
+        <a href="{{ route('customer.index') }}" class="status-brand">
             <span class="brand-icon">
                 <i class="fa-solid fa-utensils"></i>
             </span>
@@ -90,7 +90,7 @@
         </section>
 
         <div class="status-page-actions">
-            <a href="{{ route('customer.orders.index') }}" class="btn-status-home">
+            <a href="{{ route('customer.index') }}" class="btn-status-home">
                 <i class="fa-solid fa-house"></i>
                 Kembali ke Beranda
             </a>
