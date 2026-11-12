@@ -1,6 +1,15 @@
 FROM php:8.4-apache
 
+# OPcache Configuration
 COPY docker/php/conf.d/99-kantin-one-opcache.ini /usr/local/etc/php/conf.d/99-kantin-one-opcache.ini
+
+# Apache MPM Prefork Configuration
+COPY docker/apache/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
+
+# Apache Global Configuration
+COPY docker/apache/conf.d/99-kantin-one.conf /etc/apache2/conf-available/99-kantin-one.conf
+
+RUN a2enconf 99-kantin-one
 
 RUN apt-get update && apt-get install -y \
     git \
