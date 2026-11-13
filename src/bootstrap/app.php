@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\PreventBackHistory;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
@@ -18,9 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'prevent.back' => PreventBackHistory::class,
         ]);
-        $middleware->appendToGroup(
-            'web', PreventBackHistory::class
-        );
+        $middleware->appendToGroup('web', [
+            EnsureUserIsActive::class,
+            PreventBackHistory::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
