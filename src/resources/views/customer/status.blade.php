@@ -17,316 +17,160 @@
                 </div>
             </div>
         </div>
-        <div class="container p-0">
-            <div class="row flex-wrap g-3">
-                <div class="col">
-                    <div class="card border-0 shadow-sm mb-3">
-                        <div class="card-header border-0 bg-success-subtle">
-                            <span class="fw-bold text-success m-0" style="font-size: 12px;">
-                                Kantin ini masih buka pemesanan
-                            </span>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex flex-row align-items-center mb-2">
-                                <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                    <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
-                                </span>
-                                <h6 class="fw-bold m-0">Kantin 1</h6>
+        <div class="card border-0 shadow-sm mb-3 p-2">
+            <div class="card-body">
+                <div class="d-flex flex-column justify-content-center align-items-center border border-1
+                    p-3 gap-2 bg-success-subtle rounded-4">
+                    <h6 class="text-muted m-0">Antrian Pesanan</h6>
+                    <h5 class="m-0 mt-2 text-success fw-bold" style="word-spacing: 2px;">[Nomor Antrian Pesanan]</h5>
+                    <h5 class="m-0 mb-2 text-success fw-bold">[Nama Pemesan]</h5>
+                    <span class="text-muted small">
+                        Tunjukan nomor Antrian Pesanan Anda kepada pegawai kantin saat mengambil pesanan
+                    </span>
+                </div>
+                <hr class="mt-4 mb-3">
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <div class="col">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <i class="fa-solid fa-receipt fs-5" style="color: var(--primary);"></i>
+                            <div class="ms-3">
+                                <span class="text-muted small">No. Pesanan</span>
+                                <h6 class="fw-bold m-0" style="color: var(--primary);">[Nomor Pesanan Utama]</h6>
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <div class="d-flex justify-content-start align-items-center gap-3">
-                                        <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
-                                            alt="image/png" style="width: 100px; height: 70px;">
-                                        <div class="d-flex flex-column gap-1">
-                                            <h6 class="fw-bold m-0">
-                                                Produk 1
-                                                <span class="badge rounded-pill text-bg-success ms-1">Tersedia</span>
-                                            </h6>
-                                            <span class="fw-bold small" style="word-spacing: 4px;">Rp999.999</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <div class="d-flex justify-content-center align-items-center gap-3 my-2">
-                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
-                                                <i class="fa-solid fa-minus"></i>
-                                            </button>
-                                            <span class="fw-bold">0</span>
-                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <div class="d-flex justify-content-start align-items-center gap-3">
-                                        <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
-                                            alt="image/png" style="width: 100px; height: 70px;">
-                                        <div class="d-flex flex-column gap-1">
-                                            <h6 class="fw-bold m-0">
-                                                Produk 2
-                                                <span class="badge rounded-pill text-bg-danger ms-1">Tidak Tersedia</span>
-                                            </h6>
-                                            <span class="fw-bold small" style="word-spacing: 4px;">Rp999.999</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <div class="d-flex justify-content-center align-items-center gap-3 my-2">
-                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
-                                                <i class="fa-solid fa-minus"></i>
-                                            </button>
-                                            <span class="fw-bold">0</span>
-                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>                           
-                        </div>
-                        <div class="card-footer border-0 bg-danger-subtle">
-                            <span class="fw-bold text-danger" style="font-size: 12px;">
-                                Segera lakukan pemesanan pada kantin ini sebelum dari pihak kantin
-                                menutup secara tiba-tiba
-                            </span>
                         </div>
                     </div>
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header border-0 bg-success-subtle">
-                            <span class="fw-bold text-success m-0" style="font-size: 12px;">
-                                Kantin ini masih buka pemesanan
-                            </span>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex flex-row align-items-center mb-2">
-                                <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                    <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
-                                </span>
-                                <h6 class="fw-bold m-0">Kantin 1</h6>
+                    <div class="col">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <i class="fa-solid fa-wallet fs-5" style="color: var(--primary);"></i>
+                            <div class="ms-3">
+                                <span class="text-muted small">Metode Pembayaran</span>
+                                <h6 class="fw-bold m-0" style="color: var(--primary);">QRIS</h6>
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <div class="d-flex justify-content-start align-items-center gap-3">
-                                        <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
-                                            alt="image/png" style="width: 100px; height: 70px;">
-                                        <div class="d-flex flex-column gap-1">
-                                            <h6 class="fw-bold m-0">
-                                                Produk 1
-                                                <span class="badge rounded-pill text-bg-success ms-1">Tersedia</span>
-                                            </h6>
-                                            <span class="fw-bold small" style="word-spacing: 4px;">Rp999.999</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <div class="d-flex justify-content-center align-items-center gap-3 my-2">
-                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
-                                                <i class="fa-solid fa-minus"></i>
-                                            </button>
-                                            <span class="fw-bold">0</span>
-                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <div class="d-flex justify-content-start align-items-center gap-3">
-                                        <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
-                                            alt="image/png" style="width: 100px; height: 70px;">
-                                        <div class="d-flex flex-column gap-1">
-                                            <h6 class="fw-bold m-0">
-                                                Produk 2
-                                                <span class="badge rounded-pill text-bg-danger ms-1">Tidak Tersedia</span>
-                                            </h6>
-                                            <span class="fw-bold small" style="word-spacing: 4px;">Rp999.999</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <div class="d-flex justify-content-center align-items-center gap-3 my-2">
-                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
-                                                <i class="fa-solid fa-minus"></i>
-                                            </button>
-                                            <span class="fw-bold">0</span>
-                                            <button type="button" class="btn btn-sm btn-secondary bg-gradient">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger bg-gradient">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>                           
                         </div>
-                        <div class="card-footer border-0 bg-danger-subtle">
-                            <span class="fw-bold text-danger" style="font-size: 12px;">
-                                Segera lakukan pemesanan pada kantin ini sebelum dari pihak kantin
-                                menutup secara tiba-tiba
-                            </span>
+                    </div>
+                    <div class="col">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <i class="fa-solid fa-utensils fs-5" style="color: var(--primary);"></i>
+                            <div class="ms-3">
+                                <span class="text-muted small">Jenis Layanan</span>
+                                <h6 class="fw-bold m-0" style="color: var(--primary);">
+                                    [Dine In / Take Away / Pesanan Terjadwal]
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <i class="fa-solid fa-receipt fs-5" style="color: var(--primary);"></i>
+                            <div class="ms-3">
+                                <span class="text-muted small">Jumlah Kantin yang dipesan</span>
+                                <h6 class="fw-bold m-0" style="color: var(--primary);">[Jumlah] Kantin</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="mt-4 mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted small">Total Pesanan</span>
+                    <h5 class="fw-bold text-success m-0">Rp999.999</h5>
+                </div>
+            </div>
+        </div>
+        <div class="container p-0">
+            <div class="row row-cols-1 row-cols-md-2 g-3">
+                <div class="col">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex flex-row align-items-center">
+                                    <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
+                                        <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
+                                    </span>
+                                    <h6 class="fw-bold m-0">Kantin 1</h6>
+                                </div>
+                                <span class="text-muted text-end small">
+                                    No. Pesanan
+                                    <br>
+                                    <strong class="fs-6 text-success">[Kode Pesanan]</strong>
+                                </span>
+                            </div>
+                            <div class="container p-0 text-center">
+                                [Progress Pesanan]
+                            </div>
+                            <hr class="my-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item px-0 pt-0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="small">
+                                            Produk 1 x 1 <span class="badge text-bg-warning ms-1">Sedang proses</span>
+                                        </span> 
+                                        <span class="fw-bold small">Rp999.999</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item px-0 pb-0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="small">
+                                            Produk 2 x 1 <span class="badge text-bg-success ms-1">Selesai</span>
+                                        </span> 
+                                        <span class="fw-bold small">Rp999.999</span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <hr class="my-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold small">Subtotal Kantin</span> 
+                                <span class="fw-bold small">Rp999.999</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card border-0 shadow-sm px-2 sticky-top z-0" style="top: 100px;">
+                    <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            <h6 class="fw-bold m-0">Ringkasan Pesanan</h6>
-                            <hr class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex flex-row align-items-center">
+                                    <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
+                                        <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
+                                    </span>
+                                    <h6 class="fw-bold m-0">Kantin 2</h6>
+                                </div>
+                                <span class="text-muted text-end small">
+                                    No. Pesanan
+                                    <br>
+                                    <strong class="fs-6 text-success">[Kode Pesanan]</strong>
+                                </span>
+                            </div>
+                            <div class="container p-0 text-center">
+                                [Progress Pesanan]
+                            </div>
+                            <hr class="my-3">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item px-0">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="fw-bold small m-0">Kantin 1</h6>
-                                        <h6 class="fw-bold small m-0">Subtotal</h6>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="text-muted small m-0">Produk 1</h6>
-                                        <h6 class="text-muted small m-0">Rp. 999.999</h6>
-                                    </div>
+                                <li class="list-group-item px-0 pt-0">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="text-muted small m-0">Produk 2</h6>
-                                        <h6 class="text-muted small m-0">Rp. 999.999</h6>
+                                        <span class="small">
+                                            Produk 1 x 1 <span class="badge text-bg-warning ms-1">Sedang proses</span>
+                                        </span> 
+                                        <span class="fw-bold small">Rp999.999</span>
                                     </div>
                                 </li>
-                                <li class="list-group-item px-0">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="fw-bold small m-0">Kantin 2</h6>
-                                        <h6 class="fw-bold small m-0">Subtotal</h6>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="text-muted small m-0">Produk 1</h6>
-                                        <h6 class="text-muted small m-0">Rp. 999.999</h6>
-                                    </div>
+                                <li class="list-group-item px-0 pb-0">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="text-muted small m-0">Produk 2</h6>
-                                        <h6 class="text-muted small m-0">Rp. 999.999</h6>
+                                        <span class="small">
+                                            Produk 2 x 1 <span class="badge text-bg-success ms-1">Selesai</span>
+                                        </span> 
+                                        <span class="fw-bold small">Rp999.999</span>
                                     </div>
                                 </li>
                             </ul>
-                            <hr>
-                            <div class="d-flex flex-column mb-4">
-                                <h6 class="fw-bold">Total Pembayaran</h6>
-                                <h4 class="fw-bold m-0" style="color: var(--primary);">Rp. 999.999</h4>
+                            <hr class="my-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold small">Subtotal Kantin</span> 
+                                <span class="fw-bold small">Rp999.999</span>
                             </div>
-                            <div class="alert alert-warning m-0" role="alert" style="font-size: 12px;">
-                                <i class="fa-solid fa-circle-exclamation"></i>
-                                <span>Pembayaran dilakukan dalam satu transaksi untuk seluruh kantin pilihanmu</span>
-                            </div>
-                            <hr>
-                            <button type="button" class="btn btn-primary w-100">
-                                <span class="float-start">Pesan</span>
-                                <span class="float-end">
-                                    <i class="fa-solid fa-arrow-right-long"></i>
-                                </span>
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<div class="order-status-page">
-
-    <header class="order-status-header">
-        <a href="{{ route('customer.index') }}" class="status-brand">
-            <span class="brand-icon">
-                <i class="fa-solid fa-utensils"></i>
-            </span>
-            <span>Kantin<span class="brand-highlight">.ONE</span></span>
-        </a>
-
-        <span class="header-label">
-            <i class="fa-solid fa-location-dot"></i>
-            Lacak Pesanan
-        </span>
-    </header>
-
-    <main class="order-status-container">
-
-        <div class="status-page-heading">
-            <div>
-                <h1>Status Pesanan</h1>
-                <p>Pantau perkembangan pesanan kamu dari setiap tenant.</p>
-            </div>
-
-            <button type="button" class="btn-refresh-status" id="refreshStatus">
-                <i class="fa-solid fa-rotate"></i>
-                Refresh
-            </button>
-        </div>
-
-        <section class="main-order-card">
-            <div class="main-order-top">
-                <div>
-                    <span class="main-order-label">Nomor Pesanan Utama</span>
-                    <strong id="parentOrderNumber">-</strong>
-                </div>
-
-                <span class="main-order-badge" id="mainOrderStatus">
-                    Menunggu Pembayaran
-                </span>
-            </div>
-
-            <div class="main-order-information">
-                <div>
-                    <i class="fa-solid fa-wallet"></i>
-                    <span>Metode Pembayaran</span>
-                    <strong id="paymentMethod">-</strong>
-                </div>
-
-                <div>
-                    <i class="fa-solid fa-utensils"></i>
-                    <span>Jenis Layanan</span>
-                    <strong id="serviceType">-</strong>
-                </div>
-
-                <div id="pickupScheduleContainer" hidden>
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span>Jadwal Pengambilan</span>
-                    <strong id="pickupSchedule">-</strong>
-                </div>
-
-                <div>
-                    <i class="fa-solid fa-store"></i>
-                    <span>Jumlah Tenant</span>
-                    <strong id="tenantCount">0 Tenant</strong>
-                </div>
-            </div>
-
-            <div class="main-order-total">
-                <span>Total Pesanan</span>
-                <strong id="grandTotal">Rp0</strong>
-            </div>
-        </section>
-
-        <section class="tenant-tracking-section">
-            <div class="tracking-section-heading">
-                <div>
-                    <h2>Perkembangan Pesanan</h2>
-                    <p>Setiap tenant memiliki proses pesanan masing-masing.</p>
-                </div>
-                <i class="fa-solid fa-list-check"></i>
-            </div>
-
-            <div id="tenantTrackingList" class="tenant-tracking-list"></div>
-        </section>
-
-        <div class="status-page-actions">
-            <a href="{{ route('customer.index') }}" class="btn-status-home">
-                <i class="fa-solid fa-house"></i>
-                Kembali ke Beranda
-            </a>
-        </div>
-
-    </main>
-</div>
-
-@vite('resources/js/pages/status-order.js')
 @endsection

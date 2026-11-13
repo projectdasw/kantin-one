@@ -25,37 +25,31 @@ Route::get('/orders', function () {
     return view('customer.index');
 })->name('customer.index');
 
-Route::get('/pesan/tenant', function () {
+Route::get('/orders/tenant', function () {
     return view('customer.tenants');
 })->name('customer.tenants');
 
-Route::get('/pesan/tenant/{tenant}', function ($tenant) {
-    return view('customer.products', [
-        'tenantSlug' => $tenant,
-    ]);
+Route::get('/orders/tenant_product', function () {
+    return view('customer.products');
 })->name('customer.products');
 
-Route::get('/pesan/keranjang', function () {
+Route::get('/orders/cart', function () {
     return view('customer.cart');
 })->name('customer.cart');
 
-Route::get('/pesan/checkout', function () {
+Route::get('/orders/checkout', function () {
     return view('customer.checkout');
 })->name('customer.checkout');
 
-Route::get('/pesan/konfirmasi', function () {
-    return view('customer.confirmation');
-})->name('customer.confirmation');
-
-Route::get('/pesan/bayar', function () {
+Route::get('/orders/payment', function () {
     return view('customer.pay');
 })->name('customer.pay');
 
-Route::get('/pesan/pembayaran_berhasil', function () {
+Route::get('/orders/payment_status', function () {
     return view('customer.paycomplete');
 })->name('customer.paycomplete');
 
-Route::get('/pesan/status', function () {
+Route::get('/orders/status', function () {
     return view('customer.status');
 })->name('customer.status');
 /* -------------------------------------------------------------------------- */

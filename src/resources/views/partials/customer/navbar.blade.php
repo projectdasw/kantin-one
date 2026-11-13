@@ -26,7 +26,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn border border-1 rounded-3 text-white" href="#"
+            <a class="nav-link btn border border-1 rounded-3 text-white" href="{{ route('customer.cart') }}"
                 style="background-color: var(--primary);">
                 <i class="fa-solid fa-basket-shopping"></i>
                 <span class="mx-2">Keranjang</span>

@@ -10,7 +10,7 @@
 @import './components/navbar.css';
 @import './components/sidebar.css';
 
-@import './pages/customer-order.css';
+/* @import './pages/customer-order.css';
 @import './pages/tenants-order.css';
 @import './pages/products-order.css';
 @import './pages/cart-order.css';
@@ -21,7 +21,7 @@
 @import './pages/tenant-orders.css';
 @import './pages/tenant-sales.css';
 @import './pages/tenant-dashboard.css';
-@import './pages/tenant-products.css';
+@import './pages/tenant-products.css'; */
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
