@@ -53,6 +53,12 @@
                     <button type="button" class="btn btn-success bg-gradient w-25 mx-auto">
                         Download QRIS
                     </button>
+                    <a href="{{ route('customer.paycomplete') }}" class="btn btn-success w-100">
+                        <span class="float-start">Next (Simulasi)</span>
+                        <span class="float-end">
+                            <i class="fa-solid fa-arrow-right-long"></i>
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>

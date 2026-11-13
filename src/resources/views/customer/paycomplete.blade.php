@@ -35,9 +35,9 @@
                         Terima kasih telah berbelanja di Kantin.ONE
                     </span>
                 </div>
-                <button type="button" class="btn btn-success bg-gradient w-25">
+                <a href="{{ route('customer.status') }}" class="btn btn-success bg-gradient w-25">
                     Lihat Pesanan
-                </button>
+                </a>
             </div>
         </div>
     </div>
