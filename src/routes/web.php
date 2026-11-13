@@ -54,7 +54,7 @@ Route::get('/orders/status', function () {
 })->name('customer.status');
 /* -------------------------------------------------------------------------- */
 
-Route::middleware(['auth', 'prevent.back', 'role:administrator'])->group(function () {
+Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator'])->group(function () {
 
     /* Login Page */
     /* -------------------------------------------------------------------------- */
@@ -239,7 +239,7 @@ Route::middleware(['auth', 'prevent.back', 'role:administrator'])->group(functio
 
 /* Dashboard - Kepala Pengelola Tenant */
 /* -------------------------------------------------------------------------- */
-Route::middleware(['auth', 'prevent.back', 'role:canteen_manager'])->group(function () {
+Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:canteen_manager'])->group(function () {
     Route::get('/pengelola-tenant/dashboard', function () {
         return view('dashboard.canteen_manager.index');
     })->name('dashboard.canteen_manager');
@@ -264,7 +264,7 @@ Route::middleware(['auth', 'prevent.back', 'role:canteen_manager'])->group(funct
 
 /* Dashboard - Kepala Tenant & Pegawai Tenant */
 /* -------------------------------------------------------------------------- */
-Route::middleware(['auth', 'prevent.back', 'role:tenant,tenant_employee'])->group(function () {
+Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:tenant,tenant_employee'])->group(function () {
     Route::get('/tenant/dashboard', function () {
         return view('dashboard.tenant.index');
     })->name('dashboard.tenant');
