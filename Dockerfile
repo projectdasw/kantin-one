@@ -3,6 +3,9 @@ FROM php:8.4-apache
 # OPcache Configuration
 COPY docker/php/conf.d/99-kantin-one-opcache.ini /usr/local/etc/php/conf.d/99-kantin-one-opcache.ini
 
+# Security Hardening
+COPY docker/php/conf.d/99-kantin-one-security.ini /usr/local/etc/php/conf.d/99-kantin-one-security.ini
+
 # Apache MPM Prefork Configuration
 COPY docker/apache/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 
