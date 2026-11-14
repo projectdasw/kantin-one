@@ -15,10 +15,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'pickup_code',
     'status',
     'subtotal',
+    'notes',
     'accepted_at',
     'ready_at',
     'completed_at',
 ])]
+
 class TenantOrder extends Model
 {
     use HasUuids;

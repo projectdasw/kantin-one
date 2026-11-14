@@ -50,6 +50,24 @@ Route::prefix('orders')->name('customer.')->group(function () {
 
     Route::post('/service', [CustomerOrderController::class, 'storeService'])
         ->name('service.store');
+
+    // Route::post('/checkout/details', [CustomerOrderController::class, 'storeCheckoutDetails'])
+    //     ->name('checkout.details');
+
+    Route::post('/checkout/place-order', [CustomerOrderController::class, 'placeOrder'])
+        ->name('checkout.place-order');
+
+    Route::get('/payment', [CustomerOrderController::class, 'payment'])
+        ->name('payment');
+
+    Route::get('/payment/status', [CustomerOrderController::class, 'paymentStatus'])
+        ->name('payment.status');
+
+    Route::post('/payment/simulate', [CustomerOrderController::class, 'simulatePayment'])
+        ->name('payment.simulate');
+
+    Route::post('/payment/simulate-failure', [CustomerOrderController::class, 'simulatePaymentFailure'])
+        ->name('payment.simulate-failure');
 });
 
 Route::get('/orders/cart', [CustomerOrderController::class, 'cart'])
@@ -58,17 +76,17 @@ Route::get('/orders/cart', [CustomerOrderController::class, 'cart'])
 Route::get('/orders/checkout', [CustomerOrderController::class, 'checkout'])
     ->name('customer.checkout');
 
-Route::get('/orders/payment', function () {
-    return view('customer.pay');
-})->name('customer.pay');
+// Route::get('/orders/payment', function () {
+//     return view('customer.pay');
+// })->name('customer.pay');
 
-Route::get('/orders/payment_status', function () {
-    return view('customer.paycomplete');
-})->name('customer.paycomplete');
+// Route::get('/orders/payment_status', function () {
+//     return view('customer.paycomplete');
+// })->name('customer.paycomplete');
 
-Route::get('/orders/status', function () {
-    return view('customer.status');
-})->name('customer.status');
+// Route::get('/orders/status', function () {
+//     return view('customer.status');
+// })->name('customer.status');
 /* -------------------------------------------------------------------------- */
 
 Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator'])->group(function () {

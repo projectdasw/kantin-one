@@ -22,6 +22,7 @@
                 </ul>
             </div>
         </div>
+
         <div class="container p-0 mt-5 mb-3">
             <div class="d-flex flex-column justify-content align-items-center">
                 <span class="display-5 bg-success-subtle text-success bg-gradient p-3 mb-4 rounded-circle">
@@ -29,6 +30,10 @@
                 </span>
                 <div class="text-center">
                     <h3 class="fw-bold">Pesanan Berhasil Dibuat!</h3>
+                    <div class="text-center">
+                        <span class="text-muted small">Nomor Pesanan</span>
+                        <h6 class="fw-bold">{{ $order->order_number }}</h6>
+                    </div>
                     <span class="text-muted m-0">
                         Pesanan kamu sudah kami terima. Silakan lakukan pembayaran pesanan Anda
                     </span>
@@ -44,21 +49,53 @@
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between align-items-center border-0">
                             <h6 class="m-0">Total Pembayaran</h6>
-                            <h6 class="fw-bold m-0">Rp999.999</h6>
+                            <h6 class="fw-bold m-0">
+                                Rp{{ number_format((float) $payment->amount, 0, ',', '.') }}
+                            </h6>
                         </li>
                     </ul>
                     <div class="alert alert-warning fw-bold text-center" role="alert">
-                        Silahkan lakukan pembayaran sebelum kadaluarsa di [00:00]
+                        @if ($payment->status === 'pending')
+                            Silakan lakukan pembayaran sebelum kedaluwarsa.
+                            <div id="payment-countdown"
+                                data-expires-at="{{ $payment->expires_at?->timestamp }}">
+                                Memuat waktu pembayaran...
+                            </div>
+                        @elseif ($payment->status === 'paid')
+                            Pembayaran berhasil!
+                        @else
+                            Status pembayaran: {{ ucfirst($payment->status) }}
+                        @endif
+                    </div>
+                    <div class="alert alert-info text-center mb-0" role="alert">
+                        <i class="fa-solid fa-circle-info me-1"></i>
+                        Ini adalah QRIS simulasi untuk keperluan pengujian.
+                        QR Code ini tidak dapat digunakan untuk pembayaran sungguhan.
                     </div>
                     <button type="button" class="btn btn-success bg-gradient w-25 mx-auto">
                         Download QRIS
                     </button>
-                    <a href="{{ route('customer.paycomplete') }}" class="btn btn-success w-100">
-                        <span class="float-start">Next (Simulasi)</span>
-                        <span class="float-end">
-                            <i class="fa-solid fa-arrow-right-long"></i>
-                        </span>
-                    </a>
+                    @if ($payment->status === 'pending')
+                        <form action="{{ route('customer.payment.simulate') }}" method="POST">
+                            @csrf
+
+                            <button type="submit" class="btn btn-success w-100 mb-2">
+                                <i class="fa-solid fa-check-circle me-1"></i>
+                                Simulasikan Pembayaran Berhasil
+                            </button>
+                        </form>
+
+                        @if (app()->environment(['local', 'testing']))
+                            <form action="{{ route('customer.payment.simulate-failure') }}" method="POST">
+                                @csrf
+
+                                <button type="submit" class="btn btn-outline-danger w-100">
+                                    <i class="fa-solid fa-times-circle me-1"></i>
+                                    Simulasikan Pembayaran Gagal
+                                </button>
+                            </form>
+                        @endif
+                    @endif
                 </div>
             </div>
         </div>
