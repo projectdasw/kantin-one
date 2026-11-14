@@ -8,6 +8,9 @@ import './pages/auth/login.js';
 import './pages/tenants.js';
 import './pages/products.js';
 
+import './pages/customer/products-order.js';
+import './pages/customer/cart-order.js';
+
 window.bootstrap = bootstrap;
 window.Swal = Swal;
 window.Chart = Chart;

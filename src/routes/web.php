@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CustomerOrderController;
+use App\Http\Controllers\CustomerCartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -21,25 +23,40 @@ Route::get('/', function () {
 
 /* Order Page - Customer */
 /* -------------------------------------------------------------------------- */
-Route::get('/orders', function () {
-    return view('customer.index');
-})->name('customer.index');
+/*
+|--------------------------------------------------------------------------
+| Customer Ordering
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/orders/tenant', function () {
-    return view('customer.tenants');
-})->name('customer.tenants');
+Route::prefix('orders')->name('customer.')->group(function () {
+    Route::get('/', [CustomerOrderController::class, 'index'])
+        ->name('index');
 
-Route::get('/orders/tenant_product', function () {
-    return view('customer.products');
-})->name('customer.products');
+    Route::get('/tenant', [CustomerOrderController::class, 'tenants'])
+        ->name('tenants');
 
-Route::get('/orders/cart', function () {
-    return view('customer.cart');
-})->name('customer.cart');
+    Route::get('/tenant/{tenant:code}', [CustomerOrderController::class, 'products'])
+        ->name('products');
 
-Route::get('/orders/checkout', function () {
-    return view('customer.checkout');
-})->name('customer.checkout');
+    Route::post('/cart/items/{product}/increase', [CustomerCartController::class, 'increase'])
+        ->name('cart.increase');
+
+    Route::post('/cart/items/{product}/decrease', [CustomerCartController::class, 'decrease'])
+        ->name('cart.decrease');
+
+    Route::post('/cart/items/{productId}/remove', [CustomerCartController::class, 'remove'])
+        ->name('cart.remove');
+
+    Route::post('/service', [CustomerOrderController::class, 'storeService'])
+        ->name('service.store');
+});
+
+Route::get('/orders/cart', [CustomerOrderController::class, 'cart'])
+    ->name('customer.cart');
+
+Route::get('/orders/checkout', [CustomerOrderController::class, 'checkout'])
+    ->name('customer.checkout');
 
 Route::get('/orders/payment', function () {
     return view('customer.pay');

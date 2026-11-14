@@ -70,54 +70,89 @@
                         <div class="col">
                             <div class="card border-0 shadow-sm mt-4 rounded-4">
                                 <div class="card-body px-5 py-4">
-                                    <h5 class="fw-bold">Pilih Jenis Layanan</h5>
-                                    <hr>
-                                    <div class="form-check d-flex justify-content-between align-items-center px-4 py-3 border border-1 rounded-4">
-                                        <label class="form-check-label d-flex flex-row align-items-center" for="radioDefault1">
-                                            <span class="bg-primary-subtle px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                                <i class="fa-solid fa-chair text-primary"></i>
-                                            </span>
-                                            <div>
-                                                <h6 class="fw-bold m-0 small">Dine In</h6>
-                                                <span class="m-0" style="color: var(--text-muted); font-size: 12px;">
-                                                    Nikmati makanan dan minuman langsung di area kantin
+                                    <form action="{{ route('customer.service.store') }}" method="POST">
+                                        @csrf
+
+                                        <h5 class="fw-bold">Pilih Jenis Layanan</h5>
+                                        <hr>
+
+                                        <label for="service-dine-in"
+                                            class="form-check d-flex justify-content-between align-items-center px-4 py-3 border rounded-4">
+                                            <span class="d-flex flex-row align-items-center">
+                                                <span class="bg-primary-subtle px-2 py-1 fs-5 rounded-3 me-3">
+                                                    <i class="fa-solid fa-chair text-primary"></i>
                                                 </span>
-                                            </div>
-                                        </label>
-                                        <input class="form-check-input fs-4" type="radio" name="radioDefault" id="radioDefault1">
-                                    </div>
-                                    <div class="form-check d-flex justify-content-between align-items-center my-3 px-4 py-3 border border-1 rounded-4">
-                                        <label class="form-check-label d-flex flex-row align-items-center" for="radioDefault1">
-                                            <span class="bg-warning-subtle px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                                <i class="fa-solid fa-bag-shopping text-warning"></i>
-                                            </span>
-                                            <div>
-                                                <h6 class="fw-bold m-0 small">Take Away</h6>
-                                                <span class="m-0" style="color: var(--text-muted); font-size: 12px;">
-                                                    Pesan sekarang dan bawa pulang pesanan Anda.
+
+                                                <span>
+                                                    <strong class="d-block small">Dine In</strong>
+                                                    <small class="text-muted">
+                                                        Nikmati makanan dan minuman langsung di area kantin.
+                                                    </small>
                                                 </span>
-                                            </div>
-                                        </label>
-                                        <input class="form-check-input fs-4" type="radio" name="radioDefault" id="radioDefault1">
-                                    </div>
-                                    <div class="form-check d-flex justify-content-between align-items-center px-4 py-3 border border-1 rounded-4">
-                                        <label class="form-check-label d-flex flex-row align-items-center" for="radioDefault1">
-                                            <span class="bg-success-subtle px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                                <i class="fa-solid fa-calendar-check text-success"></i>
                                             </span>
-                                            <div>
-                                                <h6 class="fw-bold m-0 small">Pesanan Terjadwal</h6>
-                                                <span class="m-0" style="color: var(--text-muted); font-size: 12px;">
-                                                    Pesan sekarang dan tentukan waktu pengambilan pesanan
-                                                </span>
-                                            </div>
+
+                                            <input class="form-check-input fs-4"
+                                                type="radio"
+                                                name="service_type"
+                                                id="service-dine-in"
+                                                value="dine_in"
+                                                required>
                                         </label>
-                                        <input class="form-check-input fs-4" type="radio" name="radioDefault" id="radioDefault1">
-                                    </div>
-                                    <a href="{{ route('customer.tenants') }}" class="btn btn-primary bg-gradient w-100 mt-4 rounded-3 py-3">
-                                        <span>Lanjutkan</span>
-                                        <i class="fa-solid fa-arrow-right-long ms-1"></i>
-                                    </a>
+
+                                        <label for="service-take-away"
+                                            class="form-check d-flex justify-content-between align-items-center my-3 px-4 py-3 border rounded-4">
+                                            <span class="d-flex flex-row align-items-center">
+                                                <span class="bg-warning-subtle px-2 py-1 fs-5 rounded-3 me-3">
+                                                    <i class="fa-solid fa-bag-shopping text-warning"></i>
+                                                </span>
+
+                                                <span>
+                                                    <strong class="d-block small">Take Away</strong>
+                                                    <small class="text-muted">
+                                                        Pesan sekarang dan bawa pulang pesanan Anda.
+                                                    </small>
+                                                </span>
+                                            </span>
+
+                                            <input class="form-check-input fs-4"
+                                                type="radio"
+                                                name="service_type"
+                                                id="service-take-away"
+                                                value="take_away">
+                                        </label>
+
+                                        <label for="service-after-activity"
+                                            class="form-check d-flex justify-content-between align-items-center px-4 py-3 border rounded-4">
+                                            <span class="d-flex flex-row align-items-center">
+                                                <span class="bg-success-subtle px-2 py-1 fs-5 rounded-3 me-3">
+                                                    <i class="fa-solid fa-calendar-check text-success"></i>
+                                                </span>
+
+                                                <span>
+                                                    <strong class="d-block small">Pesanan Terjadwal</strong>
+                                                    <small class="text-muted">
+                                                        Pesan sekarang dan tentukan waktu pengambilan.
+                                                    </small>
+                                                </span>
+                                            </span>
+
+                                            <input class="form-check-input fs-4"
+                                                type="radio"
+                                                name="service_type"
+                                                id="service-after-activity"
+                                                value="after_activity">
+                                        </label>
+
+                                        @error('service_type')
+                                            <div class="text-danger small mt-2">{{ $message }}</div>
+                                        @enderror
+
+                                        <button type="submit"
+                                            class="btn btn-primary bg-gradient w-100 mt-4 rounded-3 py-3">
+                                            Lanjutkan
+                                            <i class="fa-solid fa-arrow-right-long ms-1"></i>
+                                        </button>
+                                    </form>
                                     <div class="text-muted text-center small mt-3">
                                         <i class="fa-solid fa-shield-halved me-1"></i>
                                         <span>Pemesanan mudah, aman, dan praktis.</span>

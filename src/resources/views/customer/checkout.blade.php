@@ -37,106 +37,76 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <div class="d-flex flex-row align-items-center mb-2">
-                                        <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
-                                        </span>
-                                        <h6 class="fw-bold m-0">Kantin 1</h6>
+                            @foreach ($cart as $tenantId => $tenantCart)
+                                @php
+                                    $tenant = $tenants->get($tenantId);
+                                    $tenantSubtotal = 0;
+                                @endphp
+
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-row align-items-center mb-2">
+                                            <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
+                                                <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
+                                            </span>
+
+                                            <h6 class="fw-bold m-0">
+                                                {{ $tenantCart['tenant_name'] }}
+                                            </h6>
+                                        </div>
+
+                                        <hr>
+
+                                        @foreach ($tenantCart['items'] as $productId => $item)
+                                            @php
+                                                $product = $tenant?->products->firstWhere('id', $productId);
+                                                $unitPrice = (float) ($product?->price ?? $item['unit_price']);
+                                                $quantity = (int) $item['quantity'];
+                                                $subtotal = $unitPrice * $quantity;
+
+                                                $tenantSubtotal += $subtotal;
+
+                                                $image = ! empty($item['image'])
+                                                    ? asset('storage/' . $item['image'])
+                                                    : asset('img-dummy/supermarket.png');
+                                            @endphp
+
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div class="d-flex justify-content-start align-items-center gap-3">
+                                                    <img src="{{ $image }}"
+                                                        class="img-thumbnail object-fit-cover"
+                                                        alt="{{ $item['product_name'] }}"
+                                                        style="width: 100px; height: 70px;">
+
+                                                    <div class="d-flex flex-column gap-1">
+                                                        <h6 class="fw-bold m-0">
+                                                            {{ $item['product_name'] }}
+                                                        </h6>
+
+                                                        <span class="text-muted small">
+                                                            {{ $quantity }} x Rp{{ number_format($unitPrice, 0, ',', '.') }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <span class="fw-bold">
+                                                    Rp{{ number_format($subtotal, 0, ',', '.') }}
+                                                </span>
+                                            </div>
+                                        @endforeach
+
+                                        <hr>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold small">Subtotal {{ $tenantCart['tenant_name'] }}</span>
+
+                                            <span class="fw-bold">
+                                                Rp{{ number_format($tenantSubtotal, 0, ',', '.') }}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <hr>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item px-0 py-0">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex justify-content-start align-items-center gap-3">
-                                                    <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
-                                                        alt="image/png" style="width: 100px; height: 70px;">
-                                                    <div class="d-flex flex-column gap-1">
-                                                        <h6 class="fw-bold m-0">Produk 1</h6>
-                                                        <span class="text-muted small" style="word-spacing: 2px;">1 x Rp999.999</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-bold">Rp999.999</span>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex justify-content-start align-items-center gap-3">
-                                                    <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
-                                                        alt="image/png" style="width: 100px; height: 70px;">
-                                                    <div class="d-flex flex-column gap-1">
-                                                        <h6 class="fw-bold m-0">Produk 2</h6>
-                                                        <span class="text-muted small" style="word-spacing: 2px;">1 x Rp999.999</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-bold">Rp999.999</span>
-                                                </div>
-                                            </div>
-                                            <div class="mt-4">
-                                                <h6 class="m-0" style="font-weight: 800; color: var(--text-main);">Catatan</h6>
-                                                <hr class="mt-2">
-                                                <textarea class="form-control" rows="3"></textarea>
-                                                <div class="form-text">
-                                                    Catatan ini berlaku untuk kantin ini
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>                           
                                 </div>
-                            </div>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <div class="d-flex flex-row align-items-center mb-2">
-                                        <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
-                                        </span>
-                                        <h6 class="fw-bold m-0">Kantin 2</h6>
-                                    </div>
-                                    <hr>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item px-0 py-0">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex justify-content-start align-items-center gap-3">
-                                                    <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
-                                                        alt="image/png" style="width: 100px; height: 70px;">
-                                                    <div class="d-flex flex-column gap-1">
-                                                        <h6 class="fw-bold m-0">Produk 1</h6>
-                                                        <span class="text-muted small" style="word-spacing: 2px;">1 x Rp999.999</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-bold">Rp999.999</span>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex justify-content-start align-items-center gap-3">
-                                                    <img src="{{ asset('img-dummy/supermarket.png') }}" class="img-thumbnail object-fit-cover"
-                                                        alt="image/png" style="width: 100px; height: 70px;">
-                                                    <div class="d-flex flex-column gap-1">
-                                                        <h6 class="fw-bold m-0">Produk 2</h6>
-                                                        <span class="text-muted small" style="word-spacing: 2px;">1 x Rp999.999</span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-bold">Rp999.999</span>
-                                                </div>
-                                            </div>
-                                            <div class="mt-4">
-                                                <h6 class="m-0" style="font-weight: 800; color: var(--text-main);">Catatan</h6>
-                                                <hr class="mt-2">
-                                                <textarea class="form-control" rows="3"></textarea>
-                                                <div class="form-text">
-                                                    Catatan ini berlaku untuk kantin ini
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>                           
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -155,6 +125,32 @@
                                     </div>
                                 </div>
                                 <hr>
+                                <div class="mb-3">
+                                    <small class="text-muted d-block">Jenis Layanan</small>
+
+                                    @switch($customerService['service_type'])
+                                        @case('dine_in')
+                                            <strong>
+                                                <i class="fa-solid fa-chair text-primary me-2"></i>
+                                                Dine In
+                                            </strong>
+                                            @break
+
+                                        @case('take_away')
+                                            <strong>
+                                                <i class="fa-solid fa-bag-shopping text-warning me-2"></i>
+                                                Take Away
+                                            </strong>
+                                            @break
+
+                                        @case('after_activity')
+                                            <strong>
+                                                <i class="fa-solid fa-calendar-check text-success me-2"></i>
+                                                Pesanan Terjadwal
+                                            </strong>
+                                            @break
+                                    @endswitch
+                                </div>
                                 <div class="d-flex flex-row align-items-center bg-light p-2 border border-1 rounded-3 mb-2">
                                     <span class="bg-primary-subtle px-2 py-1 fs-5 rounded-3 me-3 border-0">
                                         <i class="fa-solid fa-chair text-primary"></i>
@@ -200,23 +196,43 @@
                                 <hr class="mb-2">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item px-0">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="fw-bold small m-0">Subtotal</h6>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="fw-bold small m-0">Kantin 1</h6>
-                                            <h6 class="fw-bold small m-0">Rp. 999.999</h6>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <h6 class="fw-bold small m-0">Kantin 2</h6>
-                                            <h6 class="fw-bold small m-0">Rp. 999.999</h6>
-                                        </div>
+                                        <h6 class="fw-bold small mb-3">Subtotal</h6>
+
+                                        @foreach ($cart as $tenantId => $tenantCart)
+                                            @php
+                                                $tenant = $tenants->get($tenantId);
+                                                $tenantSubtotal = 0;
+
+                                                foreach ($tenantCart['items'] as $productId => $item) {
+                                                    $product = $tenant?->products->firstWhere('id', $productId);
+
+                                                    if ($tenant && $tenant->is_active && $product && $product->is_active) {
+                                                        $tenantSubtotal += (float) $product->price * (int) $item['quantity'];
+                                                    }
+                                                }
+                                            @endphp
+
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="fw-bold small m-0">
+                                                    {{ $tenantCart['tenant_name'] }}
+                                                </h6>
+
+                                                <h6 class="fw-bold small m-0">
+                                                    Rp{{ number_format($tenantSubtotal, 0, ',', '.') }}
+                                                </h6>
+                                            </div>
+                                        @endforeach
                                     </li>
                                 </ul>
+
                                 <hr>
+
                                 <div class="d-flex flex-column mb-4">
                                     <h6 class="fw-bold">Total Pembayaran</h6>
-                                    <h4 class="fw-bold m-0" style="color: var(--primary);">Rp. 999.999</h4>
+
+                                    <h4 class="fw-bold m-0" style="color: var(--primary);">
+                                        Rp{{ number_format($grandTotal, 0, ',', '.') }}
+                                    </h4>
                                 </div>
                                 <div class="alert alert-warning m-0" role="alert" style="font-size: 12px;">
                                     <i class="fa-solid fa-circle-exclamation"></i>

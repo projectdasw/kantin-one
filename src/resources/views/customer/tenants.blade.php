@@ -83,98 +83,57 @@
             </div>
             <div class="container p-0">
                 <div class="row row-cols-1 row-cols-md-3 g-3">
-                    <div class="col">
-                        <div class="card h-100 border-0 rounded-4 shadow-sm position-relative">
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge d-flex justify-content-center align-items-center text-success
-                                    bg-white border border-1">
-                                    <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>
-                                    <span class="small">Buka</span>
-                                </span>
-                            </div>
-                            <img src="{{ asset('img-dummy/supermarket.png') }}" class="card-img-top" alt="image/png">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-2">Kantin 1</h6>
-                                <p class="card-text text-muted small m-0">
-                                    Aneka makanan khas nusantara dengan cita rasa rumahan.
-                                </p>
-                                <hr>
-                                <a href="{{ route('customer.products') }}" class="btn btn-sm btn-primary float-end">
-                                    <span>Lihat Menu</span>
-                                    <i class="fa-solid fa-arrow-right-long ms-1"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100 border-0 rounded-4 shadow-sm position-relative">
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge d-flex justify-content-center align-items-center text-success
-                                    bg-white border border-1">
-                                    <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>
-                                    <span class="small">Buka</span>
-                                </span>
-                            </div>
-                            <img src="{{ asset('img-dummy/supermarket.png') }}" class="card-img-top" alt="image/png">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-2">Kantin 2</h6>
-                                <p class="card-text text-muted small m-0">
-                                    Aneka makanan khas nusantara dengan cita rasa rumahan.
-                                </p>
-                                <hr>
-                                <a href="{{ route('customer.products') }}" class="btn btn-sm btn-primary float-end">
-                                    <span>Lihat Menu</span>
-                                    <i class="fa-solid fa-arrow-right-long ms-1"></i>
-                                </a>
+                    @forelse ($tenants as $tenant)
+                        <div class="col">
+                            <div class="card h-100 border-0 rounded-4 shadow-sm position-relative">
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge d-flex justify-content-center align-items-center text-success bg-white border border-1">
+                                        <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>
+                                        <span class="small">Buka</span>
+                                    </span>
+                                </div>
+
+                                <img
+                                    src="{{ asset('img-dummy/supermarket.png') }}"
+                                    class="card-img-top"
+                                    alt="{{ $tenant->name }}"
+                                >
+
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-2">
+                                        {{ $tenant->name }}
+                                    </h6>
+
+                                    <p class="card-text text-muted small m-0">
+                                        {{ $tenant->description ?: 'Belum ada deskripsi kantin.' }}
+                                    </p>
+
+                                    <hr>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="small text-muted">
+                                            {{ $tenant->products_count }} menu tersedia
+                                        </span>
+
+                                        <a
+                                            href="{{ route('customer.products', $tenant->code) }}"
+                                            class="btn btn-sm btn-primary"
+                                        >
+                                            <span>Lihat Menu</span>
+                                            <i class="fa-solid fa-arrow-right-long ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100 border-0 rounded-4 shadow-sm position-relative">
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge d-flex justify-content-center align-items-center text-success
-                                    bg-white border border-1">
-                                    <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>
-                                    <span class="small">Buka</span>
-                                </span>
-                            </div>
-                            <img src="{{ asset('img-dummy/supermarket.png') }}" class="card-img-top" alt="image/png">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-2">Kantin 3</h6>
-                                <p class="card-text text-muted small m-0">
-                                    Aneka makanan khas nusantara dengan cita rasa rumahan.
-                                </p>
-                                <hr>
-                                <a href="{{ route('customer.products') }}" class="btn btn-sm btn-primary float-end">
-                                    <span>Lihat Menu</span>
-                                    <i class="fa-solid fa-arrow-right-long ms-1"></i>
-                                </a>
+                    @empty
+                        <div class="col-12">
+                            <div class="alert alert-light text-center rounded-4">
+                                <i class="fa-solid fa-store-slash fs-2 mb-2"></i>
+                                <p class="mb-0">Belum ada kantin yang tersedia saat ini.</p>
                             </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100 border-0 rounded-4 shadow-sm position-relative">
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge d-flex justify-content-center align-items-center text-success
-                                    bg-white border border-1">
-                                    <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>
-                                    <span class="small">Buka</span>
-                                </span>
-                            </div>
-                            <img src="{{ asset('img-dummy/supermarket.png') }}" class="card-img-top" alt="image/png">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-2">Kantin 4</h6>
-                                <p class="card-text text-muted small m-0">
-                                    Aneka makanan khas nusantara dengan cita rasa rumahan.
-                                </p>
-                                <hr>
-                                <a href="{{ route('customer.products') }}" class="btn btn-sm btn-primary float-end">
-                                    <span>Lihat Menu</span>
-                                    <i class="fa-solid fa-arrow-right-long ms-1"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>
