@@ -113,7 +113,9 @@ class TenantController extends Controller
         ]);
 
         $validated['code'] = $this->generateTenantCode();
-        $validated['is_active'] = true;
+        $tenant = new Tenant($validated);
+        $tenant->is_active = true;
+        $tenant->save();
 
         Tenant::create($validated);
 
@@ -191,7 +193,8 @@ class TenantController extends Controller
     {
         $this->ensureAdministrator();
         $tenant = $this->selectTenant($request);
-        $tenant->update(['is_active' => ! $tenant->is_active]);
+        $tenant->is_active = ! $tenant->is_active;
+        $tenant->save();
 
         $message = $tenant->is_active
             ? 'Tenant berhasil diaktifkan.'

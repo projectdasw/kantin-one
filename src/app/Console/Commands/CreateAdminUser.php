@@ -72,9 +72,11 @@ class CreateAdminUser extends Command
             'username' => $username,
             'password' => Hash::make($password),
             'role' => 'super_admin',
-            'is_active' => true,
-            'is_protected' => true,
         ]);
+
+        $user->is_active = true;
+        $user->is_protected = true;
+        $user->save();
 
         $this->newLine();
         $this->info('Akun administrator berhasil dibuat!');

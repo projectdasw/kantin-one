@@ -182,11 +182,10 @@ class UserController extends Controller
         $tenantId = $validated['tenant_id'] ?? null;
         unset($validated['tenant_id']);
 
-        $validated['is_active'] = true;
-        $validated['is_protected'] = false;
-
         $user = User::create($validated);
         $user->tenant_id = $tenantId;
+        $user->is_active = true;
+        $user->is_protected = false;
         $user->save();
 
         return redirect()
@@ -313,7 +312,8 @@ class UserController extends Controller
                 ->with('error', 'Administrator aktif terakhir tidak dapat dinonaktifkan.');
         }
 
-        $user->update(['is_active' => ! $user->is_active]);
+        $user->is_active = ! $user->is_active;
+        $user->save();
 
         $message = $user->is_active
             ? 'Akun pengguna berhasil diaktifkan.'
