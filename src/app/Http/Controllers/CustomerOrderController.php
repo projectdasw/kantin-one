@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tenant;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product;
-use App\Models\TenantOrder;
 use App\Models\Payment;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Models\Product;
+use App\Models\Tenant;
+use App\Models\TenantOrder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class CustomerOrderController extends Controller
@@ -261,8 +261,8 @@ class CustomerOrderController extends Controller
                 }
 
                 // Buat transaksi utama.
-                $orderNumber = 'ORD-' . now()->format('YmdHis')
-                    . '-' . Str::upper(Str::random(6));
+                $orderNumber = 'ORD-'.now()->format('YmdHis')
+                    .'-'.Str::upper(Str::random(6));
 
                 $order = Order::create([
                     'order_number' => $orderNumber,
@@ -296,7 +296,7 @@ class CustomerOrderController extends Controller
                     $tenantOrder = TenantOrder::create([
                         'order_id' => $order->id,
                         'tenant_id' => $tenantData['tenant']->id,
-                        'order_number' => 'TO-' . Str::upper(Str::random(12)),
+                        'order_number' => 'TO-'.Str::upper(Str::random(12)),
                         'pickup_code' => (string) random_int(100000, 999999),
                         'status' => 'pending',
                         'subtotal' => $tenantData['subtotal'],
@@ -374,6 +374,122 @@ class CustomerOrderController extends Controller
         ));
     }
 
+    /**
+     * Membuat pembayaran baru untuk pesanan yang gagal atau kedaluwarsa.
+     */
+    public function retryPayment(): RedirectResponse
+    {
+        abort_unless(
+            app()->environment(['local', 'testing']),
+            404
+        );
+
+        $orderId = session('customer_latest_order_id');
+
+        if (! $orderId) {
+            return redirect()
+                ->route('customer.index')
+                ->with('warning', 'Tidak ada transaksi yang dapat dibayar ulang.');
+        }
+
+        $result = DB::transaction(function () use ($orderId): string {
+            $order = Order::query()
+                ->whereKey($orderId)
+                ->lockForUpdate()
+                ->first();
+
+            if (! $order) {
+                return 'not_found';
+            }
+
+            $payment = Payment::query()
+                ->where('order_id', $order->id)
+                ->orderByDesc('created_at')
+                ->orderByDesc('id')
+                ->lockForUpdate()
+                ->first();
+
+            if (! $payment) {
+                return 'payment_not_found';
+            }
+
+            if ($payment->status === 'paid' || $order->status === 'paid') {
+                return 'already_paid';
+            }
+
+            // Pembayaran pending yang belum kedaluwarsa masih dapat dilanjutkan.
+            if (
+                $payment->status === 'pending'
+                && (! $payment->expires_at || $payment->expires_at->isFuture())
+            ) {
+                return 'still_pending';
+            }
+
+            // Tandai pembayaran lama sebagai expired jika melewati batas waktu.
+            if ($payment->status === 'pending') {
+                $payment->update([
+                    'status' => 'expired',
+                ]);
+            }
+
+            if (! in_array($payment->status, ['failed', 'expired'], true)) {
+                return 'invalid_status';
+            }
+
+            // Buat pembayaran baru untuk pesanan yang sama.
+            Payment::create([
+                'order_id' => $order->id,
+                'payment_method' => 'qris',
+                'amount' => $order->total,
+                'status' => 'pending',
+                'provider' => 'simulation',
+                'expires_at' => now()->addMinutes(15),
+                'metadata' => [
+                    'mode' => 'simulation',
+                    'retry' => true,
+                ],
+            ]);
+
+            // Kembalikan status pesanan dan seluruh pesanan tenant.
+            $order->update([
+                'status' => 'pending',
+            ]);
+
+            TenantOrder::query()
+                ->where('order_id', $order->id)
+                ->update([
+                    'status' => 'pending',
+                    'accepted_at' => null,
+                    'ready_at' => null,
+                    'completed_at' => null,
+                ]);
+
+            return 'success';
+        });
+
+        return match ($result) {
+            'success', 'still_pending' => redirect()
+                ->route('customer.payment')
+                ->with('success', 'Silakan lanjutkan pembayaran QRIS.'),
+
+            'already_paid' => redirect()
+                ->route('customer.payment.status')
+                ->with('info', 'Pesanan ini sudah berhasil dibayar.'),
+
+            'not_found' => redirect()
+                ->route('customer.index')
+                ->with('error', 'Data pesanan tidak ditemukan.'),
+
+            'payment_not_found' => redirect()
+                ->route('customer.index')
+                ->with('error', 'Data pembayaran tidak ditemukan.'),
+
+            default => redirect()
+                ->route('customer.payment.status')
+                ->with('error', 'Pembayaran ulang tidak dapat dilakukan.')
+        };
+    }
+
     public function simulatePayment(): RedirectResponse
     {
         abort_unless(
@@ -401,6 +517,8 @@ class CustomerOrderController extends Controller
 
             $payment = Payment::query()
                 ->where('order_id', $order->id)
+                ->orderByDesc('created_at')
+                ->orderByDesc('id')
                 ->lockForUpdate()
                 ->first();
 
@@ -424,6 +542,13 @@ class CustomerOrderController extends Controller
                 $order->update([
                     'status' => 'expired',
                 ]);
+
+                TenantOrder::query()
+                    ->where('order_id', $order->id)
+                    ->where('status', 'pending')
+                    ->update([
+                        'status' => 'expired',
+                    ]);
 
                 return 'expired';
             }
@@ -491,6 +616,8 @@ class CustomerOrderController extends Controller
 
             $payment = Payment::query()
                 ->where('order_id', $order->id)
+                ->orderByDesc('created_at')
+                ->orderByDesc('id')
                 ->lockForUpdate()
                 ->first();
 
@@ -576,38 +703,45 @@ class CustomerOrderController extends Controller
             && $payment->expires_at->isPast()
         ) {
             DB::transaction(function () use ($order, $payment): void {
+                $lockedOrder = Order::query()
+                    ->whereKey($order->id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $lockedOrder) {
+                    return;
+                }
+
                 $lockedPayment = Payment::query()
                     ->whereKey($payment->id)
                     ->lockForUpdate()
                     ->first();
 
                 if (
-                    $lockedPayment
-                    && $lockedPayment->status === 'pending'
-                    && $lockedPayment->expires_at
-                    && $lockedPayment->expires_at->isPast()
+                    ! $lockedPayment
+                    || $lockedPayment->status !== 'pending'
+                    || ! $lockedPayment->expires_at
+                    || ! $lockedPayment->expires_at->isPast()
                 ) {
-                    $lockedPayment->update([
+                    return;
+                }
+
+                $lockedPayment->update([
+                    'status' => 'expired',
+                ]);
+
+                $lockedOrder->update([
+                    'status' => 'expired',
+                ]);
+
+                TenantOrder::query()
+                    ->where('order_id', $lockedOrder->id)
+                    ->where('status', 'pending')
+                    ->update([
                         'status' => 'expired',
                     ]);
-
-                    Order::query()
-                        ->whereKey($order->id)
-                        ->where('status', 'pending')
-                        ->update([
-                            'status' => 'expired',
-                        ]);
-
-                    TenantOrder::query()
-                        ->where('order_id', $order->id)
-                        ->where('status', 'pending')
-                        ->update([
-                            'status' => 'expired',
-                        ]);
-                }
             });
 
-            // Ambil kembali status terbaru setelah transaksi.
             $payment->refresh();
             $order->refresh();
         }

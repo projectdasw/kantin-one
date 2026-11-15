@@ -43,7 +43,7 @@ class CustomerCartController extends Controller
         session()->put('customer_cart', $cart);
 
         return response()->json([
-             'success' => true,
+            'success' => true,
             'quantity' => $cart[$tenantId]['items'][$productId]['quantity'],
         ]);
     }

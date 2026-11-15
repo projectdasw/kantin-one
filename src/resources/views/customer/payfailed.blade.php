@@ -35,9 +35,13 @@
                         Terima kasih telah berbelanja di Kantin.ONE
                     </span>
                 </div>
-                <a href="{{ route('customer.status') }}" class="btn btn-success bg-gradient w-25">
-                    Lihat Pesanan
-                </a>
+                <form action="{{ route('customer.payment.retry') }}" method="POST">
+                    @csrf
+
+                    <button type="submit" class="btn btn-success bg-gradient w-25">
+                        Bayar Ulang
+                    </button>
+                </form>
             </div>
         </div>
     </div>

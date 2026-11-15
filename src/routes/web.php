@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\CustomerCartController;
+use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CustomerOrderController;
-use App\Http\Controllers\CustomerCartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +68,9 @@ Route::prefix('orders')->name('customer.')->group(function () {
 
     Route::post('/payment/simulate-failure', [CustomerOrderController::class, 'simulatePaymentFailure'])
         ->name('payment.simulate-failure');
+
+    Route::post('/payment/retry', [CustomerOrderController::class, 'retryPayment'])
+        ->name('payment.retry');
 });
 
 Route::get('/orders/cart', [CustomerOrderController::class, 'cart'])
@@ -84,9 +87,9 @@ Route::get('/orders/checkout', [CustomerOrderController::class, 'checkout'])
 //     return view('customer.paycomplete');
 // })->name('customer.paycomplete');
 
-// Route::get('/orders/status', function () {
-//     return view('customer.status');
-// })->name('customer.status');
+Route::get('/orders/status', function () {
+    return view('customer.status');
+})->name('customer.status');
 /* -------------------------------------------------------------------------- */
 
 Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator'])->group(function () {

@@ -48,8 +48,15 @@ class Order extends Model
         return $this->hasMany(TenantOrder::class);
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function payment(): HasOne
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasOne(Payment::class)
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
     }
 }

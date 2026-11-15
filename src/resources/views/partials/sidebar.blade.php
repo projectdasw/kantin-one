@@ -31,7 +31,7 @@
                 'label' => 'Aplikasi Pemesanan Pelanggan',
                 'icon' => 'fa-solid fa-users',
                 'url' => '#',
-                'active' => ['orders.customer*'],
+                'active' => ['customer*'],
             ],
             [
                 'label' => 'Aplikasi Monitoring Pesanan',
