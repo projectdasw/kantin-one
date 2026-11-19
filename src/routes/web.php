@@ -3,6 +3,7 @@
 use App\Http\Controllers\CustomerCartController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TableController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -79,6 +80,16 @@ Route::get('/orders/cart', [CustomerOrderController::class, 'cart'])
 Route::get('/orders/checkout', [CustomerOrderController::class, 'checkout'])
     ->name('customer.checkout');
 
+Route::get('/orders/history', [CustomerOrderController::class, 'history'])
+    ->name('customer.history');
+
+Route::post('/orders/history/search', [CustomerOrderController::class, 'searchHistory'])
+    ->name('customer.history.search');
+
+Route::get('/orders/status', function () {
+    return view('customer.status');
+})->name('customer.status');
+
 // Route::get('/orders/payment', function () {
 //     return view('customer.pay');
 // })->name('customer.pay');
@@ -86,10 +97,6 @@ Route::get('/orders/checkout', [CustomerOrderController::class, 'checkout'])
 // Route::get('/orders/payment_status', function () {
 //     return view('customer.paycomplete');
 // })->name('customer.paycomplete');
-
-Route::get('/orders/status', function () {
-    return view('customer.status');
-})->name('customer.status');
 /* -------------------------------------------------------------------------- */
 
 Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator'])->group(function () {
@@ -272,6 +279,58 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator']
 
     Route::post('/products/force-delete', [ProductController::class, 'forceDelete'])
         ->name('products.force-delete');
+
+    /* -------------------------------------------------------------------------- */
+    /* Table Management */
+    /* -------------------------------------------------------------------------- */
+
+    /* Index & Search */
+    Route::post('/tables/search', [TableController::class, 'index'])
+        ->name('tables.search');
+
+    Route::get('/tables', [TableController::class, 'index'])
+        ->name('tables.index');
+
+    /* Create */
+    Route::get('/tables/create', [TableController::class, 'create'])
+        ->name('tables.create');
+
+    Route::post('/tables', [TableController::class, 'store'])
+        ->name('tables.store');
+
+    /* Detail */
+    Route::post('/tables/detail', [TableController::class, 'selectDetail'])
+        ->name('tables.select-detail');
+
+    Route::get('/tables/detail', [TableController::class, 'show'])
+        ->name('tables.show');
+
+    /* Edit */
+    Route::post('/tables/edit', [TableController::class, 'selectEdit'])
+        ->name('tables.select-edit');
+
+    Route::get('/tables/edit', [TableController::class, 'edit'])
+        ->name('tables.edit');
+
+    Route::put('/tables/edit', [TableController::class, 'update'])
+        ->name('tables.update');
+
+    /* Status & Delete */
+    Route::post('/tables/status', [TableController::class, 'toggleStatus'])
+        ->name('tables.toggle-status');
+
+    Route::post('/tables/delete', [TableController::class, 'destroy'])
+        ->name('tables.destroy');
+
+    /* Trash, Restore & Permanent Delete */
+    Route::get('/tables/trash', [TableController::class, 'trash'])
+        ->name('tables.trash');
+
+    Route::post('/tables/restore', [TableController::class, 'restore'])
+        ->name('tables.restore');
+
+    Route::post('/tables/force-delete', [TableController::class, 'forceDelete'])
+        ->name('tables.force-delete');
 });
 /* -------------------------------------------------------------------------- */
 
@@ -281,6 +340,9 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:canteen_manager
     Route::get('/pengelola-tenant/dashboard', function () {
         return view('dashboard.canteen_manager.index');
     })->name('dashboard.canteen_manager');
+
+    Route::get('/pengelola-tenant/meja', [TableController::class, 'monitor'])
+        ->name('tables.monitor');
 
     Route::get('/tenant/pesanan', function () {
         return view('orders.tenant.index');

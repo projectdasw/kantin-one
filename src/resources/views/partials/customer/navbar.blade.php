@@ -16,12 +16,12 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('tenant.products') }}">
+            <a class="nav-link" href="{{ route('customer.history') }}">
                 <span>Riwayat</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('tenant.sales') }}">
+            <a class="nav-link" href="{{ route('customer.status') }}">
                 <span>Lacak Pesanan</span>
             </a>
         </li>
