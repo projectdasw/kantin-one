@@ -16,6 +16,24 @@
                 'active' => ['users*'],
             ],
             [
+                'label' => 'Manajemen Kantin',
+                'icon' => 'fa-solid fa-users',
+                'url' => route('canteens.index'),
+                'active' => ['canteens*'],
+            ],
+            [
+                'label' => 'Manajemen Gedung',
+                'icon' => 'fa-solid fa-users',
+                'url' => route('buildings.index'),
+                'active' => ['buildings*'],
+            ],
+            [
+                'label' => 'Manajemen Lantai',
+                'icon' => 'fa-solid fa-users',
+                'url' => route('floors.index'),
+                'active' => ['floors*'],
+            ],
+            [
                 'label' => 'Manajemen Tenant',
                 'icon' => 'fa-solid fa-store',
                 'url' => route('tenants.index'),
@@ -28,22 +46,10 @@
                 'active' => ['products*'],
             ],
             [
-                'label' => 'Aplikasi Pemesanan Pelanggan',
+                'label' => 'Manajemen Meja',
                 'icon' => 'fa-solid fa-users',
-                'url' => '#',
-                'active' => ['customer*'],
-            ],
-            [
-                'label' => 'Aplikasi Monitoring Pesanan',
-                'icon' => 'fa-solid fa-users',
-                'url' => '#',
-                'active' => ['orders.customer*'],
-            ],
-            [
-                'label' => 'Aplikasi Verifikasi Pesanan',
-                'icon' => 'fa-solid fa-users',
-                'url' => '#',
-                'active' => ['orders.customer*'],
+                'url' => route('tables.index'),
+                'active' => ['tables*'],
             ],
             [
                 'label' => 'Laporan',

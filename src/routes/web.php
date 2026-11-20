@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\CanteenController;
 use App\Http\Controllers\CustomerCartController;
 use App\Http\Controllers\CustomerOrderController;
+use App\Http\Controllers\FloorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\TenantController;
@@ -227,6 +230,81 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator']
     Route::post('/tenants/delete', [TenantController::class, 'destroy'])
         ->name('tenants.destroy');
     /* -------------------------------------------------------------------------- */
+
+    /* -------------------------------------------------------------------------- */
+
+    /* Canteen Management */
+    /* -------------------------------------------------------------------------- */
+
+    /* Index & Search */
+    Route::post('/canteens/search', [CanteenController::class, 'index'])
+        ->name('canteens.search');
+
+    Route::get('/canteens', [CanteenController::class, 'index'])
+        ->name('canteens.index');
+
+    /* Create */
+    Route::get('/canteens/create', [CanteenController::class, 'create'])
+        ->name('canteens.create');
+
+    Route::post('/canteens', [CanteenController::class, 'store'])
+        ->name('canteens.store');
+
+    /* Detail */
+    Route::post('/canteens/detail', [CanteenController::class, 'selectDetail'])
+        ->name('canteens.select-detail');
+
+    Route::get('/canteens/detail', [CanteenController::class, 'show'])
+        ->name('canteens.show');
+
+    /* Edit */
+    Route::post('/canteens/edit', [CanteenController::class, 'selectEdit'])
+        ->name('canteens.select-edit');
+
+    Route::get('/canteens/edit', [CanteenController::class, 'edit'])
+        ->name('canteens.edit');
+
+    Route::put('/canteens/edit', [CanteenController::class, 'update'])
+        ->name('canteens.update');
+
+    /* Status & Delete */
+    Route::post('/canteens/status', [CanteenController::class, 'toggleStatus'])
+        ->name('canteens.toggle-status');
+
+    Route::post('/canteens/delete', [CanteenController::class, 'destroy'])
+        ->name('canteens.destroy');
+
+    // Master Gedung
+    Route::prefix('buildings')->name('buildings.')->controller(BuildingController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/search', 'index')->name('search');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+
+        Route::post('/detail', 'selectDetail')->name('detail.select');
+        Route::get('/detail', 'show')->name('show');
+
+        Route::post('/edit', 'selectEdit')->name('edit.select');
+        Route::get('/edit', 'edit')->name('edit');
+        Route::put('/edit', 'update')->name('update');
+
+        Route::post('/status', 'toggleStatus')->name('status');
+        Route::post('/delete', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('floors')->name('floors.')->controller(FloorController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::post('/search', 'index')->name('search');
+        Route::post('/detail', 'selectDetail')->name('detail.select');
+        Route::get('/detail', 'show')->name('show');
+        Route::post('/edit', 'selectEdit')->name('edit.select');
+        Route::get('/edit', 'edit')->name('edit');
+        Route::put('/edit', 'update')->name('update');
+        Route::post('/status', 'toggleStatus')->name('status');
+        Route::post('/delete', 'destroy')->name('destroy');
+    });
 
     /* -------------------------------------------------------------------------- */
 

@@ -7,6 +7,11 @@ import './modules/tooltips.js';
 import './pages/auth/login.js';
 import './pages/tenants.js';
 import './pages/products.js';
+import './pages/users.js';
+import './pages/tables.js';
+import './pages/canteens.js';
+import './pages/buildings.js';
+import './pages/floors.js';
 
 import './pages/customer/products-order.js';
 import './pages/customer/cart-order.js';

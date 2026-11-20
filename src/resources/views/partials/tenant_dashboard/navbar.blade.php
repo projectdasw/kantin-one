@@ -29,6 +29,12 @@
                 <span>Penjualan</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('tables.monitor') }}">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Monitoring</span>
+            </a>
+        </li>
     </ul>
     <div class="dropstart">
         <ul class="dropdown-menu">
