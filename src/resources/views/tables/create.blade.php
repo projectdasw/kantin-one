@@ -29,6 +29,87 @@
                 <form action="{{ route('tables.store') }}" method="POST">
                     @csrf
 
+                    {{-- Kantin --}}
+                    <div class="mb-3">
+                        <label for="canteen_id" class="form-label fw-semibold">
+                            Kantin <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            name="canteen_id"
+                            id="canteen_id"
+                            class="form-select @error('canteen_id') is-invalid @enderror"
+                            required
+                        >
+                            <option value="">Pilih Kantin</option>
+
+                            @foreach ($canteens as $canteen)
+                                <option
+                                    value="{{ $canteen->id }}"
+                                    {{ old('canteen_id') == $canteen->id ? 'selected' : '' }}
+                                >
+                                    {{ $canteen->name }} ({{ $canteen->code }})
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @error('canteen_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Gedung --}}
+                    <div class="mb-3">
+                        <label for="building_id" class="form-label fw-semibold">
+                            Gedung <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            name="building_id"
+                            id="building_id"
+                            class="form-select @error('building_id') is-invalid @enderror"
+                            required
+                        >
+                            <option value="">Pilih Gedung</option>
+
+                            @foreach ($buildings as $building)
+                                <option
+                                    value="{{ $building->id }}"
+                                    {{ old('building_id') == $building->id ? 'selected' : '' }}
+                                >
+                                    {{ $building->name }} ({{ $building->code }})
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @error('building_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Lantai --}}
+                    <div class="mb-3">
+                        <label for="floor_id" class="form-label fw-semibold">
+                            Lantai <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            name="floor_id"
+                            id="floor_id"
+                            class="form-select @error('floor_id') is-invalid @enderror"
+                            required
+                            disabled
+                        >
+                            <option value="">Pilih gedung terlebih dahulu</option>
+                        </select>
+
+                        @error('floor_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    
+                    {{-- Nama Meja --}}
                     <div class="mb-3">
                         <label for="name" class="form-label fw-semibold">
                             Nama Meja <span class="text-danger">*</span>
@@ -41,37 +122,17 @@
                             class="form-control @error('name') is-invalid @enderror"
                             value="{{ old('name') }}"
                             placeholder="Contoh: Meja A1"
-                            maxlength="100"
+                            maxlength="255"
                             required
                         >
 
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="capacity" class="form-label fw-semibold">
-                            Kapasitas <span class="text-danger">*</span>
-                        </label>
-
-                        <div class="input-group">
-                            <input
-                                type="number"
-                                name="capacity"
-                                id="capacity"
-                                class="form-control @error('capacity') is-invalid @enderror"
-                                value="{{ old('capacity', 4) }}"
-                                min="1"
-                                max="32767"
-                                required
-                            >
-                            <span class="input-group-text">Orang</span>
-
-                            @error('capacity')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <small class="text-muted">
+                            Masukkan nama meja sesuai penamaan yang diinginkan.
+                        </small>
                     </div>
 
                     <div class="mb-4">

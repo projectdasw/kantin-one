@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Table;
+use App\Models\Canteen;
+use App\Models\Building;
+use App\Models\Floor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TableController extends Controller
 {
@@ -127,34 +131,154 @@ class TableController extends Controller
     {
         $this->ensureAdministrator();
 
-        return view('tables.create');
-    }
+        $canteens = Canteen::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
 
+        $buildings = Building::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('tables.create', compact(
+            'canteens',
+            'buildings'
+        ));
+    }
+    
     public function store(Request $request)
     {
         $this->ensureAdministrator();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:100'],
-            'capacity' => ['required', 'integer', 'min:1', 'max:32767'],
-            'location' => ['nullable', 'string', 'max:100'],
+            'canteen_id' => [
+                'required',
+                'uuid',
+                'exists:canteens,id',
+            ],
+            'building_id' => [
+                'required',
+                'uuid',
+                'exists:buildings,id',
+            ],
+            'floor_id' => [
+                'required',
+                'uuid',
+                'exists:floors,id',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'capacity' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:32767',
+            ],
+            'location' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
         ]);
 
-        $table = new Table([
-            'code' => $this->generateTableCode(),
-            'name' => $validated['name'],
-            'capacity' => $validated['capacity'],
-            'location' => $validated['location'] ?? null,
-            'is_active' => true,
-        ]);
+        DB::transaction(function () use ($validated) {
+            $canteen = Canteen::query()
+                ->whereKey($validated['canteen_id'])
+                ->where('is_active', true)
+                ->firstOrFail();
 
-        // QR Token dibuat oleh sistem, bukan dari input pengguna.
-        $table->qr_token = $this->generateQrToken();
-        $table->save();
+            $building = Building::query()
+                ->whereKey($validated['building_id'])
+                ->where('is_active', true)
+                ->firstOrFail();
+
+            // Kunci data lantai untuk mencegah
+            // nomor meja ganda pada proses bersamaan.
+            $floor = Floor::query()
+                ->whereKey($validated['floor_id'])
+                ->where('is_active', true)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            // Pastikan lantai benar-benar milik gedung pilihan.
+            abort_unless(
+                $floor->building_id === $building->id,
+                422,
+                'Lantai tidak sesuai dengan gedung yang dipilih.'
+            );
+
+            // Format dasar kode meja.
+            $prefix = $canteen->code
+                .'-'.$building->code
+                .'-'.$floor->code
+                .'-';
+
+            // Periksa seluruh meja, termasuk yang sudah dihapus.
+            $existingCodes = Table::withTrashed()
+                ->where('code', 'like', $prefix.'%')
+                ->pluck('code');
+
+            $lastNumber = 0;
+
+            foreach ($existingCodes as $existingCode) {
+                $suffix = substr($existingCode, strlen($prefix));
+
+                if (ctype_digit($suffix)) {
+                    $lastNumber = max($lastNumber, (int) $suffix);
+                }
+            }
+
+            $nextNumber = $lastNumber + 1;
+
+            $tableNumber = str_pad(
+                (string) $nextNumber,
+                2,
+                '0',
+                STR_PAD_LEFT
+            );
+
+            $code = $prefix.$tableNumber;
+
+            $table = new Table([
+                'canteen_id' => $canteen->id,
+                'floor_id' => $floor->id,
+                'table_number' => $tableNumber,
+                'code' => $code,
+                'name' => $validated['name'],
+                'capacity' => $validated['capacity'],
+                'location' => $validated['location'] ?? null,
+                'is_active' => true,
+            ]);
+
+            $table->qr_token = $this->generateQrToken();
+
+            $table->save();
+        });
 
         return redirect()
             ->route('tables.index')
             ->with('success', 'Meja berhasil ditambahkan.');
+    }
+
+    public function getFloors(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $validated = $request->validate([
+            'building_id' => ['required', 'uuid', 'exists:buildings,id'],
+        ]);
+
+        $floors = Floor::query()
+            ->where('building_id', $validated['building_id'])
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'code', 'name']);
+
+        return response()->json($floors);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -205,6 +329,7 @@ class TableController extends Controller
         return view('tables.edit', compact('table'));
     }
 
+    
     public function update(Request $request)
     {
         $this->ensureAdministrator();
@@ -212,9 +337,22 @@ class TableController extends Controller
         $table = $this->selectedTable();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:100'],
-            'capacity' => ['required', 'integer', 'min:1', 'max:32767'],
-            'location' => ['nullable', 'string', 'max:100'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'capacity' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:32767',
+            ],
+            'location' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
         ]);
 
         $table->update([

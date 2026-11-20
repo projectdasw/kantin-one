@@ -372,6 +372,9 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator']
     /* Create */
     Route::get('/tables/create', [TableController::class, 'create'])
         ->name('tables.create');
+    
+    Route::get('/tables/floors', [TableController::class, 'getFloors'])
+        ->name('tables.floors');
 
     Route::post('/tables', [TableController::class, 'store'])
         ->name('tables.store');

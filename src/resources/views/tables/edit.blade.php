@@ -45,6 +45,21 @@
                         </small>
                     </div>
 
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nomor Meja</label>
+                        <input
+                            type="text"
+                            class="form-control bg-light"
+                            value="{{ $table->table_number }}"
+                            readonly
+                        >
+                        <small class="text-muted">
+                            Nomor meja dibuat otomatis dan tidak dapat diubah.
+                        </small>
+                    </div>
+
+                    
                     <div class="mb-3">
                         <label for="name" class="form-label fw-semibold">
                             Nama Meja <span class="text-danger">*</span>
@@ -56,13 +71,17 @@
                             id="name"
                             class="form-control @error('name') is-invalid @enderror"
                             value="{{ old('name', $table->name) }}"
-                            maxlength="100"
+                            maxlength="255"
                             required
                         >
 
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+
+                        <small class="text-muted">
+                            Nama meja dapat diubah sesuai kebutuhan.
+                        </small>
                     </div>
 
                     <div class="mb-3">
