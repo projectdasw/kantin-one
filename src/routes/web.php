@@ -11,6 +11,7 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TenantOrderController;
 
 Route::get('/', function () {
     if (! Auth::check()) {
@@ -98,9 +99,11 @@ Route::get('/orders/history', [CustomerOrderController::class, 'history'])
 Route::post('/orders/history/search', [CustomerOrderController::class, 'searchHistory'])
     ->name('customer.history.search');
 
-Route::get('/orders/status', function () {
-    return view('customer.status');
-})->name('customer.status');
+Route::get('/orders/status', [CustomerOrderController::class, 'status'])
+    ->name('customer.status');
+
+Route::get('/orders/status/data', [CustomerOrderController::class, 'trackingData'])
+    ->name('customer.status.data');
 
 // Route::get('/orders/payment', function () {
 //     return view('customer.pay');
@@ -455,6 +458,12 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:canteen_manager
 /* Dashboard - Kepala Tenant & Pegawai Tenant */
 /* -------------------------------------------------------------------------- */
 Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:tenant,tenant_employee'])->group(function () {
+    Route::get('/tenant/orders', [TenantOrderController::class, 'index'])
+        ->name('tenant.orders.data');
+
+    Route::post('/tenant/orders/update-status', [TenantOrderController::class, 'updateStatus'])
+        ->name('tenant.orders.update-status');
+
     Route::get('/tenant/dashboard', function () {
         return view('dashboard.tenant.index');
     })->name('dashboard.tenant');

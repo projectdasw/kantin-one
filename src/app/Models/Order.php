@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Fillable([
     'order_number',
     'user_id',
+    'table_id',
     'service_type',
     'table_code',
     'table_name',
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'subtotal',
     'total',
 ])]
+
 class Order extends Model
 {
     use HasUuids;

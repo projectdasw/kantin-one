@@ -98,8 +98,8 @@
                     <span class="input-group-text" id="basic-addon1">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </span>
-                    <input type="search" class="form-control" placeholder="Cari kode pesanan"
-                        aria-label="Cari kode pesanan" aria-describedby="basic-addon1">
+                    <input type="search" class="form-control" id="searchOrders"
+                        placeholder="Cari kode pesanan" aria-label="Cari kode pesanan" aria-describedby="searchOrders">
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@
                 </button>
             </li>
             <li class="nav-item">
-                <button class="btn btn-sm btn-outline-warning text-dark" data-filter="waiting_confirmation">
+                <button class="btn btn-sm btn-outline-warning text-dark" data-filter="pending">
                     Menunggu Konfirmasi
                 </button>
             </li>
@@ -131,13 +131,15 @@
             </li>
         </ul>
         <hr>
-        <div class="container d-flex flex-column justify-content-center align-items-center
-            bg-secondary-subtle rounded-2 py-4">
-            <div class="display-6 text-secondary mb-2">
-                <i class="fa-solid fa-receipt"></i>
+        <div id="ordersContainer">
+            <div class="container d-flex flex-column justify-content-center align-items-center
+                bg-secondary-subtle rounded-2 py-4">
+                <div class="display-6 text-secondary mb-2">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+                <h6 class="m-0">Belum ada pesanan masuk</h6>
             </div>
-            <h6 class="m-0">Belum ada pesanan masuk</h6>
         </div>
     </div>
-    @vite('resources/js/pages/tenant-orders.js')
+    @vite('resources/js/pages/tenant/tenant-orders.js')
 @endsection

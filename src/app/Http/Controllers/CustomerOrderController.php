@@ -652,13 +652,6 @@ class CustomerOrderController extends Controller
                 'status' => 'paid',
             ]);
 
-            TenantOrder::query()
-                ->where('order_id', $order->id)
-                ->where('status', 'pending')
-                ->update([
-                    'status' => 'paid',
-                ]);
-
             return 'success';
         });
 
@@ -842,6 +835,73 @@ class CustomerOrderController extends Controller
         }
 
         return view($view, compact('order', 'payment'));
+    }
+
+    public function status()
+    {
+        $orderId = session('customer_latest_order_id');
+
+        if (! $orderId) {
+            return redirect()
+                ->route('customer.index')
+                ->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        $order = Order::query()
+            ->with([
+                'payment',
+                'tenantOrders.tenant',
+                'tenantOrders.items',
+            ])
+            ->find($orderId);
+
+        if (! $order) {
+            return redirect()
+                ->route('customer.index')
+                ->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        return view('customer.status', compact('order'));
+    }
+
+    public function trackingData()
+    {
+        $orderId = session('customer_latest_order_id');
+
+        if (! $orderId) {
+            return response()->json([
+                'message' => 'Pesanan tidak ditemukan.',
+            ], 404);
+        }
+
+        $order = Order::query()
+            ->with([
+                'payment',
+                'tenantOrders.tenant',
+                'tenantOrders.items',
+            ])
+            ->find($orderId);
+
+        if (! $order) {
+            return response()->json([
+                'message' => 'Pesanan tidak ditemukan.',
+            ], 404);
+        }
+
+        return response()->json([
+            'order' => [
+                'order_number' => $order->order_number,
+                'payment_status' => $order->payment?->status,
+                'tenant_orders' => $order->tenantOrders->map(fn ($tenantOrder) => [
+                    'id' => $tenantOrder->id,
+                    'status' => $tenantOrder->status,
+                    'created_at' => $tenantOrder->created_at,
+                    'accepted_at' => $tenantOrder->accepted_at,
+                    'ready_at' => $tenantOrder->ready_at,
+                    'completed_at' => $tenantOrder->completed_at,
+                ])->values(),
+            ],
+        ]);
     }
 
     /**
