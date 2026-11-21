@@ -37,7 +37,7 @@
                     name="search"
                     class="form-control"
                     value="{{ request('search') }}"
-                    placeholder="Cari kode atau nama meja..."
+                    placeholder="Cari kode, nomor, atau nama meja..."
                 >
 
                 <button class="btn btn-primary" type="submit">
@@ -59,6 +59,7 @@
                     <tr>
                         <th>#</th>
                         <th>Kode</th>
+                        <th>Nomor Meja</th>
                         <th>Nama Meja</th>
                         <th>Kapasitas</th>
                         <th>Lokasi</th>
@@ -75,6 +76,11 @@
                             <td>
                                 <span class="badge bg-dark">
                                     {{ $table->code }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    {{ $table->table_number }}
                                 </span>
                             </td>
 
@@ -125,7 +131,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center py-5">
+                            <td colspan="8" class="text-center py-5">
                                 <i class="fas fa-trash-alt fa-3x text-muted mb-3"></i>
                                 <p class="text-muted mb-0">
                                     Recycle Bin masih kosong.

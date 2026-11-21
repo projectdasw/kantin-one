@@ -16,8 +16,12 @@
                 <tr>
                     <td>{{ $floors->firstItem() + $loop->index }}</td>
                     <td>
-                        <div class="fw-semibold">{{ $floor->building->name }}</div>
-                        <small class="text-muted">{{ $floor->building->code }}</small>
+                        <div class="fw-semibold">
+                            {{ $floor->building?->name ?? 'Building tidak tersedia' }}
+                        </div>
+                        <small class="text-muted">
+                            {{ $floor->building?->code ?? '-' }}
+                        </small>
                     </td>
                     <td>
                         <span class="badge bg-light text-dark border">

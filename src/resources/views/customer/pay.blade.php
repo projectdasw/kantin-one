@@ -30,10 +30,30 @@
                 </span>
                 <div class="text-center">
                     <h3 class="fw-bold">Pesanan Berhasil Dibuat!</h3>
-                    <div class="text-center">
-                        <span class="text-muted small">Nomor Pesanan</span>
-                        <h6 class="fw-bold">{{ $order->order_number }}</h6>
-                    </div>
+                    @if ($order->service_type === 'after_activity')
+                        <div class="card bg-success-subtle border-0 mt-3 mx-auto"
+                            style="max-width: 350px;">
+                            <div class="card-body text-center">
+                                <i class="fa-solid fa-calendar-check text-success fs-3 mb-2"></i>
+
+                                <h6 class="fw-bold mb-3">Jadwal Pengambilan</h6>
+
+                                <div class="mb-2">
+                                    <small class="text-muted d-block">Tanggal</small>
+                                    <strong>
+                                        {{ \Carbon\Carbon::parse($order->pickup_date)->translatedFormat('d F Y') }}
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <small class="text-muted d-block">Jam</small>
+                                    <strong>
+                                        {{ \Carbon\Carbon::parse($order->pickup_time)->format('H:i') }} WIB
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     <span class="text-muted m-0">
                         Pesanan kamu sudah kami terima. Silakan lakukan pembayaran pesanan Anda
                     </span>

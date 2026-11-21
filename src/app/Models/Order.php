@@ -59,4 +59,9 @@ class Order extends Model
             ->orderByDesc('created_at')
             ->orderByDesc('id');
     }
+
+    public function table(): BelongsTo
+    {
+        return $this->belongsTo(Table::class);
+    }
 }

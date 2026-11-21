@@ -14,6 +14,13 @@ class CustomerCartController extends Controller
             404
         );
 
+        $selectedTenants = session()->get('customer_selected_tenants', []);
+
+        abort_unless(
+            in_array($product->tenant_id, $selectedTenants, true),
+            403
+        );
+
         $cart = session()->get('customer_cart', []);
 
         $tenantId = $product->tenant_id;

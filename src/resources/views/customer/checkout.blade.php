@@ -40,6 +40,21 @@
                                     </div>
                                 </div>
                                 <hr>
+                                @if ($hasUnavailableItems)
+                                    <div class="alert alert-warning" role="alert">
+                                        <div class="d-flex align-items-start gap-2">
+                                            <i class="fa-solid fa-triangle-exclamation mt-1"></i>
+                                            <div>
+                                                <strong>Ada produk yang tidak tersedia.</strong>
+                                                <div class="small">
+                                                    Beberapa produk dalam keranjang sudah tidak tersedia atau kantinnya tidak aktif.
+                                                    Silakan periksa kembali keranjang belanja Anda.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 @foreach ($cart as $tenantId => $tenantCart)
                                     @php
                                         $tenant = $tenants->get($tenantId);
@@ -74,7 +89,7 @@
                                                         : asset('img-dummy/supermarket.png');
                                                 @endphp
 
-                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div class="d-flex justify-content-between align-items-center mb-3 {{ !($item['is_available'] ?? false) ? 'opacity-50' : '' }}">
                                                     <div class="d-flex justify-content-start align-items-center gap-3">
                                                         <img src="{{ $image }}"
                                                             class="img-thumbnail object-fit-cover"
@@ -85,15 +100,30 @@
                                                             <h6 class="fw-bold m-0">
                                                                 {{ $item['product_name'] }}
                                                             </h6>
+                                                            @if (!($item['is_available'] ?? false))
+                                                                <span class="badge bg-danger mt-1">
+                                                                    Tidak Tersedia
+                                                                </span>
+                                                            @endif
 
-                                                            <span class="text-muted small">
-                                                                {{ $quantity }} x Rp{{ number_format($unitPrice, 0, ',', '.') }}
-                                                            </span>
+                                                            @if ($item['is_available'] ?? false)
+                                                                <span class="text-muted small">
+                                                                    {{ $quantity }} x Rp{{ number_format($unitPrice, 0, ',', '.') }}
+                                                                </span>
+                                                            @else
+                                                                <span class="text-danger small">
+                                                                    Produk tidak dapat dipesan
+                                                                </span>
+                                                            @endif
                                                         </div>
                                                     </div>
 
                                                     <span class="fw-bold">
-                                                        Rp{{ number_format($subtotal, 0, ',', '.') }}
+                                                        @if ($item['is_available'] ?? false)
+                                                            Rp{{ number_format($subtotal, 0, ',', '.') }}
+                                                        @else
+                                                            <span class="text-danger">-</span>
+                                                        @endif
                                                     </span>
                                                 </div>
                                             @endforeach
@@ -201,25 +231,93 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row align-items-center bg-light p-2 border border-1 rounded-3 mb-2">
-                                        <span class="bg-primary-subtle px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                            <i class="fa-solid fa-chair text-primary"></i>
-                                        </span>
-                                        <div>
-                                            <h6 class="fw-bold m-0 small">Dine In</h6>
-                                            <span style="color: var(--text-muted); font-size: 12px;">Pesanan dinikmati di area kantin.</span>
+                                    @if ($customerService['service_type'] === 'dine_in' && $customerTable)
+                                        <div class="d-flex flex-row align-items-center bg-light p-2 border rounded-3 mb-3">
+                                            <span class="bg-primary-subtle px-2 py-1 fs-5 rounded-3 me-3">
+                                                <i class="fa-solid fa-chair text-primary"></i>
+                                            </span>
+
+                                            <div>
+                                                <h6 class="fw-bold m-0 small">Lokasi & Meja</h6>
+
+                                                <span class="text-muted" style="font-size: 12px;">
+                                                    {{ $customerTable->name }}
+                                                </span>
+
+                                                @if ($customerTable->location)
+                                                    <br>
+                                                    <span class="text-muted" style="font-size: 12px;">
+                                                        {{ $customerTable->location }}
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex flex-row align-items-center bg-light p-2 border border-1 rounded-3 mb-3">
-                                        <span class="bg-primary-subtle px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
-                                        </span>
-                                        <div>
-                                            <h6 class="fw-bold m-0 small">Area Utama · Meja A-012</h6>
-                                            <span style="color: var(--text-muted); font-size: 12px;">Lokasi Pemesanan & Meja</span>
+                                    @elseif ($customerService['service_type'] === 'take_away')
+                                        <div class="d-flex flex-row align-items-center bg-light p-2 border rounded-3 mb-3">
+                                            <span class="bg-warning-subtle px-2 py-1 fs-5 rounded-3 me-3">
+                                                <i class="fa-solid fa-bag-shopping text-warning"></i>
+                                            </span>
+
+                                            <div>
+                                                <h6 class="fw-bold m-0 small">Take Away</h6>
+                                                <span class="text-muted" style="font-size: 12px;">
+                                                    Pesanan disiapkan untuk dibawa pulang.
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
+                                    @elseif ($customerService['service_type'] === 'after_activity')
+                                        <div class="d-flex flex-row align-items-center bg-light p-2 border rounded-3 mb-3">
+                                            <span class="bg-success-subtle px-2 py-1 fs-5 rounded-3 me-3">
+                                                <i class="fa-solid fa-calendar-check text-success"></i>
+                                            </span>
+
+                                            <div>
+                                                <h6 class="fw-bold m-0 small">Pesanan Terjadwal</h6>
+                                                <span class="text-muted" style="font-size: 12px;">
+                                                    Pesanan disiapkan sesuai jadwal pengambilan.
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="pickup-date" class="form-label small">
+                                                Tanggal Pengambilan <span class="text-danger">*</span>
+                                            </label>
+
+                                            <input
+                                                type="date"
+                                                name="pickup_date"
+                                                id="pickup-date"
+                                                class="form-control form-control-sm"
+                                                value="{{ old('pickup_date', $checkoutDetails['pickup_date'] ?? '') }}"
+                                                min="{{ now()->format('Y-m-d') }}"
+                                                required
+                                            >
+
+                                            @error('pickup_date')
+                                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="pickup-time" class="form-label small">
+                                                Jam Pengambilan <span class="text-danger">*</span>
+                                            </label>
+
+                                            <input
+                                                type="time"
+                                                name="pickup_time"
+                                                id="pickup-time"
+                                                class="form-control form-control-sm"
+                                                value="{{ old('pickup_time', $checkoutDetails['pickup_time'] ?? '') }}"
+                                                required
+                                            >
+
+                                            @error('pickup_time')
+                                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    @endif
+                                    <!-- <div>
                                         <label for="exampleFormControlInput1" class="form-label small">Nama Pemesan<span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <span class="input-group-text" id="basic-addon1">
@@ -228,7 +326,7 @@
                                             <input type="text" class="form-control form-control-sm" placeholder="Masukkan nama Anda"
                                                 aria-label="Masukkan nama Anda" aria-describedby="basic-addon1">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="mb-3">
                                         <label for="customer-name" class="form-label small">
                                             Nama Pemesan <span class="text-danger">*</span>
@@ -349,12 +447,12 @@
                                         <span>Pembayaran dilakukan dalam satu transaksi untuk seluruh kantin pilihanmu</span>
                                     </div>
                                     <hr>
-                                    <a href="{{ route('customer.payment') }}" class="btn btn-success w-100">
+                                    <!-- <a href="{{ route('customer.payment') }}" class="btn btn-success w-100">
                                         <span class="float-start">Bayar Pesanan</span>
                                         <span class="float-end">
                                             <i class="fa-solid fa-arrow-right-long"></i>
                                         </span>
-                                    </a>
+                                    </a> -->
                                     <button
                                         type="submit"
                                         class="btn btn-success w-100"

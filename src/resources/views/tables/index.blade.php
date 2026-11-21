@@ -38,7 +38,7 @@
                         type="text"
                         id="tableSearch"
                         class="form-control"
-                        placeholder="Cari kode, nama, atau lokasi meja..."
+                        placeholder="Cari kode, nomor, nama, atau lokasi meja..."
                     >
                 </div>
             </div>

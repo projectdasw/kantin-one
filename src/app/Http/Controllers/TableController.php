@@ -101,6 +101,7 @@ class TableController extends Controller
 
                 $query->where(function ($q) use ($search) {
                     $q->where('code', 'ILIKE', "%{$search}%")
+                        ->orWhere('table_number', 'ILIKE', "%{$search}%")
                         ->orWhere('name', 'ILIKE', "%{$search}%")
                         ->orWhere('location', 'ILIKE', "%{$search}%");
                 });
@@ -435,6 +436,7 @@ class TableController extends Controller
 
                 $query->where(function ($q) use ($search) {
                     $q->where('code', 'ILIKE', "%{$search}%")
+                        ->orWhere('table_number', 'ILIKE', "%{$search}%")
                         ->orWhere('name', 'ILIKE', "%{$search}%");
                 });
             })

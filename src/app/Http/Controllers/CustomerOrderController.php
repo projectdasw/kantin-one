@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Tenant;
 use App\Models\TenantOrder;
+use App\Models\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,7 +23,80 @@ class CustomerOrderController extends Controller
      */
     public function index(): View
     {
-        return view('customer.index');
+        $tables = Table::query()
+            ->where('is_active', true)
+            ->whereHas('canteen', function ($query) {
+                $query->where('is_active', true);
+            })
+            ->whereHas('floor', function ($query) {
+                $query->where('is_active', true)
+                    ->whereHas('building', function ($building) {
+                        $building->where('is_active', true);
+                    });
+            })
+            ->with([
+                'canteen',
+                'floor.building',
+            ])
+            ->orderBy('table_number')
+            ->get();
+
+        $selectedTable = null;
+
+        if (session()->has('customer_table_id')) {
+            $selectedTable = $tables->firstWhere(
+                'id',
+                session('customer_table_id')
+            );
+
+            if (! $selectedTable) {
+                session()->forget('customer_table_id');
+            }
+        }
+
+        return view('customer.index', compact(
+            'tables',
+            'selectedTable'
+        ));
+    }
+
+    public function simulateTableConnection(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'table_id' => [
+                'required',
+                'uuid',
+                'exists:tables,id',
+            ],
+        ]);
+
+        $table = Table::query()
+            ->where('is_active', true)
+            ->whereHas('canteen', function ($query) {
+                $query->where('is_active', true);
+            })
+            ->whereHas('floor', function ($query) {
+                $query->where('is_active', true)
+                    ->whereHas('building', function ($building) {
+                        $building->where('is_active', true);
+                    });
+            })
+            ->findOrFail($validated['table_id']);
+
+        session()->put('customer_table_id', $table->id);
+
+        return redirect()
+            ->route('customer.index')
+            ->with('success', 'Meja berhasil terhubung.');
+    }
+
+    public function disconnectSimulatedTable(): RedirectResponse
+    {
+        session()->forget('customer_table_id');
+
+        return redirect()
+            ->route('customer.index')
+            ->with('success', 'Koneksi meja berhasil diputus.');
     }
 
     public function storeService(Request $request): RedirectResponse
@@ -38,8 +112,46 @@ class CustomerOrderController extends Controller
             ],
         ]);
 
+        $tableId = null;
+
+        if ($validated['service_type'] === 'dine_in') {
+            if (! session()->has('customer_table_id')) {
+                return redirect()
+                    ->back()
+                    ->withErrors([
+                        'service_type' => 'Silakan hubungkan meja terlebih dahulu untuk layanan Dine In.',
+                    ]);
+            }
+
+            $table = Table::query()
+                ->where('is_active', true)
+                ->whereHas('canteen', function ($query) {
+                    $query->where('is_active', true);
+                })
+                ->whereHas('floor', function ($query) {
+                    $query->where('is_active', true)
+                        ->whereHas('building', function ($building) {
+                            $building->where('is_active', true);
+                        });
+                })
+                ->find(session('customer_table_id'));
+
+            if (! $table) {
+                session()->forget('customer_table_id');
+
+                return redirect()
+                    ->back()
+                    ->withErrors([
+                        'service_type' => 'Meja tidak tersedia. Silakan hubungkan kembali meja Anda.',
+                    ]);
+            }
+
+            $tableId = $table->id;
+        }
+
         session()->put('customer_service', [
             'service_type' => $validated['service_type'],
+            'table_id' => $tableId,
         ]);
 
         return redirect()->route('customer.tenants');
@@ -148,11 +260,18 @@ class CustomerOrderController extends Controller
                 'string',
                 'max:500',
             ],
+            'pickup_date' => $customerService['service_type'] === 'after_activity'
+                ? ['required', 'date_format:Y-m-d', 'after_or_equal:today']
+                : ['nullable', 'date_format:Y-m-d'],
+
+            'pickup_time' => $customerService['service_type'] === 'after_activity'
+                ? ['required', 'date_format:H:i']
+                : ['nullable', 'date_format:H:i'],
         ]);
 
         $serviceType = $customerService['service_type'];
 
-        if (! in_array($serviceType, ['dine_in', 'take_away'], true)) {
+        if (! in_array($serviceType, ['dine_in', 'take_away', 'after_activity'], true)) {
             return redirect()
                 ->route('customer.index')
                 ->with('warning', 'Jenis layanan belum tersedia.');
@@ -162,8 +281,25 @@ class CustomerOrderController extends Controller
             $order = DB::transaction(function () use (
                 $cart,
                 $validated,
-                $serviceType
+                $serviceType,
+                $customerService
             ) {
+                $table = null;
+
+                if ($serviceType === 'dine_in') {
+                    $table = Table::query()
+                        ->where('id', $customerService['table_id'] ?? null)
+                        ->where('is_active', true)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (! $table) {
+                        throw new \RuntimeException(
+                            'Meja yang dipilih sudah tidak tersedia. Silakan pilih meja kembali.'
+                        );
+                    }
+                }
+
                 $tenantIds = array_keys($cart);
 
                 // Ambil ulang tenant aktif dari database.
@@ -268,14 +404,17 @@ class CustomerOrderController extends Controller
                     'order_number' => $orderNumber,
                     'user_id' => auth()->id(),
                     'service_type' => $serviceType,
-                    'table_code' => null,
-                    'table_name' => null,
+                    'table_id' => $table?->id,
+                    'table_code' => $table?->code,
+                    'table_name' => $table?->name,
                     'customer_name' => $validated['customer_name'],
                     'customer_phone' => $validated['customer_phone'],
                     'notes' => $validated['notes'] ?? null,
                     'status' => 'pending',
                     'subtotal' => $orderSubtotal / 100,
                     'total' => $orderSubtotal / 100,
+                    'pickup_date' => $validated['pickup_date'] ?? null,
+                    'pickup_time' => $validated['pickup_time'] ?? null,
                 ]);
 
                 // Buat pembayaran QRIS simulasi.
@@ -722,18 +861,84 @@ class CustomerOrderController extends Controller
         return view('customer.tenants', compact('tenants'));
     }
 
+    public function storeTenants(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'tenant_ids' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+            'tenant_ids.*' => [
+                'required',
+                'uuid',
+                'distinct',
+                'exists:tenants,id',
+            ],
+        ]);
+
+        $tenantIds = Tenant::query()
+            ->whereIn('id', $validated['tenant_ids'])
+            ->where('is_active', true)
+            ->pluck('id')
+            ->all();
+
+        if (count($tenantIds) !== count($validated['tenant_ids'])) {
+            return redirect()
+                ->back()
+                ->withErrors([
+                    'tenant_ids' => 'Salah satu kantin sudah tidak tersedia. Silakan pilih kembali.',
+                ]);
+        }
+
+        // Simpan pilihan kantin
+        session()->put('customer_selected_tenants', $tenantIds);
+
+        // Sinkronisasi keranjang dengan pilihan kantin
+        $cart = session()->get('customer_cart', []);
+
+        $cart = array_intersect_key(
+            $cart,
+            array_flip($tenantIds)
+        );
+
+        session()->put('customer_cart', $cart);
+
+        return redirect()->route('customer.products');
+    }
+
     /**
      * Menampilkan produk dari tenant tertentu.
      */
-    public function products(Tenant $tenant): View
+    public function products(): View|RedirectResponse
     {
-        abort_unless($tenant->is_active, 404);
+        $tenantIds = session('customer_selected_tenants', []);
 
-        $products = $tenant->products()
-            ->latest()
+        if (empty($tenantIds)) {
+            return redirect()
+                ->route('customer.tenants')
+                ->with('warning', 'Silakan pilih minimal satu kantin.');
+        }
+
+        $tenants = Tenant::query()
+            ->whereIn('id', $tenantIds)
+            ->where('is_active', true)
+            ->with([
+                'products' => fn ($query) => $query
+                    ->where('is_active', true)
+                    ->latest(),
+            ])
             ->get();
 
-        return view('customer.products', compact('tenant', 'products'));
+        if ($tenants->isEmpty()) {
+            session()->forget('customer_selected_tenants');
+
+            return redirect()
+                ->route('customer.tenants')
+                ->with('warning', 'Kantin yang dipilih sudah tidak tersedia.');
+        }
+
+        return view('customer.products', compact('tenants'));
     }
 
     /**
@@ -773,6 +978,21 @@ class CustomerOrderController extends Controller
                 ->with('warning', 'Silakan pilih jenis layanan terlebih dahulu.');
         }
 
+        $customerTable = null;
+
+        if ($customerService['service_type'] === 'dine_in') {
+            $customerTable = Table::query()
+                ->where('id', $customerService['table_id'] ?? null)
+                ->where('is_active', true)
+                ->first();
+
+            if (! $customerTable) {
+                return redirect()
+                    ->route('customer.index')
+                    ->with('warning', 'Meja yang dipilih sudah tidak tersedia. Silakan pilih meja kembali.');
+            }
+        }
+
         $tenantIds = array_keys($cart);
 
         $tenants = Tenant::query()
@@ -784,21 +1004,35 @@ class CustomerOrderController extends Controller
         $grandTotal = 0;
         $hasUnavailableItems = false;
 
-        foreach ($cart as $tenantId => $tenantCart) {
+        foreach ($cart as $tenantId => &$tenantCart) {
             $tenant = $tenants->get($tenantId);
 
-            foreach ($tenantCart['items'] as $productId => $item) {
+            foreach ($tenantCart['items'] as $productId => &$item) {
                 $product = $tenant?->products->firstWhere('id', $productId);
 
-                if (! $tenant || ! $tenant->is_active || ! $product || ! $product->is_active) {
-                    $hasUnavailableItems = true;
+                $item['is_available'] = (
+                    $tenant &&
+                    $tenant->is_active &&
+                    $product &&
+                    $product->is_active
+                );
 
+                if (! $item['is_available']) {
+                    $hasUnavailableItems = true;
                     continue;
                 }
 
-                $grandTotal += (float) $product->price * (int) $item['quantity'];
+                $item['unit_price'] = (float) $product->price;
+                $item['product_name'] = $product->name;
+                $item['image'] = $product->image;
+
+                $grandTotal += $item['unit_price'] * (int) $item['quantity'];
             }
+
+            unset($item);
         }
+
+        unset($tenantCart);
 
         return view('customer.checkout', compact(
             'cart',
@@ -806,7 +1040,8 @@ class CustomerOrderController extends Controller
             'grandTotal',
             'hasUnavailableItems',
             'customerService',
-            'checkoutDetails'
+            'checkoutDetails',
+            'customerTable'
         ));
     }
 }

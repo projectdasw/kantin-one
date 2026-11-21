@@ -135,6 +135,45 @@
                         </small>
                     </div>
 
+                    <div class="col-md-6">
+                        <label for="table_number" class="form-label">
+                            Nomor Meja
+                        </label>
+
+                        <input
+                            type="text"
+                            id="table_number"
+                            class="form-control"
+                            value="Otomatis"
+                            disabled
+                        >
+
+                        <small class="text-muted">
+                            Nomor meja akan dibuat otomatis oleh sistem.
+                        </small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="capacity" class="form-label">
+                            Kapasitas <span class="text-danger">*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            name="capacity"
+                            id="capacity"
+                            class="form-control @error('capacity') is-invalid @enderror"
+                            value="{{ old('capacity', 4) }}"
+                            min="1"
+                            max="32767"
+                            required
+                        >
+
+                        @error('capacity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="mb-4">
                         <label for="location" class="form-label fw-semibold">
                             Lokasi

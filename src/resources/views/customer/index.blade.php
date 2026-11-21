@@ -47,23 +47,84 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card border-0 shadow-sm rounded-4">
-                                <div class="card-body d-flex justify-content-between align-items-center">
-                                    <div class="d-flex flex-row align-items-center">
-                                        <span class="bg-light px-2 py-1 fs-5 rounded-3 me-3 border-0">
-                                            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
-                                        </span>
-                                        <div>
-                                            <span class="m-0" style="color: var(--text-muted); font-size: 12px;">Lokasi Pemesanan</span>
-                                            <h6 class="fw-bold m-0 small">Area Utama · Meja A-012</h6>
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-body">
+                                    <h5 class="fw-bold mb-3">
+                                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                                        Lokasi Pemesanan
+                                    </h5>
+
+                                    @if ($selectedTable)
+                                        <div class="alert alert-success mb-3">
+                                            <div class="fw-bold mb-1">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                Meja Berhasil Terhubung
+                                            </div>
+
+                                            <div>
+                                                {{ $selectedTable->canteen->name }}
+                                            </div>
+
+                                            <div class="small text-muted">
+                                                {{ $selectedTable->floor->building->name }}
+                                                · {{ $selectedTable->floor->name }}
+                                                · Meja {{ $selectedTable->table_number }}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <h6 class="fw-bold m-0" style="font-size: 12px;">
-                                        <span class="text-success">
-                                            <i class="fa-solid fa-globe me-1"></i>
-                                            <span>Terhubung</span>
-                                        </span>
-                                    </h6>
+
+                                        <form action="{{ route('customer.table.disconnect') }}" method="POST">
+                                            @csrf
+
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-unlink me-1"></i>
+                                                Putuskan Koneksi Meja
+                                            </button>
+                                        </form>
+                                    @else
+                                        <p class="text-muted small mb-3">
+                                            Silakan pilih meja untuk menyimulasikan proses pemindaian QR Code.
+                                        </p>
+
+                                        <form action="{{ route('customer.table.simulate') }}" method="POST">
+                                            @csrf
+
+                                            <div class="mb-3">
+                                                <label for="table_id" class="form-label fw-semibold">
+                                                    Pilih Meja
+                                                </label>
+
+                                                <select
+                                                    name="table_id"
+                                                    id="table_id"
+                                                    class="form-select @error('table_id') is-invalid @enderror"
+                                                    required
+                                                >
+                                                    <option value="">-- Pilih Meja --</option>
+
+                                                    @foreach ($tables as $table)
+                                                        <option
+                                                            value="{{ $table->id }}"
+                                                            {{ old('table_id') == $table->id ? 'selected' : '' }}
+                                                        >
+                                                            {{ $table->canteen->name }}
+                                                            - {{ $table->floor->building->name }}
+                                                            - {{ $table->floor->name }}
+                                                            - Meja {{ $table->table_number }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                @error('table_id')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="fas fa-qrcode me-1"></i>
+                                                Simulasikan Scan QR Meja
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
                         </div>

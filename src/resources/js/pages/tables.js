@@ -19,7 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 status: statusFilter.value,
             });
 
-            const requestUrl = url || `${window.location.pathname}?${params}`;
+            let requestUrl;
+
+            if (url) {
+                const paginationUrl = new URL(url, window.location.origin);
+
+                params.set('page', paginationUrl.searchParams.get('page') || '1');
+
+                requestUrl = `${window.location.pathname}?${params}`;
+            } else {
+                requestUrl = `${window.location.pathname}?${params}`;
+            }
 
             container.style.opacity = '0.5';
 

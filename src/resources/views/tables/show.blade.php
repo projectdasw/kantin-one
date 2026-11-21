@@ -44,6 +44,13 @@
                     </div>
 
                     <div class="col-md-6">
+                        <small class="text-muted">Nomor Meja</small>
+                        <h5 class="fw-bold mt-1">
+                            <span class="badge bg-primary">{{ $table->table_number }}</span>
+                        </h5>
+                    </div>
+
+                    <div class="col-md-6">
                         <small class="text-muted">Nama Meja</small>
                         <h5 class="fw-bold mt-1">{{ $table->name }}</h5>
                     </div>

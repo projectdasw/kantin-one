@@ -34,13 +34,22 @@ Route::get('/', function () {
 */
 
 Route::prefix('orders')->name('customer.')->group(function () {
+    Route::post('/simulate-table', [CustomerOrderController::class, 'simulateTableConnection'])
+        ->name('table.simulate');
+
+    Route::post('/disconnect-table', [CustomerOrderController::class, 'disconnectSimulatedTable'])
+        ->name('table.disconnect');
+
     Route::get('/', [CustomerOrderController::class, 'index'])
         ->name('index');
 
     Route::get('/tenant', [CustomerOrderController::class, 'tenants'])
         ->name('tenants');
 
-    Route::get('/tenant/{tenant:code}', [CustomerOrderController::class, 'products'])
+    Route::post('/tenant', [CustomerOrderController::class, 'storeTenants'])
+        ->name('tenants.store');
+
+    Route::get('/products', [CustomerOrderController::class, 'products'])
         ->name('products');
 
     Route::post('/cart/items/{product}/increase', [CustomerCartController::class, 'increase'])
