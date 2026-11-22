@@ -4,71 +4,56 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>@yield('title', 'Authentication') | Kantin.ONE</title>
-        <meta name="theme-color" content="#172554">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('styles')
     </head>
     <body>
-        <main class="auth-wrapper">
-            <div class="auth-container">
-
-                {{-- BRANDING --}}
-                <section class="auth-brand-panel">
-                    <div class="auth-brand-logo">
-                        <div class="auth-logo-icon">
-                            <i class="fa-solid fa-utensils"></i>
+        <div class="container-fluid auth-panel vh-100 p-0">
+            <div class="container h-100">
+                <div class="row h-100 py-5">
+                    <div class="col d-flex flex-column justify-content-between">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="fs-4 p-2 rounded-4 me-3" style="background-color: #ffffff2a;">
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <div>
+                                <h4 class="m-0" style="font-weight: 800;">Kantin<span style="color: var(--login-text-logo);">.ONE</span></h4>
+                                <span class="small" style="color: var(--login-text-description);">Smart Canteen Management</span>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h1 class="display-5" style="font-weight: 800;">
+                                Manage Your <br>
+                                <span style="color: var(--login-text-logo);">Canteen</span> Smarter
+                            </h1>
+                            <span class="small w-75" style="color: var(--login-text-description);">
+                                Kelola operasional kantin dengan lebih mudah, terstruktur, dan efisien melalui satu platform manajemen terintegrasi
+                            </span>
+                            <div class="d-flex justify-content-start mt-3">
+                                <div class="fs-3 p-3 rounded-4 me-3 bg-primary bg-gradient shadow">
+                                    <i class="fa-solid fa-store"></i>
+                                </div>
+                                <div class="fs-3 p-3 rounded-4 me-3 bg-success bg-gradient shadow">
+                                    <i class="fa-solid fa-chart-line"></i>
+                                </div>
+                                <div class="fs-3 p-3 rounded-4 me-3 bg-danger bg-gradient shadow">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </div>
+                            </div>
                         </div>
                         <div>
-                            <div class="auth-logo-name">
-                                Kantin<span>.ONE</span>
-                            </div>
-                            <small class="auth-logo-subtitle">
-                                MANAGEMENT SYSTEM
-                            </small>
+                            <span class="small" style="color: var(--login-text-description);">
+                                &copy; {{ date('Y') }} Kantin.ONE. All rights reserved.
+                            </span>
                         </div>
                     </div>
-                    <div class="auth-brand-content">
-                        <span class="auth-brand-badge">
-                            SMART CANTEEN MANAGEMENT
-                        </span>
-                        <h1> Manage Your <span>Canteen</span> Smarter.</h1>
-                        <p>
-                            Kelola operasional kantin dengan lebih mudah,
-                            terstruktur, dan efisien melalui satu platform
-                            manajemen terintegrasi.
-                        </p>
-                        <div class="auth-brand-illustration">
-                            <div class="auth-illustration-item">
-                                <i class="fa-solid fa-store"></i>
-                            </div>
-                            <div class="auth-illustration-item">
-                                <i class="fa-solid fa-chart-line"></i>
-                            </div>
-                            <div class="auth-illustration-item">
-                                <i class="fa-solid fa-receipt"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="auth-brand-footer">
-                        &copy; {{ date('Y') }} Kantin.ONE. All rights reserved.
-                    </div>
-                </section>
-
-                {{-- AUTHENTICATION CONTENT --}}
-                <section class="auth-form-panel">
-                    <div class="auth-form-header">
-                        <h2>@yield('auth-heading', 'Welcome Back!')</h2>
-                        <p>@yield('auth-description', 'Silakan masuk untuk melanjutkan ke sistem Kantin.ONE.')</p>
-                    </div>
-                    <div class="auth-form-body">
+                    <div class="col d-flex flex-column justify-content-center">
                         @yield('auth-content')
                     </div>
-                    <div class="auth-form-footer">
-                        Kantin.ONE Management System
-                    </div>
-                </section>
+                </div>
             </div>
-        </main>
-        @stack('scripts')
+        </div>
     </body>
+    
+    @stack('scripts')
 </html>

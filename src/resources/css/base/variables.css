@@ -8,13 +8,26 @@
     --text-main: #1e293b;
     --text-muted: #94a3b8;
 
+    /* Login Page / Auth */
     --auth-primary: #6366f1;
     --auth-secondary: #8b5cf6;
     --auth-dark: #172554;
     --auth-text: #1e293b;
     --auth-muted: #94a3b8;
+    --login-text-logo: #c4b5fd;
+    --login-text-description: #c7d2fe;
+
+    /* Dashboard Page */
+    --dashboard-primary: #6366f1;
+    --dashboard-secondary: #8b5cf6;
+    --dashboard-primary-subtle: #ae9aff;
 }
 
 * {
     box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
 }

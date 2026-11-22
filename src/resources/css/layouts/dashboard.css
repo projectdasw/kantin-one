@@ -1,7 +1,92 @@
-body {
-    background: var(--page-bg);
-    color: var(--text-main);
+/* Custom Dashboard Sidebar Menu */
+/* ------------------------------------------------------------------------ */
+.list-group-item-action {
+    transition: all .2s ease;
 }
+
+.list-group-item-action:hover {
+    background-color: var(--dashboard-primary) !important;
+    color: #ffffff !important;
+}
+
+.list-group-item-action.single-active {
+    background-color: var(--dashboard-secondary) !important;
+    color: #ffffff !important;
+}
+
+.list-group-item-action.single-active:hover {
+    background-color: var(--dashboard-primary) !important;
+    color: #ffffff !important;
+}
+
+.list-group-item-action.parent-active {
+    background-color: var(--dashboard-secondary) !important;
+    color: #ffffff !important;
+}
+
+.list-group-item-action.parent-active:hover {
+    background-color: var(--dashboard-primary) !important;
+    color: #ffffff !important;
+}
+
+.list-group-item-action[aria-expanded="true"] {
+    background-color: var(--dashboard-secondary) !important;
+    color: #ffffff !important;
+}
+
+.list-group-item-action[aria-expanded="true"]:hover {
+    background-color: var(--dashboard-primary) !important;
+    color: #ffffff !important;
+}
+
+.list-group-item-action[aria-expanded="false"]:hover {
+    background-color: var(--dashboard-primary) !important;
+    color: #ffffff !important;
+}
+
+.submenu-link:hover {
+    background-color: var(--dashboard-secondary) !important;
+    color: #fff !important;
+}
+
+.submenu-link.active {
+    background-color: var(--dashboard-primary);
+    color: #fff;
+}
+
+/* Icon menu utama */
+.list-group-item-action i {
+    color: inherit;
+}
+
+/* Submenu */
+.submenu-link {
+    padding-left: 3.5rem !important;
+}
+
+.submenu-link i {
+    font-size: 12px;
+}
+
+/* Submenu Arrow */
+.submenu-arrow {
+    font-size: 11px;
+    transition: transform .25s ease;
+}
+
+/* Arrow ketika submenu terbuka */
+[aria-expanded="true"] .submenu-arrow {
+    transform: rotate(180deg);
+}
+/* ------------------------------------------------------------------------ */
+
+
+
+
+
+
+
+
 
 .dashboard-wrapper {
     min-height: 100vh;
