@@ -13,9 +13,8 @@
     <div class="row g-2">
         {{-- Informasi Pengguna --}}
         <div class="col-lg-8">
-            <div class="card border-0 shadow">
-                <div class="card-header {{ $user->is_active ? 'bg-success' : 'bg-danger' }} border-0">
-                </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header {{ $user->is_active ? 'bg-success' : 'bg-danger' }} border-0"></div>
                 <div class="card-body">
                     <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
                         <h5 class="mb-0">Informasi Akun</h5>
@@ -120,7 +119,7 @@
 
         {{-- Aksi Pengguna --}}
         <div class="col-lg-4">
-            <div class="card border-0 shadow mb-2">
+            <div class="card border-0 shadow-sm mb-2">
                 <div class="card-header bg-primary-subtle border-0"></div>
                 <div class="card-body">
                     @if (!$user->is_protected)
@@ -173,7 +172,7 @@
                     @endif
                 </div>
             </div>
-            <div class="card border-0 shadow">
+            <div class="card border-0 shadow-sm">
                 <div class="card-header bg-warning-subtle border-0"></div>
                 <div class="card-body">
                     <h6 class="fw-semibold mb-2">

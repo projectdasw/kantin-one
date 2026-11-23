@@ -13,7 +13,7 @@
                 [
                     'label' => 'Manajemen Pengguna',
                     'id' => 'management-account',
-                    'icon' => 'fa-solid fa-users',
+                    'icon' => 'fa-solid fa-house-user',
                     'active' => [
                         'users*',
                     ],
@@ -22,19 +22,37 @@
                             'label' => 'Master Akun',
                             'icon' => 'fa-solid fa-users',
                             'url' => route('users.index'),
-                            'active' => ['users*'],
+                            'active' => ['users'],
+                        ],
+                        [
+                            'label' => 'Tambah Akun',
+                            'icon' => 'fa-solid fa-user-plus',
+                            'url' => route('users.create'),
+                            'active' => ['users/create'],
+                        ],
+                        [
+                            'label' => 'Pemulihan Akun',
+                            'icon' => 'fa-solid fa-person-walking-arrow-loop-left',
+                            'url' => '#',
+                            'active' => [''],
                         ],
                         [
                             'label' => 'Akun Kadaluarsa',
-                            'icon' => 'fa-solid fa-users',
-                            'url' => '#',
-                            'active' => ['trash*'],
+                            'icon' => 'fa-solid fa-person-circle-exclamation',
+                            'url' => route('users.trash'),
+                            'active' => ['users/trash'],
                         ],
                         [
                             'label' => 'Reset Password',
-                            'icon' => 'fa-solid fa-users',
+                            'icon' => 'fa-solid fa-user-shield',
                             'url' => '#',
-                            'active' => ['resetpassword*'],
+                            'active' => [''],
+                        ],
+                        [
+                            'label' => 'Histori Akun',
+                            'icon' => 'fa-solid fa-clock-rotate-left',
+                            'url' => '#',
+                            'active' => [''],
                         ],
                     ],
                 ],
@@ -51,15 +69,44 @@
                     'submenu' => [
                         [
                             'label' => 'Kantin',
+                            'id' => 'submenu-canteens',
                             'icon' => 'fa-solid fa-store',
                             'url' => route('canteens.index'),
                             'active' => ['canteens*'],
+                            'submenu' => [
+                                [
+                                    'label' => 'Master Kantin',
+                                    'icon' => 'fa-solid fa-list',
+                                    'url' => route('canteens.index'),
+                                    'active' => ['canteens'],
+                                ],
+                                [
+                                    'label' => 'Tambah Kantin',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => route('canteens.create'),
+                                    'active' => ['canteens/create'],
+                                ],
+                            ],
                         ],
                         [
                             'label' => 'Gedung',
+                            'id' => 'submenu-building',
                             'icon' => 'fa-solid fa-building',
-                            'url' => route('buildings.index'),
                             'active' => ['buildings*'],
+                            'submenu' => [
+                                [
+                                    'label' => 'Data Gedung',
+                                    'icon' => 'fa-solid fa-list',
+                                    'url' => route('buildings.index'),
+                                    'active' => ['buildings'],
+                                ],
+                                [
+                                    'label' => 'Tambah Gedung',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => route('buildings.create'),
+                                    'active' => ['buildings/create'],
+                                ],
+                            ],
                         ],
                         [
                             'label' => 'Lantai',
@@ -261,7 +308,7 @@
     @endphp
     <div class="container-fluid bg-light vh-100">
         <div class="row h-100">
-            <div class="col-2 bg-white">
+            <div class="col-3 bg-white">
                 <div class="container d-flex flex-column justify-content-between h-100 py-4">
                     <div>
                         <div class="d-flex justify-content-start align-items-center">
@@ -292,11 +339,38 @@
                                         </a>
                                         <div class="collapse {{ $isMenuActive ? 'show' : '' }}" id="{{ $menu['id'] }}"> {{-- Submenu --}}
                                             @foreach ($menu['submenu'] as $submenu)
-                                                <a href="{{ $submenu['url'] }}" class="list-group-item list-group-item-action border-0 mt-1 submenu-link
-                                                    {{ request()->is(...$submenu['active']) ? 'active' : '' }} rounded-3" title="{{ $submenu['label'] }}">
-                                                    <i class="{{ $submenu['icon'] }} me-3"></i>
-                                                    <span>{{ $submenu['label'] }}</span>
-                                                </a>
+                                                @if (isset($submenu['submenu']))
+                                                    @php
+                                                        $isSubmenuActive = request()->is(...$submenu['active']);
+                                                    @endphp
+                                                    <a href="#{{ $submenu['id'] }}" class="list-group-item list-group-item-action border-0
+                                                        d-flex justify-content-between align-items-center mt-1 submenu-link
+                                                        {{ $isSubmenuActive ? 'active' : '' }} rounded-3" data-bs-toggle="collapse" role="button"
+                                                        aria-expanded="{{ $isSubmenuActive ? 'true' : 'false' }}" aria-controls="{{ $submenu['id'] }}"
+                                                        title="{{ $submenu['label'] }}"> {{-- Submenu yang memiliki submenu lagi --}}
+                                                        <div>
+                                                            <i class="{{ $submenu['icon'] }} me-3"></i>
+                                                            <span>{{ $submenu['label'] }}</span>
+                                                        </div>
+                                                        <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                                                    </a>
+                                                    <div class="collapse {{ $isSubmenuActive ? 'show' : '' }}" id="{{ $submenu['id'] }}"> {{-- Submenu tingkat berikutnya --}}
+                                                        @foreach ($submenu['submenu'] as $child)
+                                                            <a href="{{ $child['url'] }}" class="list-group-item list-group-item-action border-0 mt-1 nested-submenu-link
+                                                                {{ request()->is(...$child['active']) ? 'active' : '' }} rounded-3" title="{{ $child['label'] }}">
+                                                                <i class="{{ $child['icon'] }} me-3"></i>
+                                                                <span>{{ $child['label'] }}</span>
+                                                            </a>
+                                                        @endforeach
+                                                    </div>
+                                                @else
+                                                    {{-- Submenu biasa --}}
+                                                    <a href="{{ $submenu['url'] }}" class="list-group-item list-group-item-action border-0 mt-1 submenu-link
+                                                        {{ request()->is(...$submenu['active']) ? 'active' : '' }} rounded-3" title="{{ $submenu['label'] }}">
+                                                        <i class="{{ $submenu['icon'] }} me-3"></i>
+                                                        <span>{{ $submenu['label'] }}</span>
+                                                    </a>
+                                                @endif
                                             @endforeach
                                         </div>
                                     @else
@@ -315,20 +389,20 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-3">
+            <div class="col d-flex flex-column gap-3 py-3 px-4">
+                <div class="d-flex justify-content-between align-items-center bg-white shadow-sm p-3 rounded-3">
+                    <div class="d-flex align-items-center">
                         <div class="p-2 rounded-3 me-3 text-white" style="background-color: var(--dashboard-primary-subtle);">
                             <i class="fa-solid fa-bars"></i>
                         </div>
-                        <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
-                            <i class="fa-solid fa-bars"></i>
-                        </button>
-                        <div class="navbar-breadcrumb">
-                            <span>Pages</span>
-                            <i class="fa-solid fa-chevron-right"></i>
-                            <strong>@yield('page-title', 'Dashboard')</strong>
-                        </div>
+                        <nav class="text-muted small" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item">Pages</li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    @yield('page-title', 'Dashboard')
+                                </li>
+                            </ol>
+                        </nav>
                     </div>
                     <div class="d-flex align-items-center gap-3">
                         <button type="button" class="navbar-icon-btn" aria-label="Notifikasi">
@@ -369,16 +443,24 @@
                         </div>
                     </div>
                 </div>
-                {{-- Page Information --}}
-                <div class="d-flex flex-column">
-                    <h3 class="fw-bold">@yield('page-title')</h3>
-                    <span class="text-muted">@yield('page-description')</span>
+                <div class="d-flex justify-content-between align-items-center">
+                    {{-- Page Information --}}
+                    <div class="d-flex flex-column">
+                        <h3 class="fw-bold">@yield('page-title')</h3>
+                        <span class="text-muted">@yield('page-description')</span>
+                    </div>
+                    {{-- Page Actions --}}
+                    <div class="d-flex align-items-center">
+                        @yield('page-actions')
+                    </div>
                 </div>
-                {{-- Page Actions --}}
-                <div class="d-flex flex-wrap align-items-center gap-2">
-                    @yield('page-actions')
+                <div class="container d-flex flex-column gap-3 p-0">
+                    @yield('button-list')
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-primary-subtle border-0"></div>
+                        <div class="card-body">@yield('dashboard-content')</div>
+                    </div>
                 </div>
-                @yield('dashboard-content')
                 @include('partials.footer')
             </div>
         </div>

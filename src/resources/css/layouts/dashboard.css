@@ -61,7 +61,7 @@
 
 /* Submenu */
 .submenu-link {
-    padding-left: 3.5rem !important;
+    padding-left: 2rem !important;
 }
 
 .submenu-link i {
@@ -76,6 +76,26 @@
 
 /* Arrow ketika submenu terbuka */
 [aria-expanded="true"] .submenu-arrow {
+    transform: rotate(180deg);
+}
+
+/* Nested submenu */
+.nested-submenu-link {
+    padding-left: 3rem !important;
+}
+
+/* Nested submenu active */
+.nested-submenu-link.active {
+    background-color: var(--dashboard-primary);
+    color: #fff;
+}
+
+/* Nested submenu arrow */
+.submenu-link .submenu-arrow {
+    transition: transform .25s ease;
+}
+
+.submenu-link[aria-expanded="true"] .submenu-arrow {
     transform: rotate(180deg);
 }
 /* ------------------------------------------------------------------------ */

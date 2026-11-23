@@ -9,7 +9,6 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/pages/users.js',
                 'resources/js/pages/tenant/tenant-orders.js',
             ],
             refresh: true,

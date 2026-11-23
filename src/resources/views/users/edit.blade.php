@@ -10,12 +10,11 @@
         </a>
     @endsection
 
-    <form action="{{ route('users.update') }}" method="POST" class="card border-0 shadow needs-validation" novalidate>
-        @csrf
-        @method('PUT')
+    <div class="container p-0">
+        <form action="{{ route('users.update') }}" method="POST" class="needs-validation" novalidate>
+            @csrf
+            @method('PUT')
 
-        <div class="card-header bg-primary-subtle border-0"></div>
-        <div class="card-body">
             {{-- Information --}}
             <div class="alert alert-light border" role="alert">
                 <h5 class="alert-heading fw-semibold">
@@ -41,10 +40,9 @@
                     </ol>
                 </p>
             </div>
-            <div class="row">
-                <div class="col">
-                    {{-- Nama --}}
-                    <div class="mb-3">
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <div class="col"> {{-- Nama --}}
+                    <div>
                         <label for="name" class="form-label">
                             Nama Lengkap <span class="text-danger">*</span>
                         </label>
@@ -57,9 +55,9 @@
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Username --}}
-                    <div class="mb-3">
+                </div>
+                <div class="col"> {{-- Username --}}
+                    <div>
                         <label for="username" class="form-label">
                             Username <span class="text-danger">*</span>
                         </label>
@@ -73,9 +71,8 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col">
-                    {{-- Email --}}
-                    <div class="mb-3">
+                <div class="col"> {{-- Email --}}
+                    <div>
                         <label for="email" class="form-label">
                             Email <span class="text-muted">(Opsional)</span>
                         </label>
@@ -88,9 +85,9 @@
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Role --}}
-                    <div class="mb-3">
+                </div>
+                <div class="col"> {{-- Role --}}
+                    <div>
                         <label for="role" class="form-label">
                             Role Pengguna <span class="text-danger">*</span>
                         </label>
@@ -117,9 +114,10 @@
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-
+                </div>
+                <div class="col">
                     {{-- Penempatan Tenant --}}
-                    <div class="mb-3 d-none" id="tenantField">
+                    <div class="d-none" id="tenantField">
                         <label for="tenant_id" class="form-label">
                             Tenant <span class="text-danger">*</span>
                         </label>
@@ -144,20 +142,17 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card-footer d-flex justify-content-end align-items-center gap-2">
-            <a href="{{ route('users.index') }}" class="btn btn-danger">
-                <i class="fa-regular fa-circle-xmark"></i>
-                <span>Batal</span>
-            </a>
-            <button type="submit" class="btn btn-success">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <span>Ubah Akun</span>
-            </button>
-        </div>
-    </form>
+            <hr>
+            <div class="d-flex justify-content-end align-items-center gap-2">
+                <a href="{{ route('users.index') }}" class="btn btn-danger">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                    <span>Batal</span>
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Ubah Akun</span>
+                </button>
+            </div>
+        </form>
+    </div>
 @endsection
-
-@push('scripts')
-    @vite('resources/js/pages/users.js')
-@endpush
