@@ -10,7 +10,7 @@
         </a>
     @endsection
     
-    <div class="container p-0">
+    <div class="container-fluid p-0">
         <form action="{{ route('users.store') }}" method="POST"
             class="needs-validation" novalidate>
             @csrf

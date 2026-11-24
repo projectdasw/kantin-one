@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\UsersDataTable;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -108,45 +109,22 @@ class UserController extends Controller
 
     /* Index, Search & Pagination */
     /* -------------------------------------------------------------------------- */
-    public function index(Request $request)
+    public function index(UsersDataTable $dataTable)
     {
         $this->ensureAdministrator();
 
-        $users = User::query()
+        $visibleUsers = User::query()
             ->when(
                 ! auth()->user()->isSuperAdmin(),
                 fn ($query) => $query->where('role', '!=', 'super_admin')
-            )
-            ->when($request->input('search'), function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('username', 'like', "%{$search}%");
-                });
-            })
-            ->when($request->input('role'), function ($query, $role) {
-                $query->where('role', $role);
-            })
-            ->when(
-                $request->input('status') !== null &&
-                $request->input('status') !== '',
-                function ($query) use ($request) {
-                    $query->where('is_active', $request->input('status'));
-                }
-            )
-            ->latest()
-            ->paginate(10, ['*'], 'page', max(1, (int) $request->input('page', 1)));
+            );
 
-        $data = [
-            'users' => $users,
+        return $dataTable->render('users.index', [
             'roles' => $this->roles(),
-        ];
-
-        if ($request->ajax()) {
-            return view('users.partials.table', compact('users'));
-        }
-
-        return view('users.index', $data);
+            'totalUsers' => (clone $visibleUsers)->count(),
+            'activeUsers' => (clone $visibleUsers)->where('is_active', true)->count(),
+            'inactiveUsers' => (clone $visibleUsers)->where('is_active', false)->count(),
+        ]);
     }
     /* -------------------------------------------------------------------------- */
 

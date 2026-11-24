@@ -2,6 +2,10 @@
 import * as bootstrap from 'bootstrap';
 import Swal from 'sweetalert2';
 import Chart from 'chart.js/auto';
+// import './bootstrap';
+// import 'bootstrap';
+import 'laravel-datatables-vite';
+
 import './modules/auto-refresh.js';
 import './modules/tooltips.js';
 

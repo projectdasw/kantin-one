@@ -10,7 +10,7 @@
         </a>
     @endsection
     
-    <div class="container p-0">
+    <div class="container-fluid p-0">
         {{-- Filter --}}
         <form method="POST" action="{{ route('users.search') }}" class="row g-2 mb-2" id="userSearchForm">
             @csrf

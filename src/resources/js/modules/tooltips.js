@@ -1,9 +1,17 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const tooltipTriggerList = document.querySelectorAll(
-        '[data-bs-toggle="tooltip"]'
-    );
+import { Tooltip } from 'bootstrap';
 
-    [...tooltipTriggerList].forEach(tooltipTriggerEl => {
-        new bootstrap.Tooltip(tooltipTriggerEl);
+function initializeTooltips() {
+    Tooltip.getOrCreateInstance(document.body, {
+        selector: '[data-bs-toggle="tooltip"]',
+        trigger: 'hover focus',
+        boundary: document.body,
     });
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTooltips, {
+        once: true,
+    });
+} else {
+    initializeTooltips();
+}

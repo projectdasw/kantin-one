@@ -1,0 +1,223 @@
+/* ==========================================================
+   DATATABLES - MASTER AKUN
+   ========================================================== */
+
+/* Table Container */
+#users-table_wrapper {
+    color: var(--text-main);
+    font-size: 0.875rem;
+}
+
+/* Table */
+#users-table {
+    width: 100% !important;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+}
+
+/* Table Header */
+#users-table thead th {
+    background-color: var(--primary-light);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.9rem 0.85rem;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* Table Body */
+#users-table tbody td {
+    padding: 0.85rem;
+    color: var(--text-main);
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+/* Row Hover */
+#users-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+#users-table tbody tr:hover {
+    background-color: #f8faff;
+}
+
+/* Remove last row border */
+#users-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Table Responsive */
+#usersTableContainer {
+    border-radius: 0.5rem;
+}
+
+/* Search and Filter Controls */
+#users-table_wrapper .dt-search,
+#users-table_wrapper .dt-length {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+#users-table_wrapper .dt-search input,
+#users-table_wrapper .dt-length select {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.7rem;
+    color: var(--text-main);
+}
+
+#users-table_wrapper .dt-search input:focus,
+#users-table_wrapper .dt-length select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.12);
+    outline: none;
+}
+
+/* Pagination */
+#users-table_wrapper .pagination {
+    gap: 0.25rem;
+}
+
+#users-table_wrapper .page-link {
+    border-radius: 0.4rem;
+    border: 1px solid #e2e8f0;
+    color: var(--text-main);
+    font-size: 0.8rem;
+}
+
+#users-table_wrapper .page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+#users-table_wrapper .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.12);
+}
+
+/* ==========================================================
+   ACCOUNT COLUMN
+   ========================================================== */
+
+#users-table .account-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 200px;
+}
+
+#users-table .account-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+#users-table .account-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+#users-table .account-name {
+    color: var(--text-main);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+#users-table .account-email {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+/* ==========================================================
+   CUSTOM BADGES
+   ========================================================== */
+
+#users-table .badge-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+/* Role */
+#users-table .badge-role-danger {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+#users-table .badge-role-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+#users-table .badge-role-primary {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Status */
+#users-table .badge-status-active {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+#users-table .badge-status-inactive {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ==========================================================
+   ACTION BUTTONS
+   ========================================================== */
+
+#users-table .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    flex-wrap: nowrap;
+}
+
+#users-table .action-buttons form {
+    display: inline-flex;
+    margin: 0;
+}
+
+#users-table .action-buttons .btn {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.45rem;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+#users-table .action-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
+}

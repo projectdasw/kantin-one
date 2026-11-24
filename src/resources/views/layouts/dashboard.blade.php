@@ -454,7 +454,7 @@
                         @yield('page-actions')
                     </div>
                 </div>
-                <div class="container d-flex flex-column gap-3 p-0">
+                <div class="container-fluid d-flex flex-column gap-3 p-0">
                     @yield('button-list')
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-primary-subtle border-0"></div>

@@ -79,123 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ==========================================
-    // LIVE SEARCH, FILTER & PAGINATION
-    // POST REQUEST - NO SENSITIVE DATA IN URL
-    // ==========================================
-    const searchForm = document.getElementById('userSearchForm');
-    const searchInput = document.getElementById('userSearchInput');
-    const tableContainer = document.getElementById('usersTableContainer');
-    const resetButton = document.getElementById('userResetFilter');
-
-    if (searchForm && searchInput && tableContainer) {
-        let searchTimeout;
-        let controller;
-
-        async function loadUsers(page = 1) {
-            if (controller) {
-                controller.abort();
-            }
-
-            const currentController = new AbortController();
-            controller = currentController;
-
-            const formData = new FormData(searchForm);
-
-            // Pagination dikirim melalui POST body
-            formData.set('page', page);
-
-            tableContainer.style.opacity = '0.5';
-
-            try {
-                const response = await fetch(searchForm.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'text/html'
-                    },
-                    body: formData,
-                    signal: currentController.signal
-                });
-
-                if (!response.ok) {
-                    throw new Error('Gagal mengambil data pengguna.');
-                }
-
-                const html = await response.text();
-
-                // Abaikan response dari request yang sudah tidak aktif
-                if (controller !== currentController) return;
-
-                tableContainer.innerHTML = html;
-
-            } catch (error) {
-                if (error.name !== 'AbortError') {
-                    console.error(error);
-
-                    Swal.fire(
-                        'Gagal',
-                        'Tidak dapat memuat data pengguna.',
-                        'error'
-                    );
-                }
-            } finally {
-                if (controller === currentController) {
-                    tableContainer.style.opacity = '1';
-                }
-            }
-        }
-
-        // Live Search
-        searchInput.addEventListener('input', function () {
-            clearTimeout(searchTimeout);
-
-            searchTimeout = setTimeout(() => {
-                loadUsers(1);
-            }, 350);
-        });
-
-        // Filter Role dan Status
-        searchForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            clearTimeout(searchTimeout);
-            loadUsers(1);
-        });
-
-        // Reset Filter
-        if (resetButton) {
-            resetButton.addEventListener('click', function () {
-                searchForm.reset();
-
-                clearTimeout(searchTimeout);
-                loadUsers(1);
-            });
-        }
-
-        // Filter otomatis ketika pilihan berubah
-        searchForm.querySelectorAll('select').forEach(select => {
-            select.addEventListener('change', function () {
-                clearTimeout(searchTimeout);
-                loadUsers(1);
-            });
-        });
-
-        // Pagination AJAX
-        tableContainer.addEventListener('click', function (event) {
-            const link = event.target.closest('.pagination a');
-
-            if (!link) return;
-
-            event.preventDefault();
-
-            const url = new URL(link.href);
-            const page = url.searchParams.get('page') || 1;
-
-            loadUsers(page);
-        });
-    }
-
-    // ==========================================
     // SWEETALERT: ACTIVATE / DEACTIVATE
     // ==========================================
     document.addEventListener('submit', function (event) {
@@ -367,6 +250,97 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (secondConfirm.isConfirmed) {
             form.submit();
+        }
+    });
+
+        // ==========================================
+    // DATATABLES: FILTER MASTER AKUN
+    // ==========================================
+    window.addEventListener('load', function () {
+        const table = window.LaravelDataTables?.['users-table'];
+
+        if (!table) {
+            console.error('DataTables Master Akun tidak ditemukan.');
+            return;
+        }
+
+        const roleFilter = document.getElementById('userRoleFilter');
+        const statusFilter = document.getElementById('userStatusFilter');
+        const resetButton = document.getElementById('resetUserFilters');
+
+        // ==========================================
+        // DATATABLES: SATUKAN SEARCH DAN FILTER
+        // ==========================================
+        const filtersContainer = document.getElementById('userFilters');
+
+        const searchContainer = document.querySelector(
+            '#users-table_wrapper .dt-search'
+        );
+
+        if (filtersContainer && searchContainer) {
+
+            // Jadikan area pencarian sebagai toolbar horizontal
+            searchContainer.classList.add(
+                'd-flex',
+                'flex-wrap',
+                'align-items-center',
+                'gap-2'
+            );
+
+            // Hilangkan margin bawaan label
+            const searchLabel = searchContainer.querySelector('label');
+
+            if (searchLabel) {
+                searchLabel.classList.add('mb-0');
+            }
+
+            // Atur lebar input pencarian
+            const searchInput = searchContainer.querySelector('input');
+
+            if (searchInput) {
+                searchInput.style.width = '260px';
+            }
+
+            // Masukkan filter tepat di samping pencarian
+            filtersContainer.classList.add(
+                'd-flex',
+                'flex-wrap',
+                'align-items-center',
+                'gap-2'
+            );
+
+            searchContainer.appendChild(filtersContainer);
+        }
+
+        // Filter berdasarkan perubahan pilihan
+        [roleFilter, statusFilter].forEach(filter => {
+            if (!filter) return;
+
+            filter.addEventListener('change', function () {
+                table.ajax.reload();
+            });
+        });
+
+        // Reset seluruh filter
+        if (resetButton) {
+            resetButton.addEventListener('click', function () {
+
+                // Reset filter peran dan status
+                if (roleFilter) roleFilter.value = '';
+                if (statusFilter) statusFilter.value = '';
+
+                // Reset input pencarian
+                const searchInput = document.querySelector(
+                    '#users-table_wrapper .dt-search input'
+                );
+
+                if (searchInput) {
+                    searchInput.value = '';
+                }
+
+                // Reset pencarian DataTables dan reload data
+                table.search('').draw();
+            });
         }
     });
 });

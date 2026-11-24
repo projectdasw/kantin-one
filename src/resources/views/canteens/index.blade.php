@@ -9,7 +9,7 @@
 @endsection
 
 @section('dashboard-content')
-    <div class="container p-0">
+    <div class="container-fluid p-0">
         <form id="canteenSearchForm" action="{{ route('canteens.search') }}" method="POST">
             @csrf
 
