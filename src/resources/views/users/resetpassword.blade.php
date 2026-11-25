@@ -31,19 +31,23 @@
                         <label for="password" class="form-label">
                             Password Baru <span class="text-danger">*</span>
                         </label>
-                        <div class="input-group">
+                        <div class="input-group has-validation">
                             <input type="password" name="password" id="password"
-                                class="form-control @error('password') is-invalid @enderror" minlength="8"
-                                autocomplete="new-password" required>
-                            <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password">
+                                class="form-control @error('password') is-invalid @enderror"
+                                minlength="8" autocomplete="new-password" required>
+
+                            <button type="button" class="btn btn-outline-secondary toggle-password"
+                                data-target="password">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <div class="invalid-feedback">
-                                Password wajib diisi minimal 8 karakter.
+
+                            <div class="invalid-feedback" id="passwordFeedback">
+                                @error('password')
+                                    {{ $message }}
+                                @else
+                                    Mohon isi password baru minimal 8 karakter.
+                                @enderror
                             </div>
-                            @error('password')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -53,19 +57,19 @@
                             Konfirmasi Password Baru
                             <span class="text-danger">*</span>
                         </label>
-                        <div class="input-group">
-                            <input type="password" name="password_confirmation" id="password_confirmation"
-                                class="form-control" minlength="8" autocomplete="new-password" required>
+                        <div class="input-group has-validation">
+                            <input type="password" name="password_confirmation"
+                                id="password_confirmation" class="form-control"
+                                minlength="8" autocomplete="new-password" required>
+
                             <button type="button" class="btn btn-outline-secondary toggle-password"
                                 data-target="password_confirmation">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <div class="invalid-feedback">
-                                Konfirmasi password wajib diisi dan harus sama.
+
+                            <div class="invalid-feedback" id="passwordConfirmationFeedback">
+                                Mohon isi konfirmasi password.
                             </div>
-                            @error('password_confirmation')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -84,3 +88,7 @@
         </div>
     </form>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/pages/users/crud.js')
+@endpush

@@ -83,3 +83,5 @@
 
     {{ $buildings->links() }}
 </div>
+
+@vite('resources/js/pages/buildings/buildings.js')

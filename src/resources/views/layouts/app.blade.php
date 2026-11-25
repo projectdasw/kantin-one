@@ -7,6 +7,10 @@
         <title>@yield('title', 'Kantin.ONE') - Kantin.ONE</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('styles')
+        
+        @if (session('success'))
+            <meta name="flash-success" content="{{ session('success') }}">
+        @endif
     </head>
     <body>
         @yield('content')

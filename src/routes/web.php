@@ -8,10 +8,11 @@ use App\Http\Controllers\FloorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\TenantOrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TenantOrderController;
+use App\Http\Controllers\ActivityLogController;
 
 Route::get('/', function () {
     if (! Auth::check()) {
@@ -123,6 +124,15 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator']
     })->name('dashboard');
     /* -------------------------------------------------------------------------- */
 
+    /* Activity Log */
+    /* -------------------------------------------------------------------------- */
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])
+        ->name('activity-logs.index');
+
+    Route::post('/activity-logs/search', [ActivityLogController::class, 'index'])
+        ->name('activity-logs.search');
+    /* -------------------------------------------------------------------------- */
+
     /* User Management */
     /* -------------------------------------------------------------------------- */
     Route::post('/users/search', [UserController::class, 'index'])
@@ -181,6 +191,17 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator']
 
     /* Reset Password */
     /* -------------------------------------------------------------------------- */
+    // Reset Password User (Halaman Utama)
+    Route::get('/users/reset-password-user', [UserController::class, 'resetPasswordUser'])
+        ->name('users.reset-password-user');
+
+    Route::post('/users/reset-password-user/select', [UserController::class, 'selectResetPasswordUser'])
+        ->name('users.reset-password-user.select');
+
+    Route::patch('/users/reset-password-user', [UserController::class, 'updateResetPasswordUser'])
+        ->name('users.reset-password-user.update');
+
+    // Reset Password (Tombol Aksi pada halaman utama Akun)
     Route::post('/users/resetpassword/start', [UserController::class, 'startPasswordReset'])
         ->name('users.resetpassword.start');
 
@@ -384,7 +405,7 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator']
     /* Create */
     Route::get('/tables/create', [TableController::class, 'create'])
         ->name('tables.create');
-    
+
     Route::get('/tables/floors', [TableController::class, 'getFloors'])
         ->name('tables.floors');
 

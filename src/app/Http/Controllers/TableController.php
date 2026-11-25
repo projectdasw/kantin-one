@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Table;
-use App\Models\Canteen;
 use App\Models\Building;
+use App\Models\Canteen;
 use App\Models\Floor;
+use App\Models\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -147,7 +147,7 @@ class TableController extends Controller
             'buildings'
         ));
     }
-    
+
     public function store(Request $request)
     {
         $this->ensureAdministrator();
@@ -330,7 +330,6 @@ class TableController extends Controller
         return view('tables.edit', compact('table'));
     }
 
-    
     public function update(Request $request)
     {
         $this->ensureAdministrator();

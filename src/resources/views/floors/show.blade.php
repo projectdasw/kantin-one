@@ -76,3 +76,5 @@
 </div>
 
 @endsection
+
+@vite('resources/js/pages/floors/floors.js')

@@ -78,5 +78,6 @@
 @endsection
 
 @push('scripts')
+    @vite('resources/js/pages/users/users.js')
     {!! $dataTable->scripts() !!}
 @endpush

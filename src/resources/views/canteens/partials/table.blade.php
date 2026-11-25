@@ -119,3 +119,5 @@
         {{ $canteens->links() }}
     </div>
 @endif
+
+@vite('resources/js/pages/canteens/canteens.js')

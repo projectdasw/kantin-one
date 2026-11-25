@@ -62,7 +62,7 @@
                             Username <span class="text-danger">*</span>
                         </label>
                         <input type="text" name="username" id="username" class="form-control @error('username') is-invalid @enderror"
-                            value="{{ old('username', $user->username) }}" pattern="[a-z0-9_-]+" maxlength="50" required>
+                            value="{{ old('username', $user->username) }}" pattern="[a-z0-9_\-]+" maxlength="50" required>
                         <div class="invalid-feedback">
                             Username wajib diisi dan hanya boleh menggunakan huruf kecil, angka, underscore, atau tanda hubung.
                         </div>
@@ -156,3 +156,7 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/pages/users/crud.js')
+@endpush

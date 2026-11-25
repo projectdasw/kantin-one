@@ -16,6 +16,7 @@
                     'icon' => 'fa-solid fa-house-user',
                     'active' => [
                         'users*',
+                        'activity-logs*',
                     ],
                     'submenu' => [
                         [
@@ -31,12 +32,6 @@
                             'active' => ['users/create'],
                         ],
                         [
-                            'label' => 'Pemulihan Akun',
-                            'icon' => 'fa-solid fa-person-walking-arrow-loop-left',
-                            'url' => '#',
-                            'active' => [''],
-                        ],
-                        [
                             'label' => 'Akun Kadaluarsa',
                             'icon' => 'fa-solid fa-person-circle-exclamation',
                             'url' => route('users.trash'),
@@ -45,14 +40,14 @@
                         [
                             'label' => 'Reset Password',
                             'icon' => 'fa-solid fa-user-shield',
-                            'url' => '#',
-                            'active' => [''],
+                            'url' => route('users.reset-password-user'),
+                            'active' => ['users/reset_password_user'],
                         ],
                         [
                             'label' => 'Histori Akun',
                             'icon' => 'fa-solid fa-clock-rotate-left',
-                            'url' => '#',
-                            'active' => [''],
+                            'url' => route('activity-logs.index'),
+                            'active' => ['activity-logs'],
                         ],
                     ],
                 ],

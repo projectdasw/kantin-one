@@ -192,5 +192,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/pages/users.js')
+    @vite('resources/js/pages/users/crud.js')
 @endpush

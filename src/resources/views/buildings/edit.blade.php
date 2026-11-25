@@ -83,3 +83,5 @@
 </div>
 
 @endsection
+
+@vite('resources/js/pages/buildings/buildings.js')

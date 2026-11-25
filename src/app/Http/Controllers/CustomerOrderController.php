@@ -6,9 +6,9 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\Table;
 use App\Models\Tenant;
 use App\Models\TenantOrder;
-use App\Models\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -1079,6 +1079,7 @@ class CustomerOrderController extends Controller
 
                 if (! $item['is_available']) {
                     $hasUnavailableItems = true;
+
                     continue;
                 }
 

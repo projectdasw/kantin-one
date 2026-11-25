@@ -1,24 +1,125 @@
 document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
+    // FORM VALIDATION
+    // ==========================================
+    const form = document.querySelector('.needs-validation');
+    const nameInput = document.getElementById('name');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmationInput = document.getElementById('password_confirmation');
+    const roleInput = document.getElementById('role');
+    const tenantInput = document.getElementById('tenant_id');
+    const nameFeedback = document.getElementById('nameFeedback');
+    const usernameFeedback = document.getElementById('usernameFeedback');
+    const emailFeedback = document.getElementById('emailFeedback');
+    const passwordFeedback = document.getElementById('passwordFeedback');
+    const confirmationFeedback = document.getElementById('passwordConfirmationFeedback');
+    const roleFeedback = document.getElementById('roleFeedback');
+    const tenantFeedback = document.getElementById('tenantFeedback');
+
+    // ==========================================
+    // NAME VALIDATION
+    // ==========================================
+    if (nameInput && nameFeedback) {
+        nameInput.addEventListener('invalid', function () {
+            nameFeedback.textContent = 'Mohon isi nama akun.';
+        });
+    }
+
+    // ==========================================
+    // USERNAME VALIDATION
+    // ==========================================
+    if (usernameInput && usernameFeedback) {
+        usernameInput.addEventListener('invalid', function () {
+            if (usernameInput.value.trim() === '') {
+                usernameFeedback.textContent = 'Mohon isi username.';
+            } else if (usernameInput.validity.patternMismatch) {
+                usernameFeedback.textContent =
+                    'Username hanya boleh menggunakan huruf kecil, angka, underscore, dan tanda hubung.';
+            } else if (usernameInput.validity.tooLong) {
+                usernameFeedback.textContent = 'Username maksimal 50 karakter.';
+            } else {
+                usernameFeedback.textContent = 'Username tidak valid.';
+            }
+        });
+    }
+
+    // ==========================================
+    // EMAIL VALIDATION
+    // ==========================================
+    if (emailInput && emailFeedback) {
+        emailInput.addEventListener('invalid', function () {
+            emailFeedback.textContent = 'Format email tidak valid.';
+        });
+    }
+
+    // ==========================================
+    // PASSWORD VALIDATION
+    // ==========================================
+    if (passwordInput && passwordFeedback) {
+        function updatePasswordFeedback() {
+            passwordFeedback.textContent = passwordInput.value.trim() === ''
+                ? 'Mohon isi password.'
+                : 'Password minimal 8 karakter.';
+        }
+
+        passwordInput.addEventListener('invalid', updatePasswordFeedback);
+        passwordInput.addEventListener('input', updatePasswordFeedback);
+    }
+
+    // ==========================================
+    // PASSWORD CONFIRMATION VALIDATION
+    // ==========================================
+    if (passwordInput && confirmationInput && confirmationFeedback) {
+        function updateConfirmationFeedback() {
+            confirmationFeedback.textContent =
+                confirmationInput.value.trim() === ''
+                    ? 'Mohon isi konfirmasi password.'
+                    : 'Konfirmasi password tidak sama.';
+
+            confirmationInput.setCustomValidity(
+                confirmationInput.value !== passwordInput.value
+                    ? 'Konfirmasi password tidak sama.'
+                    : ''
+            );
+        }
+
+        confirmationInput.addEventListener('input', updateConfirmationFeedback);
+        confirmationInput.addEventListener('invalid', updateConfirmationFeedback);
+        passwordInput.addEventListener('input', updateConfirmationFeedback);
+    }
+
+    // ==========================================
+    // ROLE VALIDATION
+    // ==========================================
+    if (roleInput && roleFeedback) {
+        roleInput.addEventListener('invalid', function () {
+            roleFeedback.textContent = 'Mohon pilih peran.';
+        });
+    }
+
+    // ==========================================
+    // TENANT VALIDATION
+    // ==========================================
+    if (tenantInput && tenantFeedback) {
+        tenantInput.addEventListener('invalid', function () {
+            tenantFeedback.textContent = 'Mohon pilih tenant.';
+        });
+    }
+
+    // ==========================================
     // BOOTSTRAP FORM VALIDATION
     // ==========================================
-    document.querySelectorAll('.needs-validation').forEach(form => {
+    if (form) {
         form.addEventListener('submit', function (event) {
-
-            // Username lowercase
-            const username = form.querySelector('#username');
-
-            if (username) {
-                username.value = username.value.toLowerCase();
+            if (usernameInput) {
+                usernameInput.value = usernameInput.value.toLowerCase();
             }
 
-            // Password confirmation
-            const password = form.querySelector('#password');
-            const confirmation = form.querySelector('#password_confirmation');
-
-            if (password && confirmation) {
-                confirmation.setCustomValidity(
-                    confirmation.value !== password.value
+            if (passwordInput && confirmationInput) {
+                confirmationInput.setCustomValidity(
+                    confirmationInput.value !== passwordInput.value
                         ? 'Konfirmasi password tidak sama.'
                         : ''
                 );
@@ -31,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             form.classList.add('was-validated');
         });
-    });
+    }
 
     // ==========================================
     // USERNAME LOWERCASE
@@ -76,6 +177,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Jalankan saat halaman pertama kali dibuka
         toggleTenantField();
+    }
+
+    // ==========================================
+    // HTML ESCAPE FOR SWEETALERT
+    // ==========================================
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, character => {
+            const entities = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+    
+            return entities[character];
+        });
     }
 
     // ==========================================
@@ -153,23 +271,6 @@ document.addEventListener('DOMContentLoaded', function () {
         button.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
         button.setAttribute('aria-label', isPassword ? 'Sembunyikan password' : 'Tampilkan password');
     });
-
-    // ==========================================
-    // HTML ESCAPE FOR SWEETALERT
-    // ==========================================
-    function escapeHtml(value) {
-        return String(value).replace(/[&<>"']/g, character => {
-            const entities = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-
-            return entities[character];
-        });
-    }
 
     // Restore user confirmation
     document.addEventListener('submit', function (event) {
@@ -250,97 +351,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (secondConfirm.isConfirmed) {
             form.submit();
-        }
-    });
-
-        // ==========================================
-    // DATATABLES: FILTER MASTER AKUN
-    // ==========================================
-    window.addEventListener('load', function () {
-        const table = window.LaravelDataTables?.['users-table'];
-
-        if (!table) {
-            console.error('DataTables Master Akun tidak ditemukan.');
-            return;
-        }
-
-        const roleFilter = document.getElementById('userRoleFilter');
-        const statusFilter = document.getElementById('userStatusFilter');
-        const resetButton = document.getElementById('resetUserFilters');
-
-        // ==========================================
-        // DATATABLES: SATUKAN SEARCH DAN FILTER
-        // ==========================================
-        const filtersContainer = document.getElementById('userFilters');
-
-        const searchContainer = document.querySelector(
-            '#users-table_wrapper .dt-search'
-        );
-
-        if (filtersContainer && searchContainer) {
-
-            // Jadikan area pencarian sebagai toolbar horizontal
-            searchContainer.classList.add(
-                'd-flex',
-                'flex-wrap',
-                'align-items-center',
-                'gap-2'
-            );
-
-            // Hilangkan margin bawaan label
-            const searchLabel = searchContainer.querySelector('label');
-
-            if (searchLabel) {
-                searchLabel.classList.add('mb-0');
-            }
-
-            // Atur lebar input pencarian
-            const searchInput = searchContainer.querySelector('input');
-
-            if (searchInput) {
-                searchInput.style.width = '260px';
-            }
-
-            // Masukkan filter tepat di samping pencarian
-            filtersContainer.classList.add(
-                'd-flex',
-                'flex-wrap',
-                'align-items-center',
-                'gap-2'
-            );
-
-            searchContainer.appendChild(filtersContainer);
-        }
-
-        // Filter berdasarkan perubahan pilihan
-        [roleFilter, statusFilter].forEach(filter => {
-            if (!filter) return;
-
-            filter.addEventListener('change', function () {
-                table.ajax.reload();
-            });
-        });
-
-        // Reset seluruh filter
-        if (resetButton) {
-            resetButton.addEventListener('click', function () {
-
-                // Reset filter peran dan status
-                if (roleFilter) roleFilter.value = '';
-                if (statusFilter) statusFilter.value = '';
-
-                // Reset input pencarian
-                const searchInput = document.querySelector(
-                    '#users-table_wrapper .dt-search input'
-                );
-
-                if (searchInput) {
-                    searchInput.value = '';
-                }
-
-                // Reset pencarian DataTables dan reload data
-                table.search('').draw();
-            });
         }
     });
 });

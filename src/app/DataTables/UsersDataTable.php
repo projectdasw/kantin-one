@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
@@ -24,17 +25,13 @@ class UsersDataTable extends DataTable
             // Nama dan email pengguna
             ->addColumn('account', function (User $user) {
                 return '
-                    <div class="account-info">
+                    <div class="d-flex align-items-center gap-2">
                         <div class="account-avatar">
                             <i class="fa-solid fa-circle-user"></i>
                         </div>
-                        <div class="account-details">
-                            <span class="account-name">'
-                                .e($user->name).
-                            '</span>
-                            <span class="account-email">'
-                                .e($user->email ?: '—').
-                            '</span>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold">'.e($user->name).'</span>
+                            <span class="text-muted">'.e($user->email ?: '—').'</span>
                         </div>
                     </div>
                 ';
@@ -43,14 +40,17 @@ class UsersDataTable extends DataTable
             // Badge role
             ->addColumn('role_label', function (User $user) {
                 $class = match ($user->role) {
-                    'super_admin' => 'badge-role-danger',
-                    'administrator' => 'badge-role-warning',
-                    default => 'badge-role-primary',
+                    'super_admin' => 'bg-danger bg-gradient',
+                    'administrator' => 'bg-warning bg-gradient',
+                    'canteen_manager' => 'bg-info bg-gradient text-dark',
+                    'tenant' => 'bg-success bg-gradient',
+                    'tenant_employee' => 'bg-primary bg-gradient',
+                    default => 'bg-secondary bg-gradient',
                 };
 
                 $label = ucwords(str_replace('_', ' ', $user->role));
 
-                return '<span class="badge-custom '.$class.'">'
+                return '<span class="badge '.$class.'">'
                     .e($label).
                     '</span>';
             })
@@ -58,12 +58,12 @@ class UsersDataTable extends DataTable
             // Badge status
             ->addColumn('status_label', function (User $user) {
                 $class = $user->is_active
-                    ? 'badge-status-active'
-                    : 'badge-status-inactive';
+                    ? 'bg-success bg-gradient'
+                    : 'bg-danger bg-gradient';
 
                 $label = $user->is_active ? 'Aktif' : 'Nonaktif';
 
-                return '<span class="badge-custom '.$class.'">'
+                return '<span class="badge '.$class.'">'
                     .$label.
                     '</span>';
             })
@@ -97,11 +97,13 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
+        $currentUser = Auth::guard()->user();
+
         return $model->newQuery()
 
             // Administrator tidak boleh melihat akun Super Admin.
             ->when(
-                ! auth()->user()->isSuperAdmin(),
+                ! ($currentUser instanceof User && $currentUser->isSuperAdmin()),
                 fn ($query) => $query->where('role', '!=', 'super_admin')
             )
 
@@ -111,10 +113,13 @@ class UsersDataTable extends DataTable
             })
 
             // Filter status
-            ->when(request()->input('status') !== null &&
-                request()->input('status') !== '', function ($query) {
+            ->when(
+                request()->input('status') !== null &&
+                request()->input('status') !== '',
+                function ($query) {
                     $query->where('is_active', request('status'));
-                })
+                }
+            )
 
             ->latest();
     }

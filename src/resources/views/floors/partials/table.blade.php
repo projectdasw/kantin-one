@@ -92,3 +92,5 @@
 
     {{ $floors->links() }}
 </div>
+
+@vite('resources/js/pages/floors/floors.js')

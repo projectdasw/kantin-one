@@ -54,13 +54,14 @@
                             Nama Akun <span class="text-danger">*</span>
                         </label>
                         <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror"
-                            value="{{ old('name') }}" placeholder="Masukkan nama Anda" autocomplete="off" required autofocus>
-                        <div class="invalid-feedback">
-                            Mohon isi nama Anda.
+                            value="{{ old('name') }}" placeholder="Masukkan nama Anda" autocomplete="off" required>
+                        <div class="invalid-feedback" id="nameFeedback">
+                            @error('name')
+                                {{ $message }}
+                            @else
+                                Mohon isi nama akun.
+                            @enderror
                         </div>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
                     </div>
                 </div>
                 <div class="col">
@@ -70,14 +71,15 @@
                             Username <span class="text-danger">*</span>
                         </label>
                         <input type="text" name="username" id="username" class="form-control @error('username') is-invalid @enderror"
-                            value="{{ old('username') }}" placeholder="Contoh: username123" maxlength="50" pattern="[a-z0-9_-]+"
+                            value="{{ old('username') }}" placeholder="Contoh: username123" maxlength="50" pattern="[a-z0-9_\-]+"
                             autocomplete="off" required>
-                        <div class="invalid-feedback">
-                            Mohon isi username.
+                        <div class="invalid-feedback" id="usernameFeedback">
+                            @error('username')
+                                {{ $message }}
+                            @else
+                                Mohon isi username.
+                            @enderror
                         </div>
-                        @error('username')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
                     </div>
                 </div>
                 <div class="col">
@@ -88,9 +90,13 @@
                         </label>
                         <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
                             value="{{ old('email') }}" placeholder="nama@email.com" autocomplete="off">
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <div class="invalid-feedback" id="emailFeedback">
+                            @error('email')
+                                {{ $message }}
+                            @else
+                                Format email tidak valid.
+                            @enderror
+                        </div>
                     </div>
                 </div>
                 <div class="col">
@@ -99,20 +105,17 @@
                         <label for="password" class="form-label fw-semibold">
                             Password <span class="text-danger">*</span>
                         </label>
-                        <div class="input-group">
+                        <div class="input-group has-validation">
                             <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror"
                                 placeholder="Minimal 8 karakter" minlength="8" autocomplete="new-password" required>
                             <button class="btn btn-outline-secondary toggle-password" type="button" data-target="password"
                                 aria-label="Tampilkan password">
                                 <i class="fas fa-eye"></i>
                             </button>
+                            <div class="invalid-feedback" id="passwordFeedback">
+                                Mohon isi password.
+                            </div>
                         </div>
-                        <div class="invalid-feedback">
-                            Mohon isi password akun.
-                        </div>
-                        @error('password')
-                            <div class="text-danger small mt-1">{{ $message }}</div>
-                        @enderror
                     </div>
                 </div>
                 <div class="col">
@@ -121,7 +124,7 @@
                         <label for="password_confirmation" class="form-label fw-semibold">
                             Konfirmasi Password <span class="text-danger">*</span>
                         </label>
-                        <div class="input-group">
+                        <div class="input-group has-validation">
                             <input type="password" name="password_confirmation" id="password_confirmation"
                                 class="form-control" placeholder="Ulangi password" minlength="8"
                                 autocomplete="new-password" required>
@@ -129,9 +132,9 @@
                                 data-target="password_confirmation" aria-label="Tampilkan konfirmasi password">
                                 <i class="fas fa-eye"></i>
                             </button>
-                        </div>
-                        <div class="invalid-feedback">
-                            Konfirmasi password harus sama dengan password.
+                            <div class="invalid-feedback" id="passwordConfirmationFeedback">
+                                Mohon isi konfirmasi password.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -157,12 +160,13 @@
                                 </option>
                             @endforeach
                         </select>
-                        <div class="invalid-feedback">
-                            Mohon pilih peran sesuai tanggung jawab.
+                        <div class="invalid-feedback" id="roleFeedback">
+                            @error('role')
+                                {{ $message }}
+                            @else
+                                Mohon pilih peran sesuai tanggung jawab.
+                            @enderror
                         </div>
-                        @error('role')
-                            <div class="text-danger small mt-1">{{ $message }}</div>
-                        @enderror
                     </div>
                 </div>
                 <div class="col">
@@ -180,15 +184,13 @@
                                 </option>
                             @endforeach
                         </select>
-                        <div class="invalid-feedback">
-                            Silakan pilih tenant.
+                        <div class="invalid-feedback" id="tenantFeedback">
+                            @error('tenant_id')
+                                {{ $message }}
+                            @else
+                                Silakan pilih tenant.
+                            @enderror
                         </div>
-                        @error('tenant_id')
-                            <div class="text-danger small mt-1">{{ $message }}</div>
-                        @enderror
-                        <small class="text-muted">
-                            Pilih tenant tempat pengguna ini bertugas.
-                        </small>
                     </div>
                 </div>
             </div>
@@ -208,5 +210,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/pages/users.js')
+    @vite('resources/js/pages/users/crud.js')
 @endpush

@@ -113,3 +113,5 @@
 </div>
 
 @endsection
+
+@vite('resources/js/pages/canteens/canteens.js')

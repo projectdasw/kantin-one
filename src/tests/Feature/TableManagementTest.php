@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Building;
+use App\Models\Canteen;
+use App\Models\Floor;
 use App\Models\Table;
 use App\Models\User;
-use App\Models\Canteen;
-use App\Models\Building;
-use App\Models\Floor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -63,7 +63,6 @@ class TableManagementTest extends TestCase
         ];
     }
 
-    
     private function createTable(): Table
     {
         $table = new Table([
@@ -82,7 +81,6 @@ class TableManagementTest extends TestCase
         return $table;
     }
 
-    
     public function test_administrator_can_create_table(): void
     {
         $administrator = $this->createUser('administrator');
@@ -141,7 +139,6 @@ class TableManagementTest extends TestCase
             ->assertRedirect(route('dashboard.tenant'));
     }
 
-    
     public function test_administrator_can_update_table(): void
     {
         $administrator = $this->createUser('administrator');
@@ -230,7 +227,6 @@ class TableManagementTest extends TestCase
         ]);
     }
 
-    
     public function test_table_number_continues_after_previous_table_is_soft_deleted(): void
     {
         $admin = $this->createUser('administrator');
@@ -269,7 +265,6 @@ class TableManagementTest extends TestCase
         ]);
     }
 
-    
     public function test_table_number_restarts_for_different_canteen(): void
     {
         $admin = $this->createUser('administrator');
@@ -336,7 +331,6 @@ class TableManagementTest extends TestCase
         $this->assertDatabaseCount('tables', 0);
     }
 
-    
     public function test_administrator_cannot_create_table_for_inactive_canteen(): void
     {
         $admin = $this->createUser('administrator');
@@ -359,7 +353,6 @@ class TableManagementTest extends TestCase
         $this->assertDatabaseCount('tables', 0);
     }
 
-    
     public function test_administrator_cannot_create_table_for_inactive_building(): void
     {
         $admin = $this->createUser('administrator');
@@ -382,7 +375,6 @@ class TableManagementTest extends TestCase
         $this->assertDatabaseCount('tables', 0);
     }
 
-    
     public function test_administrator_cannot_create_table_for_inactive_floor(): void
     {
         $admin = $this->createUser('administrator');

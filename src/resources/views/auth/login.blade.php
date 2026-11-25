@@ -60,3 +60,5 @@
         </div>
     </div>
 @endsection
+
+@vite('resources/js/pages/auth/login.js')
