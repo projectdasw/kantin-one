@@ -45,6 +45,7 @@ export default defineConfig({
 
                 // Users
                 'resources/js/pages/users/users.js',
+                'resources/js/pages/users/crud.js',
                 'resources/js/pages/users/trash.js',
             ],
             refresh: true,

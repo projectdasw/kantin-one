@@ -54,19 +54,50 @@
                 [
                     'label' => 'Manajemen Kantin Utama',
                     'id' => 'management-canteen',
-                    'icon' => 'fa-solid fa-store',
+                    'icon' => 'fa-solid fa-landmark',
                     'active' => [
-                        'canteens*',
                         'buildings*',
                         'floors*',
+                        'canteens*',
                         'tables*',
                     ],
                     'submenu' => [
                         [
+                            'label' => 'Gedung/Lahan',
+                            'id' => 'submenu-buildings',
+                            'icon' => 'fa-solid fa-building',
+                            'active' => ['buildings*'],
+                            'submenu' => [
+                                [
+                                    'label' => 'Master Gedung/Lahan',
+                                    'icon' => 'fa-solid fa-list',
+                                    'url' => route('buildings.index'),
+                                    'active' => ['buildings'],
+                                ],
+                                [
+                                    'label' => 'Tambah Gedung/Lahan',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => route('buildings.create'),
+                                    'active' => ['buildings/create'],
+                                ],
+                                [
+                                    'label' => 'Gedung/Lahan Nonaktif',
+                                    'icon' => 'fa-solid fa-building-circle-xmark',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Pemulihan Gedung/Lahan',
+                                    'icon' => 'fa-solid fa-building-shield',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                            ],
+                        ],
+                        [
                             'label' => 'Kantin',
                             'id' => 'submenu-canteens',
-                            'icon' => 'fa-solid fa-store',
-                            'url' => route('canteens.index'),
+                            'icon' => 'fa-solid fa-shop',
                             'active' => ['canteens*'],
                             'submenu' => [
                                 [
@@ -81,140 +112,268 @@
                                     'url' => route('canteens.create'),
                                     'active' => ['canteens/create'],
                                 ],
-                            ],
-                        ],
-                        [
-                            'label' => 'Gedung',
-                            'id' => 'submenu-building',
-                            'icon' => 'fa-solid fa-building',
-                            'active' => ['buildings*'],
-                            'submenu' => [
                                 [
-                                    'label' => 'Data Gedung',
-                                    'icon' => 'fa-solid fa-list',
-                                    'url' => route('buildings.index'),
-                                    'active' => ['buildings'],
+                                    'label' => 'Kantin Nonaktif',
+                                    'icon' => 'fa-solid fa-shop-slash',
+                                    'url' => '#',
+                                    'active' => [''],
                                 ],
                                 [
-                                    'label' => 'Tambah Gedung',
-                                    'icon' => 'fa-solid fa-plus',
-                                    'url' => route('buildings.create'),
-                                    'active' => ['buildings/create'],
+                                    'label' => 'Pemulihan Kantin',
+                                    'icon' => 'fa-solid fa-shield-halved',
+                                    'url' => '#',
+                                    'active' => [''],
                                 ],
                             ],
-                        ],
-                        [
-                            'label' => 'Lantai',
-                            'icon' => 'fa-solid fa-layer-group',
-                            'url' => route('floors.index'),
-                            'active' => ['floors*'],
                         ],
                         [
                             'label' => 'Meja',
+                            'id' => 'submenu-tables',
                             'icon' => 'fa-solid fa-chair',
-                            'url' => route('tables.index'),
                             'active' => ['tables*'],
+                            'submenu' => [
+                                [
+                                    'label' => 'Master Meja',
+                                    'icon' => 'fa-solid fa-list',
+                                    'url' => route('tables.index'),
+                                    'active' => ['tables'],
+                                ],
+                                [
+                                    'label' => 'Tambah Meja',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => route('tables.create'),
+                                    'active' => ['tables/create'],
+                                ],
+                                [
+                                    'label' => 'Meja Nonaktif',
+                                    'icon' => 'fa-solid fa-ban',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Pemulihan Meja',
+                                    'icon' => 'fa-solid fa-shield-halved',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                            ],
                         ],
                     ],
                 ],
                 [
-                    'label' => 'Manajemen Tenant',
+                    'label' => 'Manajemen Outlet',
                     'id' => 'management-tenant',
-                    'icon' => 'fa-solid fa-shop',
+                    'icon' => 'fa-solid fa-tents',
                     'active' => [
                         'tenants*',
-                        'tenant-categories*',
-                        'tenant-employees*',
                     ],
                     'submenu' => [
                         [
-                            'label' => 'Data Tenant',
+                            'label' => 'Outlet',
+                            'id' => 'submenu-tenants',
                             'icon' => 'fa-solid fa-store',
-                            'url' => route('tenants.index'),
-                            'active' => ['tenants*'],
+                            'active' => [
+                                'tenants',
+                                'tenants/create'
+                            ],
+                            'submenu' => [
+                                [
+                                    'label' => 'Master Outlet',
+                                    'icon' => 'fa-solid fa-list',
+                                    'url' => route('tenants.index'),
+                                    'active' => ['tenants'],
+                                ],
+                                [
+                                    'label' => 'Tambah Outlet',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => route('tenants.create'),
+                                    'active' => ['tenants/create'],
+                                ],
+                                [
+                                    'label' => 'Outlet Nonaktif',
+                                    'icon' => 'fa-solid fa-store-slash',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Pemulihan Outlet',
+                                    'icon' => 'fa-solid fa-shield-halved',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                            ],
                         ],
                         [
-                            'label' => 'Kategori Tenant',
-                            'icon' => 'fa-solid fa-tags',
-                            'url' => '#',
-                            'active' => ['tenant-categories*'],
-                        ],
-                        [
-                            'label' => 'Pegawai Tenant',
-                            'icon' => 'fa-solid fa-users',
-                            'url' => '#',
-                            'active' => ['tenant-employees*'],
+                            'label' => 'Kategori Outlet',
+                            'id' => 'submenu-category',
+                            'icon' => 'fa-solid fa-layer-group',
+                            'active' => ['tenants/category'],
+                            'submenu' => [
+                                [
+                                    'label' => 'Master Kategori',
+                                    'icon' => 'fa-solid fa-list',
+                                    'url' => '#' ,
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Tambah Kategori',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Kategori Nonaktif',
+                                    'icon' => 'fa-solid fa-ban',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Pemulihan Kategori',
+                                    'icon' => 'fa-solid fa-shield-halved',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                            ],
                         ],
                     ],
                 ],
                 [
                     'label' => 'Manajemen Produk',
                     'id' => 'management-products',
-                    'icon' => 'fa-solid fa-shop',
+                    'icon' => 'fa-solid fa-cubes-stacked',
                     'active' => [
                         'products*',
                     ],
                     'submenu' => [
                         [
-                            'label' => 'Master Menu',
-                            'icon' => 'fa-solid fa-users',
-                            'url' => route('products.index'),
-                            'active' => ['products*'],
+                            'label' => 'Menu',
+                            'id' => 'submenu-products',
+                            'icon' => 'fa-solid fa-utensils',
+                            'active' => [
+                                'products',
+                                'products/create'
+                            ],
+                            'submenu' => [
+                                [
+                                    'label' => 'Master Menu',
+                                    'icon' => 'fa-solid fa-list',
+                                    'url' => route('products.index'),
+                                    'active' => ['products'],
+                                ],
+                                [
+                                    'label' => 'Tambah Menu',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => route('products.create'),
+                                    'active' => ['products/create'],
+                                ],
+                                [
+                                    'label' => 'Ketersediaan Menu',
+                                    'icon' => 'fa-solid fa-champagne-glasses',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Pemulihan Menu',
+                                    'icon' => 'fa-solid fa-shield-halved',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                            ],
                         ],
                         [
-                            'label' => 'Kategori Menu',
-                            'icon' => 'fa-solid fa-users',
-                            'url' => '#',
-                            'active' => [''],
+                            'label' => 'Etalase',
+                            'id' => 'submenu-display-menu',
+                            'icon' => 'fa-solid fa-store',
+                            'active' => [
+                                'display-menu',
+                                'display-menu/create'
+                            ],
+                            'submenu' => [
+                                [
+                                    'label' => 'Master Etalase',
+                                    'icon' => 'fa-solid fa-store',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Tambah Etalase',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                            ],
+                        ],
+                        [
+                            'label' => 'Kategori',
+                            'id' => 'submenu-category',
+                            'icon' => 'fa-solid fa-store',
+                            'active' => [
+                                'category',
+                                'category/create'
+                            ],
+                            'submenu' => [
+                                [
+                                    'label' => 'Master Kategori',
+                                    'icon' => 'fa-solid fa-store',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Tambah Kategori',
+                                    'icon' => 'fa-solid fa-plus',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                            ],
                         ],
                     ],
                 ],
-                [
-                    'label' => 'Manajemen Stok (Segera ada)',
-                    'icon' => 'fa-solid fa-chart-pie',
-                    'url' => '#',
-                    'active' => [''],
-                ],
-                [
-                    'label' => 'Laporan (Segera ada)',
-                    'id' => 'management-report',
-                    'icon' => 'fa-solid fa-chart-pie',
-                    'active' => [
-                        'reports*',
-                    ],
-                    'submenu' => [
-                        [
-                            'label' => 'Saldo',
-                            'icon' => 'fa-solid fa-chart-pie',
-                            'url' => '#',
-                            'active' => [''],
-                        ],
-                        [
-                            'label' => 'Penjualan',
-                            'icon' => 'fa-solid fa-chart-pie',
-                            'url' => '#',
-                            'active' => ['reports*'],
-                        ],
-                        [
-                            'label' => 'Laba/Rugi',
-                            'icon' => 'fa-solid fa-chart-pie',
-                            'url' => '#',
-                            'active' => [''],
-                        ],
-                        [
-                            'label' => 'Neraca',
-                            'icon' => 'fa-solid fa-chart-pie',
-                            'url' => '#',
-                            'active' => [''],
-                        ],
-                        [
-                            'label' => 'Hasil Penjualan Pokok',
-                            'icon' => 'fa-solid fa-chart-pie',
-                            'url' => '#',
-                            'active' => [''],
-                        ],
-                    ],
-                ],
+                // [
+                //     'label' => 'Manajemen Stok (Segera ada)',
+                //     'icon' => 'fa-solid fa-chart-pie',
+                //     'url' => '#',
+                //     'active' => [''],
+                // ],
+                // [
+                //     'label' => 'Laporan (Segera ada)',
+                //     'id' => 'management-report',
+                //     'icon' => 'fa-solid fa-chart-pie',
+                //     'active' => [
+                //         'reports*',
+                //     ],
+                //     'submenu' => [
+                //         [
+                //             'label' => 'Saldo',
+                //             'icon' => 'fa-solid fa-chart-pie',
+                //             'url' => '#',
+                //             'active' => [''],
+                //         ],
+                //         [
+                //             'label' => 'Penjualan',
+                //             'icon' => 'fa-solid fa-chart-pie',
+                //             'url' => '#',
+                //             'active' => ['reports*'],
+                //         ],
+                //         [
+                //             'label' => 'Laba/Rugi',
+                //             'icon' => 'fa-solid fa-chart-pie',
+                //             'url' => '#',
+                //             'active' => [''],
+                //         ],
+                //         [
+                //             'label' => 'Neraca',
+                //             'icon' => 'fa-solid fa-chart-pie',
+                //             'url' => '#',
+                //             'active' => [''],
+                //         ],
+                //         [
+                //             'label' => 'Hasil Penjualan Pokok',
+                //             'icon' => 'fa-solid fa-chart-pie',
+                //             'url' => '#',
+                //             'active' => [''],
+                //         ],
+                //     ],
+                // ],
             ],
 
             'Pengelola Kantin', 'Kepala Pengelolaan Tenant' => [
