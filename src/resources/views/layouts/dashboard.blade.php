@@ -204,8 +204,8 @@
                             ],
                         ],
                         [
-                            'label' => 'Kategori Outlet',
-                            'id' => 'submenu-category',
+                            'label' => 'Kategori',
+                            'id' => 'submenu-tenants-category',
                             'icon' => 'fa-solid fa-layer-group',
                             'active' => ['tenants/category'],
                             'submenu' => [
@@ -283,7 +283,7 @@
                         [
                             'label' => 'Etalase',
                             'id' => 'submenu-display-menu',
-                            'icon' => 'fa-solid fa-store',
+                            'icon' => 'fa-solid fa-sign-hanging',
                             'active' => [
                                 'display-menu',
                                 'display-menu/create'
@@ -291,7 +291,7 @@
                             'submenu' => [
                                 [
                                     'label' => 'Master Etalase',
-                                    'icon' => 'fa-solid fa-store',
+                                    'icon' => 'fa-solid fa-list',
                                     'url' => '#',
                                     'active' => [''],
                                 ],
@@ -301,21 +301,30 @@
                                     'url' => '#',
                                     'active' => [''],
                                 ],
+                                [
+                                    'label' => 'Etalase Nonaktif',
+                                    'icon' => 'fa-solid fa-ban',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Pemulihan Etalase',
+                                    'icon' => 'fa-solid fa-shield-halved',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
                             ],
                         ],
                         [
                             'label' => 'Kategori',
-                            'id' => 'submenu-category',
-                            'icon' => 'fa-solid fa-store',
-                            'active' => [
-                                'category',
-                                'category/create'
-                            ],
+                            'id' => 'submenu-displya-menu-category',
+                            'icon' => 'fa-solid fa-layer-group',
+                            'active' => ['display-menu/category'],
                             'submenu' => [
                                 [
                                     'label' => 'Master Kategori',
-                                    'icon' => 'fa-solid fa-store',
-                                    'url' => '#',
+                                    'icon' => 'fa-solid fa-list',
+                                    'url' => '#' ,
                                     'active' => [''],
                                 ],
                                 [
@@ -324,138 +333,104 @@
                                     'url' => '#',
                                     'active' => [''],
                                 ],
+                                [
+                                    'label' => 'Kategori Nonaktif',
+                                    'icon' => 'fa-solid fa-ban',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
+                                [
+                                    'label' => 'Pemulihan Kategori',
+                                    'icon' => 'fa-solid fa-shield-halved',
+                                    'url' => '#',
+                                    'active' => [''],
+                                ],
                             ],
                         ],
                     ],
                 ],
-                // [
-                //     'label' => 'Manajemen Stok (Segera ada)',
-                //     'icon' => 'fa-solid fa-chart-pie',
-                //     'url' => '#',
-                //     'active' => [''],
-                // ],
-                // [
-                //     'label' => 'Laporan (Segera ada)',
-                //     'id' => 'management-report',
-                //     'icon' => 'fa-solid fa-chart-pie',
-                //     'active' => [
-                //         'reports*',
-                //     ],
-                //     'submenu' => [
-                //         [
-                //             'label' => 'Saldo',
-                //             'icon' => 'fa-solid fa-chart-pie',
-                //             'url' => '#',
-                //             'active' => [''],
-                //         ],
-                //         [
-                //             'label' => 'Penjualan',
-                //             'icon' => 'fa-solid fa-chart-pie',
-                //             'url' => '#',
-                //             'active' => ['reports*'],
-                //         ],
-                //         [
-                //             'label' => 'Laba/Rugi',
-                //             'icon' => 'fa-solid fa-chart-pie',
-                //             'url' => '#',
-                //             'active' => [''],
-                //         ],
-                //         [
-                //             'label' => 'Neraca',
-                //             'icon' => 'fa-solid fa-chart-pie',
-                //             'url' => '#',
-                //             'active' => [''],
-                //         ],
-                //         [
-                //             'label' => 'Hasil Penjualan Pokok',
-                //             'icon' => 'fa-solid fa-chart-pie',
-                //             'url' => '#',
-                //             'active' => [''],
-                //         ],
-                //     ],
-                // ],
             ],
 
-            'Pengelola Kantin', 'Kepala Pengelolaan Tenant' => [
-                [
-                    'label' => 'Dashboard',
-                    'icon' => 'fa-solid fa-house',
-                    'url' => '/dashboard',
-                    'active' => ['dashboard'],
-                ],
-                [
-                    'label' => 'Data Tenant',
-                    'icon' => 'fa-solid fa-store',
-                    'url' => '#',
-                    'active' => ['tenants*'],
-                ],
-                [
-                    'label' => 'Monitoring Tenant',
-                    'icon' => 'fa-solid fa-chart-line',
-                    'url' => '#',
-                    'active' => ['monitoring*'],
-                ],
-                [
-                    'label' => 'Laporan',
-                    'icon' => 'fa-solid fa-file-lines',
-                    'url' => '#',
-                    'active' => ['reports*'],
-                ],
-            ],
+            // 'Pengelola Kantin', 'Kepala Pengelolaan Tenant' => [
+            //     [
+            //         'label' => 'Dashboard',
+            //         'icon' => 'fa-solid fa-house',
+            //         'url' => '/dashboard',
+            //         'active' => ['dashboard'],
+            //     ],
+            //     [
+            //         'label' => 'Data Tenant',
+            //         'icon' => 'fa-solid fa-store',
+            //         'url' => '#',
+            //         'active' => ['tenants*'],
+            //     ],
+            //     [
+            //         'label' => 'Monitoring Tenant',
+            //         'icon' => 'fa-solid fa-chart-line',
+            //         'url' => '#',
+            //         'active' => ['monitoring*'],
+            //     ],
+            //     [
+            //         'label' => 'Laporan',
+            //         'icon' => 'fa-solid fa-file-lines',
+            //         'url' => '#',
+            //         'active' => ['reports*'],
+            //     ],
+            // ],
 
-            'Kepala Tenant', 'Tenant' => [
-                [
-                    'label' => 'Dashboard',
-                    'icon' => 'fa-solid fa-house',
-                    'url' => '/dashboard',
-                    'active' => ['dashboard'],
-                ],
-                [
-                    'label' => 'Produk',
-                    'icon' => 'fa-solid fa-box',
-                    'url' => '#',
-                    'active' => ['products*'],
-                ],
-                [
-                    'label' => 'Persediaan',
-                    'icon' => 'fa-solid fa-boxes-stacked',
-                    'url' => '#',
-                    'active' => ['inventory*'],
-                ],
-                [
-                    'label' => 'Transaksi',
-                    'icon' => 'fa-solid fa-receipt',
-                    'url' => '#',
-                    'active' => ['transactions*'],
-                ],
-                [
-                    'label' => 'Laporan',
-                    'icon' => 'fa-solid fa-chart-column',
-                    'url' => '#',
-                    'active' => ['reports*'],
-                ],
-            ],
+            // 'Kepala Tenant', 'Tenant' => [
+            //     [
+            //         'label' => 'Dashboard',
+            //         'icon' => 'fa-solid fa-house',
+            //         'url' => '/dashboard',
+            //         'active' => ['dashboard'],
+            //     ],
+            //     [
+            //         'label' => 'Produk',
+            //         'icon' => 'fa-solid fa-box',
+            //         'url' => '#',
+            //         'active' => ['products*'],
+            //     ],
+            //     [
+            //         'label' => 'Persediaan',
+            //         'icon' => 'fa-solid fa-boxes-stacked',
+            //         'url' => '#',
+            //         'active' => ['inventory*'],
+            //     ],
+            //     [
+            //         'label' => 'Transaksi',
+            //         'icon' => 'fa-solid fa-receipt',
+            //         'url' => '#',
+            //         'active' => ['transactions*'],
+            //     ],
+            //     [
+            //         'label' => 'Laporan',
+            //         'icon' => 'fa-solid fa-chart-column',
+            //         'url' => '#',
+            //         'active' => ['reports*'],
+            //     ],
+            // ],
 
-            'Pegawai Tenant' => [
-                [
-                    'label' => 'Dashboard',
-                    'icon' => 'fa-solid fa-house',
-                    'url' => '/dashboard',
-                    'active' => ['dashboard'],
-                ],
-                [
-                    'label' => 'Produk',
-                    'icon' => 'fa-solid fa-box',
-                    'url' => '#',
-                    'active' => ['products*'],
-                ],
-                [
-                    'label' => 'Transaksi',
-                    'icon' => 'fa-solid fa-receipt',
-                    'url' => '#',
-                    'active' => ['transactions*'],
-                ],
-            ],
+            // 'Pegawai Tenant' => [
+            //     [
+            //         'label' => 'Dashboard',
+            //         'icon' => 'fa-solid fa-house',
+            //         'url' => '/dashboard',
+            //         'active' => ['dashboard'],
+            //     ],
+            //     [
+            //         'label' => 'Produk',
+            //         'icon' => 'fa-solid fa-box',
+            //         'url' => '#',
+            //         'active' => ['products*'],
+            //     ],
+            //     [
+            //         'label' => 'Transaksi',
+            //         'icon' => 'fa-solid fa-receipt',
+            //         'url' => '#',
+            //         'active' => ['transactions*'],
+            //     ],
+            // ],
 
             default => [],
         };
@@ -549,7 +524,8 @@
                         <div class="p-2 rounded-3 me-3 text-white" style="background-color: var(--dashboard-primary-subtle);">
                             <i class="fa-solid fa-bars"></i>
                         </div>
-                        <nav class="text-muted small" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                        <nav class="text-muted small" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8'
+                            height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item">Pages</li>
                                 <li class="breadcrumb-item active" aria-current="page">

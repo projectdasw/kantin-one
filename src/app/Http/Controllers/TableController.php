@@ -8,6 +8,7 @@ use App\Models\Floor;
 use App\Models\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\DataTables\TableDataTable;
 
 class TableController extends Controller
 {
@@ -91,37 +92,11 @@ class TableController extends Controller
     /* Index, Search & Pagination */
     /* -------------------------------------------------------------------------- */
 
-    public function index(Request $request)
+    public function index(TableDataTable $dataTable)
     {
         $this->ensureAdministrator();
 
-        $tables = Table::query()
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $search = $request->input('search');
-
-                $query->where(function ($q) use ($search) {
-                    $q->where('code', 'ILIKE', "%{$search}%")
-                        ->orWhere('table_number', 'ILIKE', "%{$search}%")
-                        ->orWhere('name', 'ILIKE', "%{$search}%")
-                        ->orWhere('location', 'ILIKE', "%{$search}%");
-                });
-            })
-            ->when(
-                $request->input('status') !== null &&
-                $request->input('status') !== '',
-                function ($query) use ($request) {
-                    $query->where('is_active', $request->input('status'));
-                }
-            )
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-
-        if ($request->ajax()) {
-            return view('tables.partials.table', compact('tables'));
-        }
-
-        return view('tables.index', compact('tables'));
+        return $dataTable->render('tables.index');
     }
 
     /* -------------------------------------------------------------------------- */

@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
+    initBuildingManagement();
+    initFloorManagement();
+});
+
+/*
+|--------------------------------------------------------------------------
+| Building Management
+|--------------------------------------------------------------------------
+*/
+
+function initBuildingManagement() {
     const searchForm = document.getElementById('buildingSearchForm');
     const searchInput = document.getElementById('buildingSearchInput');
     const statusFilter = document.getElementById('buildingStatusFilter');
@@ -12,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadBuildings = async (page = 1, updateUrl = true) => {
         if (controller) controller.abort();
+
         controller = new AbortController();
 
         const formData = new FormData(searchForm);
@@ -79,11 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     searchForm.addEventListener('submit', (event) => {
         event.preventDefault();
+
         clearTimeout(debounceTimer);
         loadBuildings();
     });
 
-    resetButton.addEventListener('click', () => {
+    resetButton?.addEventListener('click', () => {
         searchInput.value = '';
         statusFilter.value = '';
         loadBuildings();
@@ -137,4 +150,60 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-});
+}
+
+/*
+|--------------------------------------------------------------------------
+| Floor Management
+|--------------------------------------------------------------------------
+*/
+
+function initFloorManagement() {
+    document.addEventListener('submit', (event) => {
+        const statusForm = event.target.closest('.floor-status-form');
+
+        if (!statusForm) return;
+
+        event.preventDefault();
+
+        const isActive = statusForm.dataset.active === '1';
+
+        Swal.fire({
+            title: isActive ? 'Nonaktifkan Lantai?' : 'Aktifkan Lantai?',
+            text: isActive
+                ? 'Lantai yang dinonaktifkan tidak dapat digunakan.'
+                : 'Apakah Anda yakin ingin mengaktifkan lantai ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: isActive ? 'Ya, nonaktifkan' : 'Ya, aktifkan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: isActive ? '#dc3545' : '#198754',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                statusForm.submit();
+            }
+        });
+    });
+
+    document.addEventListener('submit', (event) => {
+        const deleteForm = event.target.closest('.floor-delete-form');
+
+        if (!deleteForm) return;
+
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Hapus Lantai?',
+            text: 'Lantai akan dipindahkan ke data terhapus. Anda yakin ingin melanjutkan?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#dc3545',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteForm.submit();
+            }
+        });
+    });
+}

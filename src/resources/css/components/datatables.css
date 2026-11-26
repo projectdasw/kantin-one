@@ -4,13 +4,15 @@
 
 /* Table Wrapper */
 #users-table_wrapper,
-#users-trash-table_wrapper {
+#users-trash-table_wrapper,
+#tables-table_wrapper {
     color: var(--text-main);
 }
 
 /* Table */
 #users-table,
-#users-trash-table {
+#users-trash-table,
+#tables-table {
     width: 100% !important;
     border-collapse: separate;
     border-spacing: 0;
@@ -19,7 +21,8 @@
 
 /* Table Header */
 #users-table thead th,
-#users-trash-table thead th {
+#users-trash-table thead th,
+#tables-table thead th {
     background-color: var(--primary-light);
     color: var(--text-main);
     border-bottom: 1px solid #e2e8f0;
@@ -28,31 +31,36 @@
 
 /* Table Body */
 #users-table tbody td,
-#users-trash-table tbody td {
+#users-trash-table tbody td,
+#tables-table tbody td {
     color: var(--text-main);
     border-bottom: 1px solid #f1f5f9;
 }
 
 /* Row Hover */
 #users-table tbody tr,
-#users-trash-table tbody tr {
+#users-trash-table tbody tr,
+#tables-table tbody tr {
     transition: background-color 0.2s ease;
 }
 
 #users-table tbody tr:hover,
-#users-trash-table tbody tr:hover {
+#users-trash-table tbody tr:hover,
+#tables-table tbody tr:hover {
     background-color: #f8faff;
 }
 
 /* Remove Last Row Border */
 #users-table tbody tr:last-child td,
-#users-trash-table tbody tr:last-child td {
+#users-trash-table tbody tr:last-child td,
+#tables-table tbody tr:last-child td {
     border-bottom: 0;
 }
 
 /* Table Responsive */
 #usersTableContainer,
-#usersTrashTableContainer {
+#usersTrashTableContainer,
+#tablesTableContainer {
     border-radius: 0.5rem;
 }
 
@@ -60,7 +68,9 @@
 #users-table_wrapper .dt-search,
 #users-table_wrapper .dt-length,
 #users-trash-table_wrapper .dt-search,
-#users-trash-table_wrapper .dt-length {
+#users-trash-table_wrapper .dt-length,
+#tables-table_wrapper .dt-search,
+#tables-table_wrapper .dt-length {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
@@ -68,7 +78,9 @@
 #users-table_wrapper .dt-search input,
 #users-table_wrapper .dt-length select,
 #users-trash-table_wrapper .dt-search input,
-#users-trash-table_wrapper .dt-length select {
+#users-trash-table_wrapper .dt-length select,
+#tables-table_wrapper .dt-search input,
+#tables-table_wrapper .dt-length select {
     border: 1px solid #e2e8f0;
     border-radius: 0.5rem;
     padding: 0.4rem 2.5rem 0.4rem 0.7rem;
@@ -86,12 +98,14 @@
 
 /* Pagination */
 #users-table_wrapper .pagination,
-#users-trash-table_wrapper .pagination {
+#users-trash-table_wrapper .pagination,
+#tables-table_wrapper .pagination {
     gap: 0.25rem;
 }
 
 #users-table_wrapper .page-link,
-#users-trash-table_wrapper .page-link {
+#users-trash-table_wrapper .page-link,
+#tables-table_wrapper .page-link {
     border-radius: 0.4rem;
     border: 1px solid #e2e8f0;
     color: var(--text-main);
@@ -99,14 +113,16 @@
 }
 
 #users-table_wrapper .page-item.active .page-link,
-#users-trash-table_wrapper .page-item.active .page-link {
+#users-trash-table_wrapper .page-item.active .page-link,
+#tables-table_wrapper .page-item.active .page-link {
     background-color: var(--primary);
     border-color: var(--primary);
     color: #fff;
 }
 
 #users-table_wrapper .page-link:focus,
-#users-trash-table_wrapper .page-link:focus {
+#users-trash-table_wrapper .page-link:focus,
+#tables-table_wrapper .page-link:focus {
     box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.12);
 }
 

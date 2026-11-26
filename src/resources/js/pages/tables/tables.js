@@ -1,113 +1,149 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('tableContainer');
-    const searchInput = document.getElementById('tableSearch');
-    const statusFilter = document.getElementById('tableStatus');
+    // ==========================================
+    // DATATABLES: SATUKAN SEARCH DAN FILTER
+    // ==========================================
+    window.addEventListener('load', function () {
+        const table = window.LaravelDataTables?.['tables-table'];
 
-    // Form pembuatan meja
-    const canteenSelect = document.getElementById('canteen_id');
-    const buildingSelect = document.getElementById('building_id');
-    const floorSelect = document.getElementById('floor_id');
-
-    if (container && searchInput && statusFilter) {
-
-        let debounceTimer;
-
-        // Memuat data meja melalui AJAX
-        async function loadTables(url = null) {
-            const params = new URLSearchParams({
-                search: searchInput.value,
-                status: statusFilter.value,
-            });
-
-            let requestUrl;
-
-            if (url) {
-                const paginationUrl = new URL(url, window.location.origin);
-
-                params.set('page', paginationUrl.searchParams.get('page') || '1');
-
-                requestUrl = `${window.location.pathname}?${params}`;
-            } else {
-                requestUrl = `${window.location.pathname}?${params}`;
-            }
-
-            container.style.opacity = '0.5';
-
-            try {
-                const response = await fetch(requestUrl, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'text/html',
-                    },
-                });
-
-                if (!response.ok) throw new Error('Gagal memuat data meja.');
-
-                container.innerHTML = await response.text();
-                initializeTooltips();
-            } catch (error) {
-                console.error(error);
-                container.innerHTML = `
-                    <div class="alert alert-danger">
-                        Gagal memuat data meja. Silakan coba kembali.
-                    </div>
-                `;
-            } finally {
-                container.style.opacity = '1';
-            }
+        if (!table) {
+            console.error('DataTables Manajemen Meja tidak ditemukan.');
+            return;
         }
 
-        // Pencarian dengan debounce
-        searchInput.addEventListener('input', () => {
-            clearTimeout(debounceTimer);
+        const statusFilter = document.getElementById('tableStatus');
+        const resetButton = document.getElementById('resetTableFilters');
+        const filtersContainer = document.getElementById('tableFilters');
 
-            debounceTimer = setTimeout(() => {
-                loadTables();
-            }, 400);
-        });
+        const searchContainer = document.querySelector(
+            '#tables-table_wrapper .dt-search'
+        );
 
-        // Filter status
-        statusFilter.addEventListener('change', () => loadTables());
+        if (filtersContainer && searchContainer) {
 
-        // Pagination AJAX
-        container.addEventListener('click', (event) => {
-            const link = event.target.closest('.pagination a');
+            searchContainer.classList.add(
+                'd-flex',
+                'flex-wrap',
+                'align-items-center',
+                'gap-2'
+            );
 
-            if (!link) return;
+            const searchLabel = searchContainer.querySelector('label');
 
-            event.preventDefault();
-            loadTables(link.href);
-        });
-
-        // Konfirmasi hapus
-        container.addEventListener('submit', async (event) => {
-            const form = event.target.closest('.delete-table-form');
-
-            if (!form) return;
-
-            event.preventDefault();
-
-            const result = await Swal.fire({
-                title: 'Hapus meja?',
-                text: 'Meja akan dipindahkan ke Recycle Bin.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus',
-                cancelButtonText: 'Batal',
-                reverseButtons: true,
-            });
-
-            if (result.isConfirmed) {
-                form.submit();
+            if (searchLabel) {
+                searchLabel.classList.add('mb-0');
             }
-        });
+
+            const searchInput = searchContainer.querySelector('input');
+
+            if (searchInput) {
+                searchInput.style.width = '260px';
+            }
+
+            filtersContainer.classList.add(
+                'd-flex',
+                'flex-wrap',
+                'align-items-center',
+                'gap-2'
+            );
+
+            searchContainer.appendChild(filtersContainer);
+        }
+
+        if (statusFilter) {
+            statusFilter.addEventListener('change', function () {
+                table.ajax.reload();
+            });
+        }
+
+        if (resetButton) {
+            resetButton.addEventListener('click', function () {
+                if (statusFilter) {
+                    statusFilter.value = '';
+                }
+
+                const searchInput = document.querySelector(
+                    '#tables-table_wrapper .dt-search input'
+                );
+
+                if (searchInput) {
+                    searchInput.value = '';
+                }
+
+                table.search('').draw();
+            });
+        }
+    });
+
+    // Filter status DataTables
+    const statusFilter = document.getElementById('tableStatus');
+    const resetFilter = document.getElementById('resetTableFilters');
+
+    if (
+        window.jQuery &&
+        $.fn.DataTable.isDataTable('#tables-table')
+    ) {
+        const table = $('#tables-table').DataTable();
+
+        if (statusFilter) {
+            statusFilter.addEventListener('change', () => {
+                table.ajax.reload();
+            });
+        }
+
+        if (resetFilter) {
+            resetFilter.addEventListener('click', () => {
+                if (statusFilter) {
+                    statusFilter.value = '';
+                }
+
+                table.ajax.reload();
+            });
+        }
     }
 
+    // Konfirmasi hapus meja
+    document.addEventListener('submit', async (event) => {
+        const form = event.target.closest('.delete-table-form');
+
+        if (!form) return;
+
+        event.preventDefault();
+
+        const result = await Swal.fire({
+            title: 'Hapus meja?',
+            text: 'Meja akan dipindahkan ke Recycle Bin.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+        });
+
+        if (result.isConfirmed) {
+            form.submit();
+        }
+    });
+
+    // Tooltip Bootstrap
     function initializeTooltips() {
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => {
             bootstrap.Tooltip.getOrCreateInstance(element);
         });
     }
+
+    initializeTooltips();
+
+    // Perbarui tooltip setelah DataTables menggambar ulang tabel
+    if (window.jQuery) {
+        $('#tables-table').on('draw.dt', function () {
+            initializeTooltips();
+        });
+    }
+
+    // Form pembuatan meja
+    const canteenSelect = document.getElementById('canteen_id');
+    const buildingSelect = document.getElementById('building_id');
+    const floorSelect = document.getElementById('floor_id');
 
     if (canteenSelect && buildingSelect && floorSelect) {
         const floorsUrl = '/tables/floors';

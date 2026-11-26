@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Building;
+use App\Models\Floor;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BuildingController extends Controller
 {
@@ -83,6 +85,120 @@ class BuildingController extends Controller
             ->with('success', 'Gedung berhasil ditambahkan.');
     }
 
+    public function storeFloor(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $building = $this->selectedBuilding();
+
+        abort_unless($building, 404);
+
+        abort_unless(
+            $building->is_active,
+            403,
+            'Lantai tidak dapat ditambahkan pada gedung nonaktif.'
+        );
+
+        $validated = $request->validate([
+            'code' => [
+                'required',
+                'string',
+                'max:30',
+                Rule::unique('floors', 'code')
+                    ->where('building_id', $building->id),
+            ],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+        ]);
+
+        $floor = new Floor($validated);
+        $floor->building_id = $building->id;
+        $floor->is_active = true;
+        $floor->save();
+
+        return redirect()
+            ->route('buildings.show')
+            ->with('success', 'Lantai berhasil ditambahkan.');
+    }
+
+    public function updateFloor(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $building = $this->selectedBuilding();
+
+        abort_unless($building, 404);
+
+        $validated = $request->validate([
+            'floor_id' => ['required', 'uuid'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+        ]);
+
+        $floor = $building->floors()
+            ->findOrFail($validated['floor_id']);
+
+        $floor->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+        ]);
+
+        return redirect()
+            ->route('buildings.show')
+            ->with('success', 'Data lantai berhasil diperbarui.');
+    }
+
+    public function destroyFloor(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $building = $this->selectedBuilding();
+
+        abort_unless($building, 404);
+
+        $validated = $request->validate([
+            'floor_id' => ['required', 'uuid'],
+        ]);
+
+        $floor = $building->floors()
+            ->findOrFail($validated['floor_id']);
+
+        if ($floor->tables()->exists()) {
+            return redirect()
+                ->route('buildings.show')
+                ->with('error', 'Lantai tidak dapat dihapus karena masih memiliki data meja.');
+        }
+
+        $floor->delete();
+
+        return redirect()
+            ->route('buildings.show')
+            ->with('success', 'Lantai berhasil dihapus.');
+    }
+
+    public function toggleFloorStatus(Request $request)
+    {
+        $this->ensureAdministrator();
+
+        $building = $this->selectedBuilding();
+
+        abort_unless($building, 404);
+
+        $validated = $request->validate([
+            'floor_id' => ['required', 'uuid'],
+        ]);
+
+        $floor = $building->floors()
+            ->findOrFail($validated['floor_id']);
+
+        $floor->is_active = ! $floor->is_active;
+        $floor->save();
+
+        return redirect()
+            ->route('buildings.show')
+            ->with('success', 'Status lantai berhasil diperbarui.');
+    }
+
     public function selectDetail(Request $request)
     {
         $this->ensureAdministrator();
@@ -103,6 +219,10 @@ class BuildingController extends Controller
         $building = $this->selectedBuilding();
 
         abort_unless($building, 404);
+
+        $building->load([
+            'floors' => fn ($query) => $query->latest(),
+        ]);
 
         return view('buildings.show', compact('building'));
     }

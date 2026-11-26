@@ -313,16 +313,18 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator']
         Route::post('/search', 'index')->name('search');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-
         Route::post('/detail', 'selectDetail')->name('detail.select');
         Route::get('/detail', 'show')->name('show');
-
         Route::post('/edit', 'selectEdit')->name('edit.select');
         Route::get('/edit', 'edit')->name('edit');
         Route::put('/edit', 'update')->name('update');
-
         Route::post('/status', 'toggleStatus')->name('status');
         Route::post('/delete', 'destroy')->name('destroy');
+
+        Route::post('/floors', [BuildingController::class, 'storeFloor'])->name('floors.store');
+        Route::put('/floors/update', [BuildingController::class, 'updateFloor'])->name('floors.update');
+        Route::post('/floors/status', [BuildingController::class, 'toggleFloorStatus'])->name('floors.status');
+        Route::delete('/floors/delete', [BuildingController::class, 'destroyFloor'])->name('floors.destroy');
     });
 
     Route::prefix('floors')->name('floors.')->controller(FloorController::class)->group(function () {

@@ -2,7 +2,7 @@
 @section('title', 'Login')
 @section('auth-content')
     <div class="container p-0">
-        <div class="card border-0 shadow-lg w-75 mx-auto">
+        <div class="card border-0 shadow-lg w-75 float-end">
             <div class="card-header border-0" style="background-color: var(--auth-primary);"></div>
             <div class="card-body p-5">
                 @if (session('status'))

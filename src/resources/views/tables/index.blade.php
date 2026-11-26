@@ -22,43 +22,31 @@
 
 @section('dashboard-content')
 
-<div class="card border-0 shadow-sm">
-    <div class="card-body">
+    {{-- Filter Manajemen Meja --}}
+    <div id="tableFilters" class="d-flex flex-wrap align-items-center gap-2">
 
-        {{-- Search & Filter --}}
-        <div class="row g-3 mb-4">
+        <select id="tableStatus" class="form-select form-select-sm" style="width: 145px;">
+            <option value="">Semua Status</option>
+            <option value="1">Aktif</option>
+            <option value="0">Nonaktif</option>
+        </select>
 
-            <div class="col-md-8">
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="fas fa-search"></i>
-                    </span>
-
-                    <input
-                        type="text"
-                        id="tableSearch"
-                        class="form-control"
-                        placeholder="Cari kode, nomor, nama, atau lokasi meja..."
-                    >
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <select id="tableStatus" class="form-select">
-                    <option value="">Semua Status</option>
-                    <option value="1">Aktif</option>
-                    <option value="0">Nonaktif</option>
-                </select>
-            </div>
-
-        </div>
-
-        {{-- Table --}}
-        <div id="tableContainer">
-            @include('tables.partials.table')
-        </div>
+        <button type="button" id="resetTableFilters" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-undo me-1"></i> Reset
+        </button>
 
     </div>
-</div>
+
+    {{-- Tabel Manajemen Meja --}}
+    <div class="table-responsive" id="tablesTableContainer">
+        {!! $dataTable->table([
+            'class' => 'table table-hover align-middle mb-0',
+        ]) !!}
+    </div>
 
 @endsection
+
+@push('scripts')
+    @vite('resources/js/pages/tables/tables.js')
+    {!! $dataTable->scripts() !!}
+@endpush
