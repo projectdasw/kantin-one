@@ -31,9 +31,6 @@ export default defineConfig({
                 // Buildings
                 'resources/js/pages/buildings/buildings.js',
 
-                // Floors
-                'resources/js/pages/floors/floors.js',
-
                 // Tables
                 'resources/js/pages/tables/tables.js',
 

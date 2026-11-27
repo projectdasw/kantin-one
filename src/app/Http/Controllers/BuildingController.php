@@ -6,6 +6,9 @@ use App\Models\Building;
 use App\Models\Floor;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\DataTables\BuildingsDataTable;
+use App\DataTables\BuildingsInactiveDataTable;
+use App\DataTables\BuildingsRestoreDataTable;
 
 class BuildingController extends Controller
 {
@@ -25,38 +28,43 @@ class BuildingController extends Controller
         return $id ? Building::find($id) : null;
     }
 
-    public function index(Request $request)
+    public function index(BuildingsDataTable $dataTable)
     {
         $this->ensureAdministrator();
 
-        $query = Building::query();
+        return $dataTable->render('buildings.index');
+    }
 
-        // Pencarian tanpa membedakan huruf besar dan kecil
-        if ($request->filled('search')) {
-            $search = trim($request->search);
+    public function inactive(BuildingsInactiveDataTable $dataTable)
+    {
+        $this->ensureAdministrator();
 
-            $query->where(function ($q) use ($search) {
-                $q->where('code', 'ilike', "%{$search}%")
-                    ->orWhere('name', 'ilike', "%{$search}%")
-                    ->orWhere('description', 'ilike', "%{$search}%");
-            });
-        }
+        return $dataTable->render('buildings.inactive');
+    }
 
-        // Filter status hanya diterapkan jika benar-benar dipilih
-        if ($request->filled('status')) {
-            $query->where('is_active', $request->status === '1');
-        }
+    public function restorePage(BuildingsRestoreDataTable $dataTable)
+    {
+        $this->ensureAdministrator();
 
-        $buildings = $query
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+        return $dataTable->render('buildings.restore');
+    }
 
-        if ($request->ajax()) {
-            return view('buildings.partials.table', compact('buildings'));
-        }
+    public function restore(Request $request)
+    {
+        $this->ensureAdministrator();
 
-        return view('buildings.index', compact('buildings'));
+        $request->validate([
+            'building_id' => ['required', 'uuid'],
+        ]);
+
+        $building = Building::onlyTrashed()
+            ->findOrFail($request->building_id);
+
+        $building->restore();
+
+        return redirect()
+            ->route('buildings.restore')
+            ->with('success', 'Gedung berhasil dipulihkan.');
     }
 
     public function create()

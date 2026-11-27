@@ -4,7 +4,6 @@ use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\CanteenController;
 use App\Http\Controllers\CustomerCartController;
 use App\Http\Controllers\CustomerOrderController;
-use App\Http\Controllers\FloorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\TenantController;
@@ -325,20 +324,12 @@ Route::middleware(['auth', 'auth.session', 'prevent.back', 'role:administrator']
         Route::put('/floors/update', [BuildingController::class, 'updateFloor'])->name('floors.update');
         Route::post('/floors/status', [BuildingController::class, 'toggleFloorStatus'])->name('floors.status');
         Route::delete('/floors/delete', [BuildingController::class, 'destroyFloor'])->name('floors.destroy');
-    });
 
-    Route::prefix('floors')->name('floors.')->controller(FloorController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::post('/search', 'index')->name('search');
-        Route::post('/detail', 'selectDetail')->name('detail.select');
-        Route::get('/detail', 'show')->name('show');
-        Route::post('/edit', 'selectEdit')->name('edit.select');
-        Route::get('/edit', 'edit')->name('edit');
-        Route::put('/edit', 'update')->name('update');
-        Route::post('/status', 'toggleStatus')->name('status');
-        Route::post('/delete', 'destroy')->name('destroy');
+        Route::get('/inactive', 'inactive')->name('inactive');
+        Route::post('/inactive/search', 'inactive')->name('inactive.search');
+        Route::get('/restore', 'restorePage')->name('restore');
+        Route::post('/restore/search', 'restorePage')->name('restore.search');
+        Route::post('/restore', 'restore')->name('restore.action');
     });
 
     /* -------------------------------------------------------------------------- */

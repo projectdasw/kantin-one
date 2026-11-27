@@ -10,144 +10,150 @@ document.addEventListener('DOMContentLoaded', () => {
 */
 
 function initBuildingManagement() {
-    const searchForm = document.getElementById('buildingSearchForm');
-    const searchInput = document.getElementById('buildingSearchInput');
-    const statusFilter = document.getElementById('buildingStatusFilter');
-    const resetButton = document.getElementById('buildingResetFilter');
-    const tableContainer = document.getElementById('buildingsTableContainer');
+    window.addEventListener('load', function () {
+        const mainTable = window.LaravelDataTables?.['buildings-table'];
+        const inactiveTable = window.LaravelDataTables?.['buildings-inactive-table'];
+        const restoreTable = window.LaravelDataTables?.['buildings-restore-table'];
 
-    if (!searchForm || !tableContainer) return;
+        const statusFilter = document.getElementById('buildingStatus');
+        const resetButton = document.getElementById('resetBuildingFilters');
+        const filtersContainer = document.getElementById('buildingFilters');
 
-    let debounceTimer;
-    let controller;
+        const tableId = mainTable
+            ? 'buildings-table'
+            : inactiveTable
+                ? 'buildings-inactive-table'
+                : 'buildings-restore-table';
 
-    const loadBuildings = async (page = 1, updateUrl = true) => {
-        if (controller) controller.abort();
+        const table = mainTable || inactiveTable || restoreTable;
 
-        controller = new AbortController();
-
-        const formData = new FormData(searchForm);
-        formData.set('page', page);
-
-        try {
-            const response = await fetch(searchForm.action, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'text/html',
-                },
-                body: formData,
-                signal: controller.signal,
-            });
-
-            if (!response.ok) {
-                throw new Error('Gagal memuat data gedung.');
-            }
-
-            tableContainer.innerHTML = await response.text();
-
-            if (updateUrl) {
-                const params = new URLSearchParams();
-
-                if (searchInput.value.trim()) {
-                    params.set('search', searchInput.value.trim());
-                }
-
-                if (statusFilter.value !== '') {
-                    params.set('status', statusFilter.value);
-                }
-
-                if (page > 1) {
-                    params.set('page', page);
-                }
-
-                const query = params.toString();
-
-                history.replaceState(
-                    {},
-                    '',
-                    window.location.pathname + (query ? `?${query}` : '')
-                );
-            }
-        } catch (error) {
-            if (error.name !== 'AbortError') {
-                console.error(error);
-                Swal.fire('Error', error.message, 'error');
-            }
-        }
-    };
-
-    searchInput.addEventListener('input', () => {
-        clearTimeout(debounceTimer);
-
-        debounceTimer = setTimeout(() => {
-            loadBuildings();
-        }, 350);
-    });
-
-    statusFilter.addEventListener('change', () => {
-        loadBuildings();
-    });
-
-    searchForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        clearTimeout(debounceTimer);
-        loadBuildings();
-    });
-
-    resetButton?.addEventListener('click', () => {
-        searchInput.value = '';
-        statusFilter.value = '';
-        loadBuildings();
-    });
-
-    tableContainer.addEventListener('click', (event) => {
-        const link = event.target.closest('.pagination a');
-
-        if (!link) return;
-
-        event.preventDefault();
-
-        const url = new URL(link.href);
-        const page = url.searchParams.get('page') || 1;
-
-        loadBuildings(page);
-    });
-
-    tableContainer.addEventListener('submit', (event) => {
-        const statusForm = event.target.closest('.building-status-form');
-        const deleteForm = event.target.closest('.building-delete-form');
-
-        if (!statusForm && !deleteForm) return;
-
-        event.preventDefault();
-
-        if (statusForm) {
-            Swal.fire({
-                title: 'Ubah Status Gedung?',
-                text: 'Apakah Anda yakin ingin mengubah status gedung ini?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, lanjutkan',
-                cancelButtonText: 'Batal',
-            }).then((result) => {
-                if (result.isConfirmed) statusForm.submit();
-            });
+        if (!table) {
+            console.error('DataTables Gedung tidak ditemukan.');
+            return;
         }
 
-        if (deleteForm) {
-            Swal.fire({
-                title: 'Hapus Gedung?',
-                text: 'Apakah Anda yakin ingin menghapus gedung ini?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#dc3545',
-            }).then((result) => {
-                if (result.isConfirmed) deleteForm.submit();
+        // Gabungkan pencarian dan filter pada halaman Master Gedung.
+        const searchContainer = document.querySelector(
+            `#${tableId}_wrapper .dt-search`
+        );
+
+        if (filtersContainer && searchContainer) {
+            searchContainer.classList.add(
+                'd-flex',
+                'flex-wrap',
+                'align-items-center',
+                'gap-2'
+            );
+
+            const searchLabel = searchContainer.querySelector('label');
+
+            if (searchLabel) {
+                searchLabel.classList.add('mb-0');
+            }
+
+            const searchInput = searchContainer.querySelector('input');
+
+            if (searchInput) {
+                searchInput.style.width = '260px';
+            }
+
+            searchContainer.appendChild(filtersContainer);
+        }
+
+        // Filter status Master Gedung.
+        statusFilter?.addEventListener('change', function () {
+            table.ajax.reload();
+        });
+
+        // Reset pencarian dan filter Master Gedung.
+        resetButton?.addEventListener('click', function () {
+            if (statusFilter) {
+                statusFilter.value = '';
+            }
+
+            const searchInput = document.querySelector(
+                `#${tableId}_wrapper .dt-search input`
+            );
+
+            if (searchInput) {
+                searchInput.value = '';
+            }
+
+            table.search('').draw();
+        });
+
+        // Konfirmasi aksi Gedung.
+        document.addEventListener('submit', async function (event) {
+            const statusForm = event.target.closest('.building-status-form');
+            const deleteForm = event.target.closest('.building-delete-form');
+            const restoreForm = event.target.closest('.building-restore-form');
+
+            if (!statusForm && !deleteForm && !restoreForm) return;
+
+            event.preventDefault();
+
+            if (statusForm) {
+                const result = await Swal.fire({
+                    title: 'Ubah Status Gedung?',
+                    text: 'Apakah Anda yakin ingin mengubah status gedung ini?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, lanjutkan',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true,
+                });
+
+                if (result.isConfirmed) {
+                    statusForm.submit();
+                }
+            }
+
+            if (deleteForm) {
+                if (restoreForm) {
+                    const result = await Swal.fire({
+                        title: 'Pulihkan Gedung?',
+                        text: 'Gedung akan dikembalikan ke Master Gedung.',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, pulihkan',
+                        cancelButtonText: 'Batal',
+                        confirmButtonColor: '#198754',
+                        reverseButtons: true,
+                    });
+
+                    if (result.isConfirmed) {
+                        restoreForm.submit();
+                    }
+                }
+                
+                const result = await Swal.fire({
+                    title: 'Hapus Gedung?',
+                    text: 'Gedung akan dipindahkan ke Recycle Bin.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#dc3545',
+                    reverseButtons: true,
+                });
+
+                if (result.isConfirmed) {
+                    deleteForm.submit();
+                }
+            }
+        });
+
+        // Tooltip Bootstrap.
+        function initializeTooltips() {
+            document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => {
+                bootstrap.Tooltip.getOrCreateInstance(element);
             });
+        }
+
+        initializeTooltips();
+
+        if (window.jQuery) {
+            $(`#${tableId}`).on('draw.dt', initializeTooltips);
         }
     });
 }

@@ -83,14 +83,14 @@
                                 [
                                     'label' => 'Gedung/Lahan Nonaktif',
                                     'icon' => 'fa-solid fa-building-circle-xmark',
-                                    'url' => '#',
-                                    'active' => [''],
+                                    'url' => route('buildings.inactive'),
+                                    'active' => ['buildings/inactive'],
                                 ],
                                 [
                                     'label' => 'Pemulihan Gedung/Lahan',
                                     'icon' => 'fa-solid fa-building-shield',
-                                    'url' => '#',
-                                    'active' => [''],
+                                    'url' => route('buildings.restore'),
+                                    'active' => ['buildings/restore'],
                                 ],
                             ],
                         ],
@@ -591,7 +591,6 @@
                         <div class="card-body">@yield('dashboard-content')</div>
                     </div>
                 </div>
-                @include('partials.footer')
             </div>
         </div>
     </div>

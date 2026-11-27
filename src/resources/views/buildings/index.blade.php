@@ -11,70 +11,31 @@
 
 @section('dashboard-content')
 
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white border-0 py-3">
-        <h5 class="mb-1">Daftar Gedung</h5>
-        <small class="text-muted">
-            Informasi seluruh gedung yang terdaftar.
-        </small>
+    {{-- Filter Gedung --}}
+    <div id="buildingFilters" class="d-flex flex-wrap align-items-center gap-2">
+
+        <select id="buildingStatus" class="form-select form-select-sm" style="width: 145px;">
+            <option value="">Semua Status</option>
+            <option value="1">Aktif</option>
+            <option value="0">Nonaktif</option>
+        </select>
+
+        <button type="button" id="resetBuildingFilters" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-undo me-1"></i> Reset
+        </button>
+
     </div>
 
-    <div class="card-body">
-        <form id="buildingSearchForm"
-              action="{{ route('buildings.search') }}"
-              method="POST">
-            @csrf
-
-            <div class="row g-2 mb-3">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white">
-                            <i class="fas fa-search"></i>
-                        </span>
-
-                        <input type="text"
-                               name="search"
-                               id="buildingSearchInput"
-                               class="form-control"
-                               placeholder="Cari kode atau nama gedung..."
-                               value="{{ request('search') }}">
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <select name="status"
-                            id="buildingStatusFilter"
-                            class="form-select">
-                        <option value="">Semua Status</option>
-                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>
-                            Aktif
-                        </option>
-                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>
-                            Nonaktif
-                        </option>
-                    </select>
-                </div>
-
-                <div class="col-md-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-filter me-1"></i> Filter
-                    </button>
-
-                    <button type="button"
-                            id="buildingResetFilter"
-                            class="btn btn-outline-secondary">
-                        <i class="fas fa-undo me-1"></i> Reset
-                    </button>
-                </div>
-            </div>
-        </form>
-
-        <div id="buildingsTableContainer">
-            @include('buildings.partials.table')
-        </div>
+    {{-- Tabel Gedung --}}
+    <div class="table-responsive" id="buildingsTableContainer">
+        {!! $dataTable->table([
+            'class' => 'table table-hover align-middle mb-0',
+        ]) !!}
     </div>
-</div>
 
 @endsection
 
-@vite('resources/js/pages/buildings/buildings.js')
+@push('scripts')
+    @vite('resources/js/pages/buildings/buildings.js')
+    {!! $dataTable->scripts() !!}
+@endpush
