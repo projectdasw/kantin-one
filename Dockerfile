@@ -14,15 +14,21 @@ COPY docker/apache/conf.d/99-kantin-one.conf /etc/apache2/conf-available/99-kant
 
 RUN a2enconf 99-kantin-one
 
+# Install System Dependencies and PHP Extensions
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
     libzip-dev \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
     pdo_pgsql \
     pgsql \
     zip \
+    gd \
     && a2enmod rewrite \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
