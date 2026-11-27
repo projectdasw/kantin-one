@@ -17,16 +17,16 @@ export default defineConfig({
                 'resources/js/pages/auth/login.js',
 
                 // Customer
-                'resources/js/customer/cart-order.js',
-                'resources/js/customer/order-tracking.js',
-                'resources/js/customer/products-order.js',
-                'resources/js/customer/tenant-order.js',
+                // 'resources/js/customer/cart-order.js',
+                // 'resources/js/customer/order-tracking.js',
+                // 'resources/js/customer/products-order.js',
+                // 'resources/js/customer/tenant-order.js',
                 
                 // Tenant
                 'resources/js/pages/tenants/tenants.js',
 
                 // Canteens
-                'resources/js/pages/tenants/canteens.js',
+                // 'resources/js/pages/tenants/canteens.js',
 
                 // Buildings
                 'resources/js/pages/buildings/buildings.js',
